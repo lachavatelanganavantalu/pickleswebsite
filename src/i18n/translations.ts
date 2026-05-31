@@ -8,42 +8,26 @@ export const LOCALE_LABELS: Record<Locale, string> = {
 type Messages = Record<string, { en: string; te: string }>;
 
 export const messages: Messages = {
-  "nav.veg": { en: "Veg", te: "వెజ్" },
-  "nav.nonveg": { en: "Non-Veg", te: "నాన్-వెజ్" },
-  "nav.combos": { en: "Combos", te: "కాంబోలు" },
-  "nav.story": { en: "Story", te: "మా కథ" },
+  "nav.pickles": { en: "Pickles", te: "పచ్చళ్ళు" },
+  "nav.combos": { en: "Combo", te: "కాంబో" },
   "nav.contact": { en: "Contact", te: "సంప్రదించండి" },
   "nav.shop": { en: "Shop", te: "కొనండి" },
-  "nav.shopPickles": { en: "Shop pickles", te: "పచ్చళ్ళు కొనండి" },
   "nav.cart": { en: "Cart", te: "బస్కెట్" },
 
-  "hero.badge": { en: "Nizamabad · Telangana", te: "నిజామాబాద్ · తెలంగాణ" },
+  "hero.badge": { en: "Lachava Telangana Pickles", te: "లచ్చవ్వ తెలంగాణ వంటల" },
   "hero.title": {
-    en: "Pickles made the way your ammamma still does",
-    te: "మీ అమ్మమ్మ ఇంకా చేసే విధంగా పచ్చళ్ళు",
+    en: "Pickles — official menu",
+    te: "పచ్చళ్ళు — అధికారిక మెనూ",
   },
   "hero.subtitle": {
-    en: "Avakaya, Gongura, Royyala & more — stone-ground spices, cold-pressed sesame oil, zero shortcuts.",
-    te: "అవకాయ, గోంగూర, రొయ్యల & మరిన్ని — రాతిలో రుద్దిన మసాలా, వేరుశనగ నూనె, ఎటువంటి షార్ట్‌కట్ లేదు.",
+    en: "10 pickles (1 kg & 1/2 kg). 5-pickle combo ₹999. PhonePe / GPay 63021 12848.",
+    te: "10 రకాల పచ్చళ్ళు. 5 పికిల్స్ కాంబో ₹999. PhonePe / GPay 63021 12848.",
   },
-  "hero.ctaVeg": { en: "Shop veg pickles", te: "వెజ్ పచ్చళ్ళు కొనండి" },
-  "hero.ctaNonVeg": { en: "Non-veg range", te: "నాన్-వెజ్ రేంజ్" },
+  "hero.ctaShop": { en: "Shop pickles", te: "పచ్చళ్ళు కొనండి" },
+  "hero.ctaCombo": { en: "Combo ₹999", te: "కాంబో ₹999" },
 
-  "trust.homestyle": { en: "Homestyle recipes", te: "ఇంటి వంటకాలు" },
-  "trust.noPreservatives": { en: "No artificial preservatives", te: "కృత్రిమ పదార్థాలు లేవు" },
-  "trust.sunDried": { en: "Sun-dried spices", te: "ఎండబెట్టిన మసాలా" },
-  "trust.stoneGround": { en: "Stone-ground masala", te: "రాతిలో రుద్దిన మసాలా" },
-  "trust.shipping": { en: "Pan-India shipping", te: "భారతదేశం మొత్తం డెలివరీ" },
-  "trust.fssai": { en: "FSSAI certified", te: "FSSAI సర్టిఫైడ్" },
+  "home.combos": { en: "Combo offer", te: "కాంబో ఆఫర్" },
 
-  "home.storyTitle": { en: "Maa intlo puttina ruchi", te: "మా ఇంట్లో పుట్టిన రుచి" },
-  "home.storySubtitle": { en: "Born in our kitchen", te: "మా వంటగదిలో పుట్టింది" },
-  "home.featured": { en: "Featured pickles", te: "ప్రధాన పచ్చళ్ళు" },
-  "home.viewAll": { en: "View all", te: "అన్నీ చూడండి" },
-  "home.combos": { en: "Combo packs", te: "కాంబో ప్యాక్‌లు" },
-  "home.process": { en: "How we make it", te: "మేము ఎలా చేస్తాం" },
-
-  "product.from": { en: "From", te: "నుండి" },
   "product.outOfStock": { en: "Out of stock", te: "స్టాక్ అయిపోయింది" },
   "product.addToCart": { en: "Add to cart", te: "బస్కెట్‌లో వేయండి" },
   "product.selectWeight": { en: "Choose size", te: "సైజ్ ఎంచుకోండి" },
@@ -68,19 +52,11 @@ export const messages: Messages = {
   "success.title": { en: "Order confirmed", te: "ఆర్డర్ నిర్ధారించబడింది" },
   "success.thanks": { en: "Thank you", te: "ధన్యవాదాలు" },
 
-  "footer.rights": { en: "All rights reserved.", te: "అన్ని హక్కులు రిజర్వ్." },
-
-  "listing.veg": { en: "Veg pickles", te: "వెజ్ పచ్చళ్ళు" },
-  "listing.nonveg": { en: "Non-veg pickles", te: "నాన్-వెజ్ పచ్చళ్ళు" },
-  "listing.vegSub": {
-    en: "Avakaya, Gongura, and more — stone-ground, sun-dried",
-    te: "అవకాయ, గోంగూర — రాతిలో రుద్దిన మసాలా",
+  "listing.all": { en: "All pickles", te: "అన్ని పచ్చళ్ళు" },
+  "listing.allSub": {
+    en: "Prices per 1 kg and 1/2 kg — as on our page",
+    te: "1 kg మరియు 1/2 kg ధరలు — మా పేజీ ప్రకారం",
   },
-  "listing.nonvegSub": {
-    en: "Prawn, chicken, fish — homestyle non-veg",
-    te: "రొయ్యల, కోడి, చేప — ఇంటి వంట రుచి",
-  },
-  "listing.all": { en: "All products", te: "అన్ని ఉత్పత్తులు" },
 
   "admin.dashboard": { en: "Dashboard", te: "డాష్‌బోర్డ్" },
   "admin.orders": { en: "Orders", te: "ఆర్డర్‌లు" },

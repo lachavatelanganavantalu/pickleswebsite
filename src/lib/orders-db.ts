@@ -1,6 +1,7 @@
 import { promises as fs } from "fs";
 import path from "path";
 import { getDb } from "./mongodb";
+import { normalizePhone } from "./phone";
 import { nextDailySequenceFromFile } from "./order-counter-file";
 
 export interface OrderCustomer {
@@ -26,6 +27,7 @@ export type PaymentStatus = "pending" | "paid";
 export interface Order {
   orderId: string;
   displayOrderId: string;
+  userId?: string;
   paymentId?: string;
   paymentStatus: PaymentStatus;
   amountINR: number;
@@ -130,12 +132,14 @@ export async function saveOrderToDb(
   displayOrderId: string,
   items: OrderItem[],
   totalINR: number,
-  customer: OrderCustomer
+  customer: OrderCustomer,
+  userId?: string
 ): Promise<void> {
   const orders = await getOrders();
   orders.unshift({
     orderId,
     displayOrderId,
+    userId,
     paymentStatus: "pending",
     amountINR: totalINR,
     items,
@@ -151,11 +155,13 @@ export async function createPaidOrder(
   paymentId: string,
   items: OrderItem[],
   totalINR: number,
-  customer: OrderCustomer
+  customer: OrderCustomer,
+  userId?: string
 ): Promise<Order> {
   const order: Order = {
     orderId,
     displayOrderId,
+    userId,
     paymentId,
     paymentStatus: "paid",
     amountINR: totalINR,
@@ -260,4 +266,31 @@ export async function updateOrder(
 
 export function invalidateOrdersCache(): void {
   memoryOrders = null;
+}
+
+export async function getOrdersByUserId(userId: string): Promise<Order[]> {
+  const orders = await getOrders();
+  return orders
+    .filter((o) => o.userId === userId)
+    .sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+}
+
+export async function linkOrdersToUserByPhone(userId: string, phone: string): Promise<void> {
+  const normalized = normalizePhone(phone);
+  if (!normalized) return;
+
+  const orders = await getOrders();
+  let changed = false;
+  for (const order of orders) {
+    if (order.userId) continue;
+    const orderPhone = normalizePhone(order.customer.phone);
+    if (orderPhone === normalized) {
+      order.userId = userId;
+      changed = true;
+    }
+  }
+  if (changed) await persistOrders(orders);
 }

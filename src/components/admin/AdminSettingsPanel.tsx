@@ -49,9 +49,16 @@ export default function AdminSettingsPanel() {
   useEffect(() => {
     let cancelled = false;
     void fetch("/api/admin/settings")
-      .then((r) => r.json())
+      .then(async (r) => {
+        const data = await r.json();
+        if (!r.ok) throw new Error(data.error || "Failed to load settings");
+        return data as SiteSettings;
+      })
       .then((data) => {
         if (!cancelled) setSettings(data);
+      })
+      .catch(() => {
+        if (!cancelled) setMessage("Could not load settings — log in again.");
       });
     return () => {
       cancelled = true;
@@ -67,8 +74,13 @@ export default function AdminSettingsPanel() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(settings),
     });
+    const data = await res.json().catch(() => ({}));
     setSaving(false);
-    setMessage(res.ok ? "Saved — refresh the homepage to see changes." : "Save failed");
+    setMessage(
+      res.ok
+        ? "Saved — refresh the homepage to see changes."
+        : (data as { error?: string }).error || "Save failed"
+    );
   };
 
   if (!settings) return <p className="p-8 text-muted">Loading…</p>;
@@ -89,7 +101,7 @@ export default function AdminSettingsPanel() {
   };
 
   return (
-    <div className="p-6 sm:p-8 max-w-3xl">
+    <div className="p-4 sm:p-8 max-w-3xl w-full overflow-x-hidden">
       <h1 className="font-display text-2xl text-ink">Site settings</h1>
       <p className="text-sm text-muted mt-1">
         Edit homepage and contact in English and Telugu. Customers switch language with EN / తె.

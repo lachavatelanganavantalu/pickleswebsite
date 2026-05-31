@@ -1,9 +1,5 @@
-import ShopGrid from "@/components/ShopGrid";
-
-export const metadata = {
-  title: "Non-Veg Pickles",
-};
+import { redirect } from "next/navigation";
 
 export default function NonVegPicklesPage() {
-  return <ShopGrid category="non-veg" />;
+  redirect("/products");
 }

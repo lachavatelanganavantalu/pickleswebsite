@@ -10,6 +10,43 @@ const FILE_STORE = path.join(process.cwd(), "data", "site-settings.json");
 
 let cache: SiteSettings | null = null;
 
+const LEGACY_CONTACT_PHONES = ["9949525111", "919949525111"];
+
+function patchLegacyContact(settings: SiteSettings): SiteSettings {
+  const digits = settings.contact.phone.replace(/\D/g, "");
+  const wa = settings.contact.whatsapp.replace(/\D/g, "");
+  const isLegacy =
+    LEGACY_CONTACT_PHONES.some((n) => digits.includes(n) || wa.includes(n.replace(/^91/, "")));
+  if (!isLegacy) return settings;
+  return {
+    ...settings,
+    contact: { ...settings.contact, ...defaultSiteSettings.contact },
+  };
+}
+
+function patchLegacyMarketing(settings: SiteSettings): SiteSettings {
+  const blob = JSON.stringify(settings).toLowerCase();
+  const stale =
+    blob.includes("gongura") ||
+    blob.includes("avakaya") ||
+    blob.includes("royyala") ||
+    blob.includes("free delivery") ||
+    blob.includes("ammamma") ||
+    blob.includes("fssai");
+  if (!stale) return settings;
+  return {
+    ...settings,
+    hero: defaultSiteSettings.hero,
+    story: defaultSiteSettings.story,
+    announcement: defaultSiteSettings.announcement,
+    contact: { ...settings.contact, ...defaultSiteSettings.contact },
+  };
+}
+
+function patchSiteSettings(settings: SiteSettings): SiteSettings {
+  return patchLegacyMarketing(patchLegacyContact(settings));
+}
+
 async function readFile(): Promise<SiteSettings | null> {
   try {
     const raw = await fs.readFile(FILE_STORE, "utf-8");
@@ -33,9 +70,17 @@ export async function getSiteSettings(): Promise<SiteSettings> {
       const db = await getDb();
       const doc = await db.collection(COLLECTION).findOne({ id: DOC_ID });
       if (doc) {
-        const { id: _id, ...settings } = doc as unknown as { id: string } & SiteSettings;
-        void _id;
-        cache = settings as SiteSettings;
+        const { id: _docId, _id: _mongoId, ...settings } = doc as unknown as {
+          id: string;
+          _id?: unknown;
+        } & SiteSettings;
+        void _docId;
+        void _mongoId;
+        const patched = patchSiteSettings(settings as SiteSettings);
+        if (patched !== settings) {
+          return saveSiteSettings(patched);
+        }
+        cache = patched;
         return cache;
       }
     } catch (err) {
@@ -45,8 +90,9 @@ export async function getSiteSettings(): Promise<SiteSettings> {
 
   const fromFile = await readFile();
   if (fromFile) {
-    cache = fromFile;
-    return fromFile;
+    cache = patchSiteSettings(fromFile);
+    if (cache !== fromFile) await writeFile(cache);
+    return cache;
   }
 
   cache = { ...defaultSiteSettings, updatedAt: new Date().toISOString() };

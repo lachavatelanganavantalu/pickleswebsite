@@ -2,12 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { isDemoPaymentsEnabled } from "@/lib/demo-payments";
 import { getRazorpay } from "@/lib/razorpay";
+import { getCustomerSession } from "@/lib/customer-auth";
 import { saveOrder } from "@/lib/order-store";
 import { createPaidOrder, saveOrderToDb } from "@/lib/orders-db";
 import { generateDisplayOrderId } from "@/lib/order-id";
 
 export async function POST(req: NextRequest) {
   try {
+    const session = getCustomerSession(req);
+    const userId = session?.userId;
     const body = await req.json();
     const { amountINR, items, customer } = body;
 
@@ -54,7 +57,8 @@ export async function POST(req: NextRequest) {
         paymentId,
         orderItems,
         amountINR,
-        customerData
+        customerData,
+        userId
       );
 
       return NextResponse.json({
@@ -84,7 +88,7 @@ export async function POST(req: NextRequest) {
       customer: customerData,
     });
 
-    await saveOrderToDb(order.id, displayOrderId, orderItems, amountINR, customerData);
+    await saveOrderToDb(order.id, displayOrderId, orderItems, amountINR, customerData, userId);
 
     return NextResponse.json({
       demo: false,

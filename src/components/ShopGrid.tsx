@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { PickleProduct, ProductCategory } from "@/types/product";
 import PickleProductCard from "./PickleProductCard";
 import ComboProductCard from "./ComboProductCard";
-import { comboPacks } from "@/data/combos";
+import type { ComboPack } from "@/data/combos";
 import { cn } from "@/lib/cn";
 
 type Filter = "all" | ProductCategory;
@@ -16,6 +16,7 @@ interface Props {
   title?: string;
   subtitle?: string;
   initialProducts?: PickleProduct[];
+  initialCombos?: ComboPack[];
 }
 
 export default function ShopGrid({
@@ -25,6 +26,7 @@ export default function ShopGrid({
   title,
   subtitle,
   initialProducts,
+  initialCombos = [],
 }: Props) {
   const [products, setProducts] = useState<PickleProduct[]>(initialProducts ?? []);
   const [loading, setLoading] = useState(!initialProducts);
@@ -96,7 +98,8 @@ export default function ShopGrid({
         <p className="py-16 text-center text-sm text-shop-muted">No products found.</p>
       ) : (
         <div className="shop-product-grid">
-          {showCombo && comboPacks.map((combo) => <ComboProductCard key={combo.id} combo={combo} />)}
+          {showCombo &&
+            initialCombos.map((combo) => <ComboProductCard key={combo.id} combo={combo} />)}
           {filtered.map((p) => (
             <PickleProductCard key={p.id} product={p} />
           ))}

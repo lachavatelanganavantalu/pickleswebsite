@@ -1,8 +1,13 @@
 import { promises as fs } from "fs";
 import path from "path";
 import { getDb } from "@/lib/mongodb";
-import { defaultProducts } from "@/data/default-products";
+import {
+  CANONICAL_PRODUCT_IDS,
+  defaultProducts,
+  LEGACY_PRODUCT_IDS,
+} from "@/data/default-products";
 import { PickleProduct } from "@/types/product";
+import { applyDefaultImages } from "@/lib/product-images";
 
 const COLLECTION = "products";
 const FILE_STORE = path.join(process.cwd(), "data", "products-store.json");
@@ -24,13 +29,58 @@ async function writeFileStore(products: PickleProduct[]): Promise<void> {
   memoryCache = products;
 }
 
-async function seedIfEmpty(products: PickleProduct[]): Promise<PickleProduct[]> {
-  if (products.length > 0) return products;
-  const seeded = defaultProducts.map((p) => ({
-    ...p,
-    updatedAt: new Date().toISOString(),
-  }));
-  return seeded;
+function stampDefaults(): PickleProduct[] {
+  return applyDefaultImages(
+    defaultProducts.map((p) => ({
+      ...p,
+      updatedAt: new Date().toISOString(),
+    }))
+  );
+}
+
+function needsProductsReseed(products: PickleProduct[]): boolean {
+  if (products.length === 0) return false;
+  if (products.length !== defaultProducts.length) return true;
+  if (products.some((p) => LEGACY_PRODUCT_IDS.has(p.id) || !CANONICAL_PRODUCT_IDS.has(p.id))) {
+    return true;
+  }
+  return products.some((p) => {
+    const def = defaultProducts.find((d) => d.id === p.id);
+    if (!def) return true;
+    return def.weightOptions.some(
+      (w, i) => w.priceINR !== p.weightOptions[i]?.priceINR || w.label !== p.weightOptions[i]?.label
+    );
+  });
+}
+
+function mergeWithMenuSource(stored: PickleProduct[]): PickleProduct[] {
+  const kept = stored.filter((p) => CANONICAL_PRODUCT_IDS.has(p.id));
+  return stampDefaults().map((def) => {
+    const existing = kept.find((p) => p.id === def.id);
+    if (!existing) return def;
+    return {
+      ...def,
+      available: existing.available,
+      imagePath: existing.imagePath?.trim() || def.imagePath,
+      displayOrder: existing.displayOrder ?? def.displayOrder,
+    };
+  });
+}
+
+async function persistProducts(products: PickleProduct[]): Promise<void> {
+  memoryCache = products;
+  if (process.env.MONGODB_URI) {
+    try {
+      const db = await getDb();
+      const col = db.collection(COLLECTION);
+      await col.deleteMany({});
+      if (products.length) await col.insertMany(products);
+      return;
+    } catch (err) {
+      console.error("MongoDB products save failed, using file store:", err);
+    }
+  }
+  await writeFileStore(products);
 }
 
 export async function getAllProducts(): Promise<PickleProduct[]> {
@@ -45,37 +95,37 @@ export async function getAllProducts(): Promise<PickleProduct[]> {
         .sort({ displayOrder: 1 })
         .toArray()) as unknown as PickleProduct[];
       if (products.length === 0) {
-        const seeded = await seedIfEmpty([]);
-        await col.insertMany(seeded);
-        products = seeded;
+        products = stampDefaults();
+        await persistProducts(products);
+        return products;
       }
-      memoryCache = products;
-      return products;
+      if (needsProductsReseed(products)) {
+        products = mergeWithMenuSource(products);
+        await persistProducts(products);
+        return products;
+      }
+      memoryCache = applyDefaultImages(products);
+      return memoryCache;
     } catch (err) {
       console.error("MongoDB products fetch failed, using file store:", err);
     }
   }
 
   let products = await readFileStore();
-  products = await seedIfEmpty(products);
-  if (products.length && !(await fileExists())) {
+  if (products.length === 0) {
+    products = stampDefaults();
     await writeFileStore(products);
-  } else if (products.length) {
-    const stored = await readFileStore();
-    if (stored.length === 0) await writeFileStore(products);
-    else products = stored;
+    memoryCache = products;
+    return products;
+  }
+  if (needsProductsReseed(products)) {
+    products = mergeWithMenuSource(products);
+    await writeFileStore(products);
+  } else {
+    products = applyDefaultImages(products);
   }
   memoryCache = products;
   return products;
-}
-
-async function fileExists(): Promise<boolean> {
-  try {
-    await fs.access(FILE_STORE);
-    return true;
-  } catch {
-    return false;
-  }
 }
 
 export async function saveAllProducts(products: PickleProduct[]): Promise<void> {
@@ -83,21 +133,7 @@ export async function saveAllProducts(products: PickleProduct[]): Promise<void> 
     ...p,
     updatedAt: new Date().toISOString(),
   }));
-  memoryCache = withTs;
-
-  if (process.env.MONGODB_URI) {
-    try {
-      const db = await getDb();
-      const col = db.collection(COLLECTION);
-      await col.deleteMany({});
-      if (withTs.length) await col.insertMany(withTs);
-      return;
-    } catch (err) {
-      console.error("MongoDB products save failed, using file store:", err);
-    }
-  }
-
-  await writeFileStore(withTs);
+  await persistProducts(withTs);
 }
 
 export async function upsertProduct(product: PickleProduct): Promise<PickleProduct> {

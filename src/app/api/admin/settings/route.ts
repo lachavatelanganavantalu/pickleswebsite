@@ -14,7 +14,12 @@ export async function PUT(req: NextRequest) {
   if (!isAdminRequest(req)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const body = (await req.json()) as SiteSettings;
-  const saved = await saveSiteSettings(body);
-  return NextResponse.json(saved);
+  try {
+    const body = (await req.json()) as SiteSettings;
+    const saved = await saveSiteSettings(body);
+    return NextResponse.json(saved);
+  } catch (err) {
+    console.error("PUT /api/admin/settings:", err);
+    return NextResponse.json({ error: "Failed to save settings" }, { status: 500 });
+  }
 }

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Search, X } from "lucide-react";
+import type { ComboPack } from "@/data/combos";
 import { PickleProduct } from "@/types/product";
 import { searchCatalog, SearchResult } from "@/lib/search-products";
 
@@ -15,6 +16,7 @@ export default function ShopSearchOverlay({ open, onClose }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState("");
   const [products, setProducts] = useState<PickleProduct[]>([]);
+  const [combos, setCombos] = useState<ComboPack[]>([]);
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<SearchResult[]>([]);
 
@@ -23,9 +25,13 @@ export default function ShopSearchOverlay({ open, onClose }: Props) {
     setQuery("");
     setResults([]);
     setLoading(true);
-    fetch("/api/products")
-      .then((r) => r.json())
-      .then((data) => setProducts(Array.isArray(data) ? data : []))
+    Promise.all([fetch("/api/products"), fetch("/api/combos")])
+      .then(async ([productsRes, combosRes]) => {
+        const productsData = await productsRes.json();
+        const combosData = await combosRes.json();
+        setProducts(Array.isArray(productsData) ? productsData : []);
+        setCombos(Array.isArray(combosData) ? combosData : []);
+      })
       .finally(() => setLoading(false));
   }, [open]);
 
@@ -49,8 +55,8 @@ export default function ShopSearchOverlay({ open, onClose }: Props) {
   }, [open, onClose]);
 
   useEffect(() => {
-    setResults(searchCatalog(products, query));
-  }, [products, query]);
+    setResults(searchCatalog(products, query, combos));
+  }, [products, query, combos]);
 
   const handleClose = useCallback(() => {
     setQuery("");

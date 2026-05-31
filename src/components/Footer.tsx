@@ -4,81 +4,41 @@ export default function Footer() {
   return (
     <footer className="mt-auto hidden border-t border-border bg-brand text-surface pb-[env(safe-area-inset-bottom)] lg:block">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 py-14">
-        <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
+        <div className="grid gap-10 md:grid-cols-[1.4fr_1fr]">
           <div>
-            <p className="font-display text-2xl text-surface">Lachava</p>
+            <p className="font-display text-2xl text-surface">లచ్చవ్వ తెలంగాణ వంటల</p>
             <p className="text-xs uppercase tracking-[0.2em] text-surface/50 mt-1">
-              Telangana Pickles
+              Lachava Telangana Pickles
             </p>
             <p className="mt-4 max-w-sm text-sm text-surface/60 leading-relaxed">
-              Handcrafted in Nizamabad. Stone-ground spices, cold-pressed sesame oil.
-            </p>
-            <p className="mt-3 font-display text-lg italic text-accent-soft/90">
-              Ammamma Cheyyi Ruchi
+              Official menu — 10 pickles (1 kg & 1/2 kg). 5-pickle combo ₹999.
             </p>
           </div>
 
           <div>
             <h3 className="text-xs font-semibold uppercase tracking-widest text-surface/50 mb-4">
-              Shop
+              Order
             </h3>
             <div className="flex flex-col gap-2 text-sm text-surface/70">
-              <Link href="/veg-pickles" className="hover:text-white transition-colors">
-                Veg pickles
-              </Link>
-              <Link href="/non-veg-pickles" className="hover:text-white transition-colors">
-                Non-veg pickles
+              <Link href="/products" className="hover:text-white transition-colors">
+                Pickles
               </Link>
               <Link href="/combos" className="hover:text-white transition-colors">
-                Combo packs
+                Combo ₹999
               </Link>
-              <Link href="/story" className="hover:text-white transition-colors">
-                Our story
+              <Link href="/contact" className="hover:text-white transition-colors">
+                Contact & payment
               </Link>
-            </div>
-          </div>
-
-          <div>
-            <h3 className="text-xs font-semibold uppercase tracking-widest text-surface/50 mb-4">
-              Contact
-            </h3>
-            <div className="flex flex-col gap-2 text-sm text-surface/70">
-              <p>Husnabad, Telangana 503001</p>
               <a href="tel:+916302112848" className="hover:text-white transition-colors">
                 +91 63021 12848
               </a>
               <p>PhonePe / GPay: 63021 12848</p>
-              <a
-                href="mailto:orders@lachavapickles.com"
-                className="hover:text-white transition-colors"
-              >
-                orders@lachavapickles.com
-              </a>
-              <a
-                href="https://instagram.com/lachava_pickles"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-white transition-colors"
-              >
-                @lachava_pickles
-              </a>
             </div>
           </div>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-surface/10 flex flex-col sm:flex-row justify-between gap-4 text-xs text-surface/40">
+        <div className="mt-12 pt-8 border-t border-surface/10 text-xs text-surface/40">
           <p>© {new Date().getFullYear()} Lachava Telangana Pickles</p>
-          <div className="flex gap-4">
-            <Link href="/shipping" className="hover:text-surface/70">
-              Shipping
-            </Link>
-            <Link href="/returns" className="hover:text-surface/70">
-              Returns
-            </Link>
-            <Link href="/privacy" className="hover:text-surface/70">
-              Privacy
-            </Link>
-          </div>
         </div>
       </div>
     </footer>

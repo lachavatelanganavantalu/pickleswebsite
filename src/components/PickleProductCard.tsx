@@ -12,12 +12,7 @@ interface Props {
 }
 
 function categoryLabel(product: PickleProduct): string {
-  const parts: string[] = [];
-  if (product.tag === "new") parts.push("Newly Added");
-  if (product.tag === "bestseller") parts.push("Bestseller");
-  parts.push(product.category === "veg" ? "Veg Pickles" : "Non-Veg Pickle's");
-  parts.push("Shop All");
-  return parts.join(", ");
+  return product.nameTelugu ? `${product.nameTelugu} · 1 kg / 1/2 kg` : "1 kg / 1/2 kg";
 }
 
 export default function PickleProductCard({ product }: Props) {

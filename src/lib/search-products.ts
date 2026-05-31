@@ -1,4 +1,4 @@
-import { comboPacks } from "@/data/combos";
+import type { ComboPack } from "@/data/combos";
 import { PickleProduct } from "@/types/product";
 
 export interface SearchResult {
@@ -19,7 +19,11 @@ function matchesQuery(text: string | undefined, query: string): boolean {
   return normalize(text).includes(query);
 }
 
-export function searchCatalog(products: PickleProduct[], rawQuery: string): SearchResult[] {
+export function searchCatalog(
+  products: PickleProduct[],
+  rawQuery: string,
+  combos: ComboPack[] = []
+): SearchResult[] {
   const query = normalize(rawQuery);
   if (!query) return [];
 
@@ -47,19 +51,23 @@ export function searchCatalog(products: PickleProduct[], rawQuery: string): Sear
       };
     });
 
-  const comboResults: SearchResult[] = comboPacks
+  const comboResults: SearchResult[] = combos
     .filter(
       (c) =>
         matchesQuery(c.name, query) ||
+        matchesQuery(c.nameTelugu, query) ||
         matchesQuery(c.description, query) ||
+        matchesQuery(c.descriptionTelugu, query) ||
         matchesQuery(c.items, query) ||
-        matchesQuery("combo pack offer", query)
+        matchesQuery(c.itemsTelugu, query) ||
+        matchesQuery("combo pack offer 999", query)
     )
     .map((c) => ({
       id: c.id,
       href: "/combos",
-      title: c.name,
+      title: c.nameTelugu ? `${c.name} (${c.nameTelugu})` : c.name,
       subtitle: c.items,
+      imagePath: c.imagePath,
       priceLabel: `₹${c.priceINR}`,
     }));
 

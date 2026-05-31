@@ -64,15 +64,15 @@ export function normalizeProduct(raw: PickleProduct): PickleProduct {
     slug,
     name: raw.name.trim(),
     nameTelugu: raw.nameTelugu?.trim() || undefined,
-    subtitle: raw.subtitle.trim(),
-    description: raw.description.trim(),
+    subtitle: raw.subtitle.trim() || raw.nameTelugu?.trim() || raw.name.trim(),
+    description: raw.description?.trim() ?? "",
     category: raw.category,
     spiceLevel: Math.min(5, Math.max(1, Number(raw.spiceLevel) || 3)),
     tag: raw.available && raw.tag === "out_of_stock" ? null : raw.tag,
     available: raw.available,
     featured: raw.featured,
     displayOrder: Number(raw.displayOrder) || 0,
-    imagePath: "",
+    imagePath: raw.imagePath?.trim() || "",
     weightOptions,
     updatedAt: new Date().toISOString(),
   };
@@ -85,8 +85,6 @@ export function validateProduct(
 ): string[] {
   const errors: string[] = [];
   if (!product.name.trim()) errors.push("Product name is required");
-  if (!product.subtitle.trim()) errors.push("Subtitle is required");
-  if (!product.description.trim()) errors.push("Description is required");
   if (product.description.length > 500) errors.push("Description must be under 500 characters");
 
   const slug = slugify(product.slug || product.name);

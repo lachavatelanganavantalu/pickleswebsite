@@ -2,37 +2,37 @@ import { SiteSettings } from "@/types/site-settings";
 
 export const defaultSiteSettings: SiteSettings = {
   hero: {
-    badge: { en: "Nizamabad · Telangana", te: "నిజామాబాద్ · తెలంగాణ" },
+    badge: { en: "Lachava Telangana Pickles", te: "లచ్చవ్వ తెలంగాణ వంటల" },
     title: {
-      en: "Pickles made the way your ammamma still does",
-      te: "మీ అమ్మమ్మ ఇంకా చేసే విధంగా పచ్చళ్ళు",
+      en: "Pickles — official menu",
+      te: "పచ్చళ్ళు — అధికారిక మెనూ",
     },
     subtitle: {
-      en: "Avakaya, Gongura, Royyala & more — stone-ground spices, cold-pressed sesame oil, zero shortcuts.",
-      te: "అవకాయ, గోంగూర, రొయ్యల & మరిన్ని — రాతిలో రుద్దిన మసాలా, వేరుశనగ నూనె, ఎటువంటి షార్ట్‌కట్ లేదు.",
+      en: "10 pickles (1 kg & 1/2 kg). 5-pickle combo ₹999. PhonePe / GPay 63021 12848.",
+      te: "10 రకాల పచ్చళ్ళు (1 kg & 1/2 kg). 5 పికిల్స్ కాంబో ₹999. PhonePe / GPay 63021 12848.",
     },
-    ctaVeg: { en: "Shop veg pickles", te: "వెజ్ పచ్చళ్ళు కొనండి" },
-    ctaNonVeg: { en: "Non-veg range", te: "నాన్-వెజ్ రేంజ్" },
+    ctaVeg: { en: "Shop pickles", te: "పచ్చళ్ళు కొనండి" },
+    ctaNonVeg: { en: "Combo ₹999", te: "కాంబో ₹999" },
   },
   story: {
-    title: { en: "Maa intlo puttina ruchi", te: "మా ఇంట్లో పుట్టిన రుచి" },
-    subtitle: { en: "Born in our kitchen", te: "మా వంటగదిలో పుట్టింది" },
+    title: { en: "లచ్చవ్వ తెలంగాణ వంటల", te: "లచ్చవ్వ తెలంగాణ వంటల" },
+    subtitle: { en: "Thank you for visiting our page", te: "మా పేజీని సందర్శించినందుకు ధన్యవాదాలు" },
     body1: {
-      en: "Lachava began in Nizamabad, where our grandmother Lachavamma spent summers pickling mangoes, gongura, and tamarind — recipes passed down, never written down for outsiders.",
-      te: "లచవ నిజామాబాద్‌లో మొదలైంది. మా అమ్మమ్మ లచవమ్మ వేసవుల్లో మామిడి, గోంగూర, చింతపండు పచ్చళ్ళు చేసేవారు — బయటికి రాయని కుటుంబ వంటకాలు.",
+      en: "Order pickles by the jar — prices as listed. Combo: 5 jars (250g each) for ₹999.",
+      te: "జార్‌లో పచ్చళ్ళు ఆర్డర్ చేయండి — ధరలు జాబితా ప్రకారం. కాంబో: 5 జార్లు (250g) ₹999.",
     },
     body2: {
-      en: "We don't batch-compromise. Every jar is Telangana tradition, bottled.",
-      te: "మేము ఫ్యాక్టరీ లాగా చేయము. ప్రతి జార్‌లో తెలంగాణ రుచి ఉంటుంది.",
+      en: "PhonePe / GPay: 63021 12848",
+      te: "PhonePe / GPay: 63021 12848",
     },
   },
   contact: {
-    phone: "+91 99495 25111",
-    whatsapp: "919949525111",
-    email: "hello@lachavapickles.com",
+    phone: "+91 63021 12848",
+    whatsapp: "916302112848",
+    email: "",
     address: {
-      en: "Nizamabad, Telangana, India",
-      te: "నిజామాబాద్, తెలంగాణ, భారతదేశం",
+      en: "Telangana",
+      te: "తెలంగాణ",
     },
   },
   social: {
@@ -40,7 +40,7 @@ export const defaultSiteSettings: SiteSettings = {
     facebook: "",
   },
   announcement: {
-    en: "Free delivery on orders above ₹999 across India.",
-    te: "₹999 పైన ఆర్డర్‌లకు భారతదేశం మొత్తం ఫ్రీ డెలివరీ.",
+    en: "⭐ 5 pickles combo — ₹999 (Chicken, Chinthankaya, Mango, Usirikaya, Lemon · 250g each)",
+    te: "⭐ 5 పికిల్స్ కాంబో — ₹999 (చికెన్, చింతకాయ, మామిడికాయ, ఉసిరికాయ, నిమ్మకాయ · 250g)",
   },
 };

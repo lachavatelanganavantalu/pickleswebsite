@@ -415,7 +415,7 @@ function buildInsights(input: {
 
   if (input.avgOrderValue > 0) {
     lines.push(
-      `Average paid order: **₹${Math.round(input.avgOrderValue).toLocaleString("en-IN")}**. Bundle combos to push cart value above ₹999 for free delivery.`
+      `Average paid order: **₹${Math.round(input.avgOrderValue).toLocaleString("en-IN")}**. Promote the **5-pickle combo (₹999)** alongside top jars.`
     );
   }
 

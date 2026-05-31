@@ -4,6 +4,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
   type ReactNode,
@@ -27,7 +28,13 @@ function readLocale(): Locale {
 }
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>(readLocale);
+  const [locale, setLocaleState] = useState<Locale>("en");
+
+  useEffect(() => {
+    const stored = readLocale();
+    setLocaleState(stored);
+    document.documentElement.lang = stored === "te" ? "te" : "en";
+  }, []);
 
   const setLocale = useCallback((next: Locale) => {
     setLocaleState(next);

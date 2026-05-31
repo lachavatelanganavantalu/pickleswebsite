@@ -1,14 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { useCurrency } from "@/context/CurrencyContext";
+import { useCustomerAuth } from "@/context/CustomerAuthContext";
 import RazorpayCheckout from "@/components/RazorpayCheckout";
 
 export default function CheckoutPage() {
   const { items, totalINR } = useCart();
   const { format } = useCurrency();
+  const { user } = useCustomerAuth();
   const [customer, setCustomer] = useState({
     name: "",
     email: "",
@@ -19,6 +21,12 @@ export default function CheckoutPage() {
     zip: "",
     country: "India",
   });
+
+  useEffect(() => {
+    if (user?.phone) {
+      setCustomer((c) => (c.phone ? c : { ...c, phone: user.phone }));
+    }
+  }, [user?.phone]);
 
   const update = (field: keyof typeof customer, value: string) => {
     setCustomer((c) => ({ ...c, [field]: value }));
@@ -50,6 +58,21 @@ export default function CheckoutPage() {
     <div className="app-content py-[clamp(1.5rem,5vw,3rem)]">
       <h1 className="text-xl font-bold text-brand">Checkout</h1>
       <p className="mt-1 text-sm text-muted">Secure payment via Razorpay (UPI, card, wallet)</p>
+      {user ? (
+        <p className="mt-2 text-xs text-forest">
+          Logged in — this order will appear in{" "}
+          <Link href="/account" className="font-semibold underline">
+            My account
+          </Link>
+        </p>
+      ) : (
+        <p className="mt-2 text-xs text-muted">
+          <Link href="/account" className="font-semibold text-brand hover:underline">
+            Create an account
+          </Link>{" "}
+          to see order history (mobile + password).
+        </p>
+      )}
 
       <div className="mt-8 space-y-8">
         <form className="space-y-4 rounded-xl bg-white p-5 border border-border" onSubmit={(e) => e.preventDefault()}>

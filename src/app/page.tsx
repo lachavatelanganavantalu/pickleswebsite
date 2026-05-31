@@ -1,7 +1,8 @@
+import { getAllCombos } from "@/lib/combos-db";
 import { getAllProducts } from "@/lib/products-db";
 import ShopGrid from "@/components/ShopGrid";
 
 export default async function Home() {
-  const products = await getAllProducts();
-  return <ShopGrid initialProducts={products} showCombo />;
+  const [products, combos] = await Promise.all([getAllProducts(), getAllCombos()]);
+  return <ShopGrid initialProducts={products} initialCombos={combos} showCombo />;
 }

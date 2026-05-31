@@ -9,40 +9,29 @@ export interface ComboPack {
   priceINR: number;
   originalPriceINR: number;
   available?: boolean;
+  imagePath?: string;
   updatedAt?: string;
 }
 
+export const COMBO_PACK_IMAGE = "/combopack.png";
+
+/** Official combo from client menu (WhatsApp / page). */
 export const comboPacks: ComboPack[] = [
   {
-    id: "telangana-starter",
-    name: "Telangana Starter Pack",
-    description: "3 bestsellers: Avakaya + Gongura + Tomato (250g each)",
-    items: "Avakaya, Gongura, Tomato — 250g each",
-    priceINR: 420,
-    originalPriceINR: 480,
-  },
-  {
-    id: "nonveg-lovers",
-    name: "Non-Veg Lovers Pack",
-    description: "Royyala + Kodi + Chepala (250g each)",
-    items: "Royyala, Kodi, Chepala — 250g each",
-    priceINR: 840,
-    originalPriceINR: 920,
-  },
-  {
-    id: "festival-box",
-    name: "Grand Festival Box",
-    description: "5 assorted pickles of your choice (250g each)",
-    items: "Your choice of 5 pickles — 250g each",
-    priceINR: 675,
-    originalPriceINR: 750,
-  },
-  {
-    id: "spice-warrior",
-    name: "Spice Warrior Pack",
-    description: "Gongura + Green Chilli + Kodi (all extra spicy)",
-    items: "Gongura, Pachchi Mirapakaya, Kodi — 250g each",
-    priceINR: 499,
-    originalPriceINR: 560,
+    id: "five-pickles-combo-999",
+    name: "5 Pickles Combo",
+    nameTelugu: "⭐ 5 పికిల్స్ కాంబో",
+    description:
+      "Chicken, Chinthankaya, Mango, Usirikaya & Lemon — 250g each. Flat ₹999.",
+    descriptionTelugu:
+      "చికెన్, చింతకాయ, మామిడికాయ, ఉసిరికాయ, నిమ్మకాయ — ప్రతి 250g. ఒకే ధర ₹999.",
+    items:
+      "Chicken 250g · Chinthankaya 250g · Mango 250g · Usirikaya 250g · Lemon 250g",
+    itemsTelugu:
+      "చికెన్ 250g · చింతకాయ 250g · మామిడికాయ 250g · ఉసిరికాయ 250g · నిమ్మకాయ 250g",
+    priceINR: 999,
+    originalPriceINR: 999,
+    available: true,
+    imagePath: COMBO_PACK_IMAGE,
   },
 ];

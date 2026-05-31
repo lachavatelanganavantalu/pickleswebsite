@@ -1,11 +1,11 @@
 "use client";
 
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { PickleProduct, spiceDisplay } from "@/types/product";
+import { PickleProduct } from "@/types/product";
 import WeightSelector from "@/components/WeightSelector";
-import ProductTagBadge, { StockBadge } from "@/components/ProductTagBadge";
+import { StockBadge } from "@/components/ProductTagBadge";
 import ProductVisual from "@/components/ProductVisual";
 import WishlistHeartButton from "@/components/WishlistHeartButton";
 import { useCart } from "@/context/CartContext";
@@ -14,6 +14,7 @@ import { formatINRDecimal } from "@/lib/format-price";
 
 export default function ProductDetailPage() {
   const params = useParams();
+  const router = useRouter();
   const slug = params.slug as string;
   const [product, setProduct] = useState<PickleProduct | null>(null);
   const [loading, setLoading] = useState(true);
@@ -21,12 +22,18 @@ export default function ProductDetailPage() {
   const { format } = useCurrency();
   const [selectedVariant, setSelectedVariant] = useState("");
   const [quantity, setQuantity] = useState(1);
+  const [added, setAdded] = useState(false);
 
   useEffect(() => {
+    setAdded(false);
+    setQuantity(1);
+    setSelectedVariant("");
     if (!slug || slug.includes("[")) {
       setLoading(false);
+      setProduct(null);
       return;
     }
+    setLoading(true);
     fetch(`/api/products?slug=${encodeURIComponent(slug)}`)
       .then((r) => {
         if (!r.ok) return null;
@@ -40,6 +47,20 @@ export default function ProductDetailPage() {
       })
       .finally(() => setLoading(false));
   }, [slug]);
+
+  const selected = useMemo(() => {
+    if (!product?.weightOptions?.length) return undefined;
+    return (
+      product.weightOptions.find((w) => w.id === selectedVariant) ??
+      product.weightOptions[0]
+    );
+  }, [product, selectedVariant]);
+
+  useEffect(() => {
+    if (!product?.weightOptions?.length) return;
+    const valid = product.weightOptions.some((w) => w.id === selectedVariant);
+    if (!valid) setSelectedVariant(product.weightOptions[0].id);
+  }, [product, selectedVariant]);
 
   if (loading) {
     return (
@@ -58,9 +79,8 @@ export default function ProductDetailPage() {
     );
   }
 
-  const selected = product.weightOptions.find((w) => w.id === selectedVariant)!;
   const outOfStock = !product.available || product.tag === "out_of_stock";
-  const backHref = product.category === "veg" ? "/veg-pickles" : "/non-veg-pickles";
+  const backHref = "/products";
   const prices = product.weightOptions.map((w) => w.priceINR);
   const minPrice = Math.min(...prices);
   const maxPrice = Math.max(...prices);
@@ -77,6 +97,8 @@ export default function ProductDetailPage() {
       },
       quantity
     );
+    setAdded(true);
+    window.setTimeout(() => router.push("/cart"), 400);
   };
 
   return (
@@ -92,7 +114,6 @@ export default function ProductDetailPage() {
 
       <div className="mt-4 px-1">
         <div className="flex flex-wrap gap-2 mb-2">
-          <ProductTagBadge tag={product.tag} />
           <StockBadge available={product.available} tag={product.tag} />
         </div>
         {product.nameTelugu && (
@@ -104,8 +125,6 @@ export default function ProductDetailPage() {
           {formatINRDecimal(minPrice)}
           {minPrice !== maxPrice && ` – ${formatINRDecimal(maxPrice)}`}
         </p>
-        <p className="mt-2 text-xs text-muted">{spiceDisplay(product.spiceLevel)} spice</p>
-        <p className="mt-4 text-sm text-ink-muted leading-relaxed">{product.description}</p>
 
         <div className="mt-8">
           <WeightSelector
@@ -138,14 +157,26 @@ export default function ProductDetailPage() {
           <button
             type="button"
             onClick={handleAddToCart}
-            disabled={outOfStock}
+            disabled={outOfStock || !selected}
             className="shop-select-btn disabled:opacity-50"
           >
-            {outOfStock ? "OUT OF STOCK" : `ADD TO CART — ${format(selected.priceINR * quantity)}`}
+            {outOfStock
+              ? "OUT OF STOCK"
+              : added
+                ? "ADDED — OPENING CART…"
+                : `ADD TO CART — ${format((selected?.priceINR ?? 0) * quantity)}`}
           </button>
+          {added && (
+            <p className="text-sm font-semibold text-forest" role="status">
+              Added to cart.
+            </p>
+          )}
         </div>
         <p className="mt-4 text-xs text-muted">
-          Shipping extra by weight & location. Non-veg: refrigerate after opening.
+          PhonePe / GPay: 63021 12848 · Combo: 5 pickles ₹999 on{" "}
+          <Link href="/combos" className="font-semibold text-brand hover:underline">
+            combos page
+          </Link>
         </p>
       </div>
     </div>

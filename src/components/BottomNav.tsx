@@ -19,7 +19,7 @@ const items = [
     label: "Track Order",
     shortLabel: "Track Or...",
     icon: MapPin,
-    match: (path: string) => path === "/contact" || path === "/shipping",
+    match: (path: string) => path === "/contact",
   },
   {
     id: "shop",
@@ -29,8 +29,6 @@ const items = [
     icon: Store,
     match: (path: string) =>
       path.startsWith("/products") ||
-      path.startsWith("/veg-pickles") ||
-      path.startsWith("/non-veg-pickles") ||
       path === "/combos",
   },
   {
@@ -43,11 +41,11 @@ const items = [
   },
   {
     id: "account",
-    href: "/contact",
+    href: "/account",
     label: "My account",
-    shortLabel: "My accou...",
+    shortLabel: "Account",
     icon: User,
-    match: () => false,
+    match: (path: string) => path.startsWith("/account"),
   },
 ];
 

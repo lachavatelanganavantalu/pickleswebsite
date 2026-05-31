@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ShoppingBag, Menu, X, Search } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import BrandLogo from "@/components/BrandLogo";
@@ -9,11 +9,8 @@ import ShopSearchOverlay from "@/components/ShopSearchOverlay";
 
 const links = [
   { href: "/", label: "Home" },
-  { href: "/products", label: "Shop All" },
-  { href: "/veg-pickles", label: "Veg Pickles" },
-  { href: "/non-veg-pickles", label: "Non-Veg Pickles" },
-  { href: "/combos", label: "Combos" },
-  { href: "/story", label: "Our Story" },
+  { href: "/products", label: "Pickles" },
+  { href: "/combos", label: "Combo ₹999" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -21,6 +18,11 @@ export default function Navbar() {
   const { itemCount } = useCart();
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [cartReady, setCartReady] = useState(false);
+
+  useEffect(() => {
+    setCartReady(true);
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 bg-brand pt-[env(safe-area-inset-top)] text-white">
@@ -68,8 +70,11 @@ export default function Navbar() {
             aria-label="Cart"
           >
             <ShoppingBag className="h-[clamp(1.25rem,4vw,1.375rem)] w-[clamp(1.25rem,4vw,1.375rem)]" strokeWidth={2} />
-            <span className="absolute right-0.5 top-0.5 flex h-[clamp(1rem,3.2vw,1.125rem)] min-w-[clamp(1rem,3.2vw,1.125rem)] items-center justify-center rounded-full bg-white px-0.5 text-[clamp(0.5625rem,2vw,0.625rem)] font-bold leading-none text-brand">
-              {itemCount}
+            <span
+              className="absolute right-0.5 top-0.5 flex h-[clamp(1rem,3.2vw,1.125rem)] min-w-[clamp(1rem,3.2vw,1.125rem)] items-center justify-center rounded-full bg-white px-0.5 text-[clamp(0.5625rem,2vw,0.625rem)] font-bold leading-none text-brand"
+              suppressHydrationWarning
+            >
+              {cartReady ? itemCount : 0}
             </span>
           </Link>
         </div>

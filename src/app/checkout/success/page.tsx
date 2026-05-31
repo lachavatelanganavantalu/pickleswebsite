@@ -27,7 +27,7 @@ export default function CheckoutSuccessPage() {
       <div className="mx-auto max-w-lg px-4 py-20 text-center">
         <h1 className="font-display text-3xl text-ink">Order confirmed</h1>
         <p className="mt-4 text-muted">Thank you for your order.</p>
-        <Link href="/veg-pickles" className="mt-8 inline-block text-accent font-semibold">
+        <Link href="/products" className="mt-8 inline-block text-accent font-semibold">
           Continue shopping
         </Link>
       </div>
@@ -59,7 +59,7 @@ export default function CheckoutSuccessPage() {
           Download receipt
         </a>
         <Link
-          href="/veg-pickles"
+          href="/products"
           className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-accent px-6 text-sm font-semibold text-white hover:bg-accent-hover"
         >
           Shop more

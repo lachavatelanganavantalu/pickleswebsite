@@ -62,7 +62,7 @@ export default function AdminProductsPanel() {
   };
 
   return (
-    <div className="p-6 sm:p-8">
+    <div className="p-4 sm:p-8 max-w-full overflow-x-hidden">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
           <h1 className="font-display text-2xl text-ink">Products</h1>
@@ -96,19 +96,21 @@ export default function AdminProductsPanel() {
           {filtered.map((p) => (
             <article
               key={p.id}
-              className="flex gap-4 rounded-xl border border-border bg-surface-elevated p-4"
+              className="flex flex-col gap-3 rounded-xl border border-border bg-surface-elevated p-4 sm:flex-row sm:gap-4"
             >
-              <div className="w-20 shrink-0 overflow-hidden rounded-lg">
-                <ProductVisual product={p} compact className="min-h-[80px] aspect-square" />
+              <div className="flex min-w-0 gap-3 sm:flex-1">
+                <div className="w-20 shrink-0 overflow-hidden rounded-lg">
+                  <ProductVisual product={p} compact className="min-h-[80px] aspect-square" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="font-semibold text-ink truncate">{p.name}</p>
+                  <p className="text-xs text-muted truncate">{p.slug} · {p.category}</p>
+                  <p className="text-xs text-muted mt-1">
+                    {p.available ? "Available" : "Hidden"} · Order {p.displayOrder}
+                  </p>
+                </div>
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="font-semibold text-ink truncate">{p.name}</p>
-                <p className="text-xs text-muted">{p.slug} · {p.category}</p>
-                <p className="text-xs text-muted mt-1">
-                  {p.available ? "Available" : "Hidden"} · Order {p.displayOrder}
-                </p>
-              </div>
-              <div className="flex items-start gap-1">
+              <div className="flex shrink-0 items-center justify-end gap-1 sm:items-start">
                 <button
                   type="button"
                   onClick={() => openEdit(p)}

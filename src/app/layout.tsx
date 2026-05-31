@@ -33,13 +33,13 @@ export const metadata: Metadata = {
     template: "%s | Lachava",
   },
   description:
-    "లచ్చవ్వ తెలంగాణ వంటల — Mamidikaya, Chinthankaya, prawn, chicken pickles & more. Homemade Telangana taste.",
+    "లచ్చవ్వ తెలంగాణ వంటల — 10 pickles (1 kg & 1/2 kg). 5-pickle combo ₹999. PhonePe / GPay 63021 12848.",
   icons: {
     icon: BRAND.favicon,
   },
   openGraph: {
     title: "Lachava Telangana Vantalu",
-    description: "Ammamma Cheyyi Ruchi — Handcrafted pickles",
+    description: "లచ్చవ్వ తెలంగాణ వంటల — official pickle menu",
     type: "website",
   },
 };

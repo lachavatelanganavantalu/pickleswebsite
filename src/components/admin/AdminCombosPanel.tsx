@@ -8,6 +8,7 @@ export default function AdminCombosPanel() {
   const [combos, setCombos] = useState<ComboPack[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState("");
 
   const load = useCallback(async () => {
     const res = await fetch("/api/admin/combos");
@@ -56,19 +57,26 @@ export default function AdminCombosPanel() {
 
   const saveAll = async () => {
     setSaving(true);
-    await fetch("/api/admin/combos", {
+    setMessage("");
+    const res = await fetch("/api/admin/combos", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(combos),
     });
+    const data = await res.json().catch(() => ({}));
     setSaving(false);
-    load();
+    if (res.ok) {
+      setMessage("Saved.");
+      load();
+    } else {
+      setMessage((data as { error?: string }).error || "Save failed");
+    }
   };
 
   if (loading) return <p className="p-8 text-muted">Loading…</p>;
 
   return (
-    <div className="p-6 sm:p-8 max-w-4xl">
+    <div className="p-4 sm:p-8 max-w-4xl w-full overflow-x-hidden">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="font-display text-2xl text-ink">Combo packs</h1>
@@ -93,6 +101,12 @@ export default function AdminCombosPanel() {
           </button>
         </div>
       </div>
+
+      {message && (
+        <p className={`mt-4 text-sm font-medium ${message === "Saved." ? "text-forest" : "text-red-600"}`}>
+          {message}
+        </p>
+      )}
 
       <div className="mt-8 space-y-6">
         {combos.map((c, i) => (

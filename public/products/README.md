@@ -1,15 +1,5 @@
-# Product photos
+# Product images
 
-Place pickle photos here as `{product-slug}.jpeg` (must match slug in admin).
+Filenames match `slug` in `src/data/default-products.ts` (e.g. `mutton-pickle.jpg`, `chepala-pickle.jpeg`).
 
-| File | Product |
-|------|---------|
-| `avakaya.jpeg` | Avakaya (from `mango.jpeg`) |
-| `tomato-pickle.jpeg` | Tomato Pickle |
-| `nimmakaya-pickle.jpeg` | Nimmakaya / Lemon |
-| `usirikaya-pickle.jpeg` | Usirikaya / Amla |
-| `kakarakaya-pickle.jpeg` | Bitter Gourd |
-| `naatu-kodi-pickle.jpeg` | Country Chicken |
-| `chepala-pickle.jpeg` | Fish Pickle |
-
-Other products show a gradient until you add a matching file.
+Official catalog: 10 pickles + combo offer only — see client WhatsApp menu.

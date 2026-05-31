@@ -6,11 +6,12 @@ import { Heart } from "lucide-react";
 import { PickleProduct } from "@/types/product";
 import PickleProductCard from "@/components/PickleProductCard";
 import { getWishlistIds } from "@/lib/wishlist-storage";
-import { comboPacks } from "@/data/combos";
+import type { ComboPack } from "@/data/combos";
 import ComboProductCard from "@/components/ComboProductCard";
 
 export default function WishlistPageClient() {
   const [products, setProducts] = useState<PickleProduct[]>([]);
+  const [combos, setCombos] = useState<ComboPack[]>([]);
   const [wishIds, setWishIds] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -25,14 +26,18 @@ export default function WishlistPageClient() {
   }, []);
 
   useEffect(() => {
-    fetch("/api/products")
-      .then((r) => r.json())
-      .then((data) => setProducts(Array.isArray(data) ? data : []))
+    Promise.all([fetch("/api/products"), fetch("/api/combos")])
+      .then(async ([productsRes, combosRes]) => {
+        const productsData = await productsRes.json();
+        const combosData = await combosRes.json();
+        setProducts(Array.isArray(productsData) ? productsData : []);
+        setCombos(Array.isArray(combosData) ? combosData : []);
+      })
       .finally(() => setLoading(false));
   }, []);
 
   const savedProducts = products.filter((p) => wishIds.includes(p.id));
-  const savedCombos = comboPacks.filter((c) => wishIds.includes(c.id));
+  const savedCombos = combos.filter((c) => wishIds.includes(c.id));
   const hasItems = savedProducts.length > 0 || savedCombos.length > 0;
 
   if (loading) {
