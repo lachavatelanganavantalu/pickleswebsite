@@ -4,7 +4,6 @@ import { usePathname } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import BottomNav from "@/components/BottomNav";
 import WhatsAppButton from "@/components/WhatsAppButton";
-import LachavaAgentLauncher from "@/components/agent/LachavaAgentLauncher";
 
 export default function AppChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -20,7 +19,6 @@ export default function AppChrome({ children }: { children: React.ReactNode }) {
       <main className="app-main">{children}</main>
       <BottomNav />
       <WhatsAppButton />
-      <LachavaAgentLauncher />
     </>
   );
 }

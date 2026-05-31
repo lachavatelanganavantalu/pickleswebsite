@@ -26,7 +26,6 @@ export default function WeightSelector({
             <button
               key={opt.id}
               type="button"
-              data-agent-weight={opt.id}
               disabled={disabled}
               onClick={() => onSelect(opt.id)}
               className={cn(

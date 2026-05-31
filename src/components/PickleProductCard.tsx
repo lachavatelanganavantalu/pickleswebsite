@@ -27,11 +27,7 @@ export default function PickleProductCard({ product }: Props) {
   const outOfStock = !product.available || product.tag === "out_of_stock";
 
   return (
-    <article
-      className={cn("shop-product-card flex flex-col", outOfStock && "opacity-60")}
-      data-agent-product={product.slug}
-      data-agent-product-name={product.name}
-    >
+    <article className={cn("shop-product-card flex flex-col", outOfStock && "opacity-60")}>
       <div className="relative">
         <ProductVisual product={product} />
         <WishlistHeartButton itemId={product.id} />
