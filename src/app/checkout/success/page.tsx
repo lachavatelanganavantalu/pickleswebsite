@@ -5,15 +5,11 @@ import Link from "next/link";
 import { useOrder } from "@/context/OrderContext";
 import { useCurrency } from "@/context/CurrencyContext";
 import type { LastOrder } from "@/context/OrderContext";
+import { readPendingOrderSession } from "@/lib/pending-order-session";
 
 function readOrderFromSession(): LastOrder | null {
-  if (typeof window === "undefined") return null;
-  try {
-    const raw = sessionStorage.getItem("orderSuccess");
-    return raw ? (JSON.parse(raw) as LastOrder) : null;
-  } catch {
-    return null;
-  }
+  const pending = readPendingOrderSession();
+  return pending as LastOrder | null;
 }
 
 export default function CheckoutSuccessPage() {
@@ -61,12 +57,20 @@ export default function CheckoutSuccessPage() {
 
       <div className="mt-8 flex flex-col gap-3">
         {pending && (
-          <Link
-            href={`/order/${order.orderId}/payment`}
-            className="inline-flex min-h-[48px] items-center justify-center rounded-full bg-brand px-6 text-sm font-bold uppercase tracking-wide text-white hover:bg-brand-dark"
-          >
-            Pay & send screenshot
-          </Link>
+          <>
+            <Link
+              href="/cart"
+              className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-brand px-6 text-sm font-semibold text-brand hover:bg-brand/5"
+            >
+              Edit cart
+            </Link>
+            <Link
+              href={`/order/${order.orderId}/payment`}
+              className="inline-flex min-h-[48px] items-center justify-center rounded-full bg-brand px-6 text-sm font-bold uppercase tracking-wide text-white hover:bg-brand-dark"
+            >
+              Pay & send screenshot
+            </Link>
+          </>
         )}
         <Link
           href={`/track?displayOrderId=${encodeURIComponent(order.displayOrderId ?? "")}`}

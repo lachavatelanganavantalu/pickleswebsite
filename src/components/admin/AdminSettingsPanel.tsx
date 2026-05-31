@@ -217,9 +217,9 @@ export default function AdminSettingsPanel() {
           }
         />
 
-        <h2 className="font-semibold text-ink pt-4">Payment (UPI / QR)</h2>
+        <h2 className="font-semibold text-ink pt-4">Payment</h2>
         <p className="text-xs text-muted">
-          Shown to customers after they place an order. Upload your PhonePe / GPay QR image.
+          Customers pay with UPI ID first. QR is shown only if they say UPI payment did not work.
         </p>
         <div className="grid sm:grid-cols-2 gap-4">
           <label className="block">
@@ -274,6 +274,29 @@ export default function AdminSettingsPanel() {
             }
             className="mt-1 w-full rounded-lg border border-border px-3 py-2 text-sm"
           />
+        </label>
+        <label className="flex items-start gap-3 rounded-xl border border-border p-4">
+          <input
+            type="checkbox"
+            checked={settings.payment?.showQrPayment !== false}
+            onChange={(e) =>
+              setSettings((s) =>
+                s
+                  ? {
+                      ...s,
+                      payment: { ...s.payment, showQrPayment: e.target.checked },
+                    }
+                  : s
+              )
+            }
+            className="mt-0.5 h-4 w-4 rounded border-border text-accent"
+          />
+          <span className="text-sm">
+            <span className="font-semibold text-ink">Show QR payment fallback</span>
+            <span className="mt-0.5 block text-xs text-muted">
+              When off, customers only see UPI ID payment — no QR option at all.
+            </span>
+          </span>
         </label>
         <div className="rounded-xl border border-border p-4">
           <p className="text-xs font-semibold uppercase text-muted">Payment QR image</p>

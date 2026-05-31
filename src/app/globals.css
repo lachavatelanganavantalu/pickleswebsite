@@ -428,6 +428,10 @@ html {
   background-color: var(--color-brand);
 }
 
+a.shop-add-cart-btn {
+  text-decoration: none;
+}
+
 .shop-page-title {
   font-size: clamp(1rem, 3.5vw, 1.25rem);
   font-weight: 700;

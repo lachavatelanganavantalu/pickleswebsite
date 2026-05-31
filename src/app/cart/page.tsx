@@ -1,17 +1,22 @@
 "use client";
 
 import Link from "next/link";
+import EditableCartList from "@/components/EditableCartList";
+import PendingOrderBanner from "@/components/PendingOrderBanner";
 import { useCart } from "@/context/CartContext";
 import { useCurrency } from "@/context/CurrencyContext";
 
 export default function CartPage() {
-  const { items, updateQuantity, removeItem, totalINR } = useCart();
+  const { items, totalINR } = useCart();
   const { format } = useCurrency();
 
   if (items.length === 0) {
     return (
       <div className="app-content py-20 text-center">
-        <h1 className="text-xl font-bold text-brand">Your cart</h1>
+        <div className="mx-auto max-w-lg text-left">
+          <PendingOrderBanner />
+        </div>
+        <h1 className="mt-8 text-xl font-bold text-brand">Your cart</h1>
         <p className="mt-4 text-muted">Your cart is empty.</p>
         <Link
           href="/products"
@@ -24,55 +29,17 @@ export default function CartPage() {
   }
 
   return (
-    <div className="app-content py-[clamp(1.5rem,5vw,3rem)]">
+    <div className="app-content py-[clamp(1.5rem,5vw,3rem)] max-w-lg mx-auto">
       <h1 className="text-xl font-bold text-brand">Your cart</h1>
+      <p className="mt-1 text-sm text-muted">Change quantities or remove items anytime.</p>
 
-      <ul className="mt-6 space-y-3">
-        {items.map((item) => (
-          <li
-            key={`${item.productId}-${item.variantId}`}
-            className="rounded-xl border border-border bg-white p-4"
-          >
-            <div className="flex justify-between gap-4">
-              <div>
-                <p className="font-semibold text-brand">{item.productName}</p>
-                <p className="text-sm text-muted">{item.variantLabel}</p>
-                <p className="mt-1 text-sm font-semibold text-brand">
-                  {format(item.priceINR * item.quantity)}
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => removeItem(item.productId, item.variantId)}
-                className="text-xs text-muted hover:text-red-600"
-              >
-                Remove
-              </button>
-            </div>
-            <div className="mt-3 flex w-fit items-center rounded-full border border-border">
-              <button
-                type="button"
-                onClick={() =>
-                  updateQuantity(item.productId, item.variantId, item.quantity - 1)
-                }
-                className="min-h-[40px] min-w-[40px] hover:bg-surface rounded-l-full"
-              >
-                −
-              </button>
-              <span className="min-w-[2rem] px-3 text-center font-medium">{item.quantity}</span>
-              <button
-                type="button"
-                onClick={() =>
-                  updateQuantity(item.productId, item.variantId, item.quantity + 1)
-                }
-                className="min-h-[40px] min-w-[40px] hover:bg-surface rounded-r-full"
-              >
-                +
-              </button>
-            </div>
-          </li>
-        ))}
-      </ul>
+      <div className="mt-4">
+        <PendingOrderBanner />
+      </div>
+
+      <div className="mt-6">
+        <EditableCartList />
+      </div>
 
       <div className="mt-6 rounded-xl border border-border bg-white p-5">
         <div className="flex justify-between text-lg font-bold text-brand">
@@ -82,12 +49,20 @@ export default function CartPage() {
         <p className="mt-2 text-xs text-muted">Shipping calculated at checkout</p>
       </div>
 
-      <Link
-        href="/checkout"
-        className="mt-6 flex w-full min-h-[48px] items-center justify-center rounded-full bg-brand text-sm font-bold uppercase tracking-wide text-white hover:bg-brand-dark"
-      >
-        Proceed to checkout
-      </Link>
+      <div className="mt-6 flex flex-col gap-3">
+        <Link
+          href="/checkout"
+          className="flex w-full min-h-[48px] items-center justify-center rounded-full bg-brand text-sm font-bold uppercase tracking-wide text-white hover:bg-brand-dark"
+        >
+          Proceed to checkout
+        </Link>
+        <Link
+          href="/products"
+          className="text-center text-sm font-semibold text-muted hover:text-brand"
+        >
+          Continue shopping
+        </Link>
+      </div>
     </div>
   );
 }

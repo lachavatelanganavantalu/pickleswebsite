@@ -6,6 +6,8 @@ import { useCart } from "@/context/CartContext";
 import { useCurrency } from "@/context/CurrencyContext";
 import { useCustomerAuth } from "@/context/CustomerAuthContext";
 import PlaceOrderButton from "@/components/PlaceOrderButton";
+import EditableCartList from "@/components/EditableCartList";
+import PendingOrderBanner from "@/components/PendingOrderBanner";
 
 export default function CheckoutPage() {
   const { items, totalINR } = useCart();
@@ -57,7 +59,11 @@ export default function CheckoutPage() {
   return (
     <div className="app-content py-[clamp(1.5rem,5vw,3rem)]">
       <h1 className="text-xl font-bold text-brand">Checkout</h1>
-      <p className="mt-1 text-sm text-muted">Pay via UPI / PhonePe / GPay after placing your order</p>
+      <p className="mt-1 text-sm text-muted">Pay via UPI after placing your order. You can edit the cart anytime.</p>
+
+      <div className="mt-4">
+        <PendingOrderBanner />
+      </div>
       {user ? (
         <p className="mt-2 text-xs text-forest">
           Logged in — this order will appear in{" "}
@@ -146,20 +152,15 @@ export default function CheckoutPage() {
         </form>
 
         <div className="rounded-xl border border-border bg-white p-5">
-          <h2 className="font-semibold text-brand">Order summary</h2>
-          <ul className="mt-4 space-y-2 text-sm">
-            {items.map((item) => (
-              <li
-                key={`${item.productId}-${item.variantId}`}
-                className="flex justify-between text-muted"
-              >
-                <span>
-                  {item.productName} ({item.variantLabel}) × {item.quantity}
-                </span>
-                <span>{format(item.priceINR * item.quantity)}</span>
-              </li>
-            ))}
-          </ul>
+          <div className="flex items-center justify-between gap-3">
+            <h2 className="font-semibold text-brand">Order summary</h2>
+            <Link href="/cart" className="text-xs font-semibold text-brand hover:underline">
+              Edit cart
+            </Link>
+          </div>
+          <div className="mt-4">
+            <EditableCartList compact />
+          </div>
           <div className="mt-4 flex justify-between border-t border-border pt-4 font-bold text-brand">
             <span>Total</span>
             <span>{format(totalINR)}</span>

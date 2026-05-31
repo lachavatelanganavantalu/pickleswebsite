@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { readJsonResponse } from "@/lib/read-json-response";
 import { useCart } from "@/context/CartContext";
 import { useOrder } from "@/context/OrderContext";
+import { writePendingOrderSession } from "@/lib/pending-order-session";
 
 interface CustomerForm {
   name: string;
@@ -23,7 +24,7 @@ interface Props {
 }
 
 export default function PlaceOrderButton({ customer, disabled }: Props) {
-  const { items, totalINR, clearCart } = useCart();
+  const { items, totalINR } = useCart();
   const { setLastOrder } = useOrder();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -69,8 +70,7 @@ export default function PlaceOrderButton({ customer, disabled }: Props) {
       };
 
       setLastOrder(orderPayload);
-      sessionStorage.setItem("orderSuccess", JSON.stringify(orderPayload));
-      clearCart();
+      writePendingOrderSession(orderPayload);
       router.push(`/order/${data.orderId}/payment`);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Order failed");

@@ -22,13 +22,21 @@ export function parseDataUrlImage(dataUrl: string): { mime: string; buffer: Buff
   }
 }
 
+export function paymentQrDownloadUrl(displayUrl: string): string {
+  if (!displayUrl) return "";
+  const sep = displayUrl.includes("?") ? "&" : "?";
+  return `${displayUrl}${sep}download=1`;
+}
+
 export function publicPaymentSettings(settings: SiteSettings) {
+  const showQrPayment = settings.payment.showQrPayment !== false;
   const displayUrl = paymentQrDisplayUrl(settings);
   return {
     upiId: settings.payment.upiId,
     upiPhone: settings.payment.upiPhone,
     payeeName: settings.payment.payeeName,
-    qrImagePath: displayUrl,
+    showQrPayment,
+    qrImagePath: showQrPayment && displayUrl ? displayUrl : "",
   };
 }
 

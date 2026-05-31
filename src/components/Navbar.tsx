@@ -6,6 +6,7 @@ import { ShoppingBag, Menu, X, Search } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import BrandLogo from "@/components/BrandLogo";
 import ShopSearchOverlay from "@/components/ShopSearchOverlay";
+import PwaInstallButton from "@/components/PwaInstallButton";
 
 const links = [
   { href: "/", label: "Home" },
@@ -52,7 +53,8 @@ export default function Navbar() {
           </div>
         </div>
 
-        <div className="flex min-w-[4.5rem] items-center justify-end">
+        <div className="flex min-w-[4.5rem] items-center justify-end gap-0.5">
+          <PwaInstallButton />
           <button
             type="button"
             onClick={() => {

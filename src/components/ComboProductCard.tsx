@@ -46,7 +46,6 @@ export default function ComboProductCard({ combo }: Props) {
       quantity
     );
     setAdded(true);
-    window.setTimeout(() => setAdded(false), 1800);
   };
 
   return (
@@ -75,17 +74,28 @@ export default function ComboProductCard({ combo }: Props) {
               </div>
 
               <p className="shop-card-options-label shop-card-options-label-spaced">Qty:</p>
-              <CardQuantitySelect value={quantity} onChange={setQuantity} />
+              <CardQuantitySelect
+                value={quantity}
+                onChange={(q) => {
+                  setQuantity(q);
+                  setAdded(false);
+                }}
+              />
             </div>
           </div>
         )}
       </div>
 
-      {optionsOpen && (
-        <button type="button" className="shop-add-cart-btn" onClick={handleAddToCart}>
-          {added ? "Added to cart ✓" : "ADD TO CART"}
-        </button>
-      )}
+      {optionsOpen &&
+        (added ? (
+          <Link href="/cart" className="shop-add-cart-btn">
+            OPEN CART
+          </Link>
+        ) : (
+          <button type="button" className="shop-add-cart-btn" onClick={handleAddToCart}>
+            ADD TO CART
+          </button>
+        ))}
 
       <div className="shop-product-meta flex flex-1 flex-col pt-2.5">
         <Link href="/combos" className="hover:underline">

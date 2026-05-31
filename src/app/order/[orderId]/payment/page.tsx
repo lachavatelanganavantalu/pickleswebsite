@@ -3,10 +3,14 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { MessageCircle } from "lucide-react";
+import { Download, MessageCircle } from "lucide-react";
 import OrderTimeline from "@/components/OrderTimeline";
+import EditableCartList from "@/components/EditableCartList";
 import { formatINRDecimal } from "@/lib/format-price";
+import { paymentQrDownloadUrl } from "@/lib/payment-qr";
+import { clearPendingOrderSession } from "@/lib/pending-order-session";
 import { readJsonResponse } from "@/lib/read-json-response";
+import { useCart } from "@/context/CartContext";
 import type { TimelineStep } from "@/lib/order-timeline";
 
 interface PaymentInfo {
@@ -14,6 +18,7 @@ interface PaymentInfo {
   upiPhone: string;
   qrImagePath: string;
   payeeName: string;
+  showQrPayment: boolean;
 }
 
 interface OrderView {
@@ -36,6 +41,10 @@ export default function OrderPaymentPage() {
   const [whatsappUrl, setWhatsappUrl] = useState<string | null>(null);
   const [upiPayUrl, setUpiPayUrl] = useState<string | null>(null);
   const [qrBroken, setQrBroken] = useState(false);
+  const [showQrFallback, setShowQrFallback] = useState(false);
+  const [downloadingQr, setDownloadingQr] = useState(false);
+  const [copiedUpi, setCopiedUpi] = useState(false);
+  const { clearCart, itemCount } = useCart();
 
   useEffect(() => {
     if (!orderId) return;
@@ -60,6 +69,46 @@ export default function OrderPaymentPage() {
       .finally(() => setLoading(false));
   }, [orderId]);
 
+  useEffect(() => {
+    if (order?.paymentStatus !== "paid") return;
+    clearCart();
+    clearPendingOrderSession();
+  }, [order?.paymentStatus, clearCart]);
+
+  const canShowQr =
+    Boolean(payment?.showQrPayment && payment?.qrImagePath && !qrBroken);
+
+  const handleCopyUpi = async () => {
+    if (!payment?.upiId) return;
+    try {
+      await navigator.clipboard.writeText(payment.upiId);
+      setCopiedUpi(true);
+      window.setTimeout(() => setCopiedUpi(false), 2000);
+    } catch {
+      /* ignore */
+    }
+  };
+
+  const handleDownloadQr = async () => {
+    if (!payment?.qrImagePath) return;
+    setDownloadingQr(true);
+    try {
+      const res = await fetch(paymentQrDownloadUrl(payment.qrImagePath));
+      if (!res.ok) throw new Error("Download failed");
+      const blob = await res.blob();
+      const objectUrl = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = objectUrl;
+      anchor.download = "lachava-payment-qr.png";
+      anchor.click();
+      URL.revokeObjectURL(objectUrl);
+    } catch {
+      window.alert("Could not download QR. Try taking a screenshot instead.");
+    } finally {
+      setDownloadingQr(false);
+    }
+  };
+
   if (loading) {
     return <p className="app-content py-16 text-center text-muted">Loading order…</p>;
   }
@@ -83,51 +132,125 @@ export default function OrderPaymentPage() {
       <h1 className="shop-page-title mt-1">Pay for order {order.displayOrderId}</h1>
       <p className="mt-2 text-lg font-bold text-brand">{formatINRDecimal(order.amountINR)}</p>
 
+      {!paid && (
+        <section className="mt-6 rounded-2xl border border-border bg-white p-5">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h2 className="text-sm font-bold uppercase tracking-wide text-brand">Edit cart</h2>
+            <Link href="/cart" className="text-xs font-semibold text-brand hover:underline">
+              Open full cart
+            </Link>
+          </div>
+          <p className="mt-1 text-xs text-muted">
+            Change products or quantities anytime — even if you stopped payment. Place the order again
+            when your cart is ready.
+          </p>
+          {itemCount > 0 ? (
+            <div className="mt-4">
+              <EditableCartList compact />
+            </div>
+          ) : (
+            <p className="mt-3 text-sm text-muted">
+              Your cart is empty.{" "}
+              <Link href="/products" className="font-semibold text-brand hover:underline">
+                Add products
+              </Link>
+            </p>
+          )}
+        </section>
+      )}
+
       {!paid ? (
         <>
           <section className="mt-6 rounded-2xl border border-border bg-white p-5">
-            <h2 className="text-sm font-bold uppercase tracking-wide text-brand">Step 1 — Pay</h2>
-            <p className="mt-2 text-sm text-muted">
-              Scan the QR or pay on PhonePe / GPay to{" "}
-              <strong className="text-brand">{payment?.upiPhone ?? payment?.upiId}</strong>
-            </p>
+            <h2 className="text-sm font-bold uppercase tracking-wide text-brand">Step 1 — Pay with UPI</h2>
 
-            {payment?.qrImagePath && !qrBroken && (
-              <div className="mt-4 flex justify-center">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={payment.qrImagePath}
-                  alt="UPI payment QR code"
-                  className="max-w-[220px] rounded-xl border border-border"
-                  onError={() => setQrBroken(true)}
-                />
-              </div>
+            {!showQrFallback ? (
+              <>
+                <p className="mt-2 text-sm text-muted">
+                  Pay using the UPI ID below or open your UPI app (PhonePe / GPay / Paytm).
+                </p>
+
+                <div className="mt-4 space-y-2 text-sm">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <p>
+                      <span className="font-semibold text-brand">UPI ID:</span> {payment?.upiId}
+                    </p>
+                    {payment?.upiId && (
+                      <button
+                        type="button"
+                        onClick={() => void handleCopyUpi()}
+                        className="rounded-full border border-border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-brand hover:border-brand/40"
+                      >
+                        {copiedUpi ? "Copied" : "Copy"}
+                      </button>
+                    )}
+                  </div>
+                  <p>
+                    <span className="font-semibold text-brand">PhonePe / GPay:</span>{" "}
+                    {payment?.upiPhone}
+                  </p>
+                </div>
+
+                {upiPayUrl && (
+                  <a
+                    href={upiPayUrl}
+                    className="mt-4 flex min-h-[44px] items-center justify-center rounded-full bg-brand px-4 text-sm font-semibold text-white hover:bg-brand-dark"
+                  >
+                    Open UPI app to pay
+                  </a>
+                )}
+
+                {canShowQr && (
+                  <button
+                    type="button"
+                    onClick={() => setShowQrFallback(true)}
+                    className="mt-4 w-full text-left text-sm font-semibold text-brand underline-offset-2 hover:underline"
+                  >
+                    UPI payment not working? Pay with QR code
+                  </button>
+                )}
+              </>
+            ) : (
+              <>
+                <p className="mt-2 text-sm text-muted">
+                  Scan this QR in PhonePe / GPay, or download it and pay from your UPI app.
+                </p>
+
+                <div className="mt-4 flex justify-center">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={payment?.qrImagePath}
+                    alt="UPI payment QR code"
+                    className="max-w-[220px] rounded-xl border border-border"
+                    onError={() => setQrBroken(true)}
+                  />
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => void handleDownloadQr()}
+                  disabled={downloadingQr}
+                  className="mt-4 flex min-h-[44px] w-full items-center justify-center gap-2 rounded-full border border-brand px-4 text-sm font-semibold text-brand hover:bg-brand/5 disabled:opacity-60"
+                >
+                  <Download className="h-4 w-4" />
+                  {downloadingQr ? "Downloading…" : "Download QR code"}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setShowQrFallback(false)}
+                  className="mt-3 w-full text-sm font-semibold text-muted hover:text-brand"
+                >
+                  ← Back to UPI ID payment
+                </button>
+              </>
             )}
 
-            {qrBroken && (
+            {showQrFallback && qrBroken && (
               <p className="mt-4 rounded-lg bg-surface px-3 py-2 text-xs text-muted">
-                QR image not uploaded yet. Pay manually to{" "}
+                QR image not available. Pay manually to{" "}
                 <strong>{payment?.upiPhone}</strong> ({payment?.upiId}).
               </p>
-            )}
-
-            <div className="mt-4 space-y-2 text-sm">
-              <p>
-                <span className="font-semibold text-brand">UPI ID:</span> {payment?.upiId}
-              </p>
-              <p>
-                <span className="font-semibold text-brand">PhonePe / GPay:</span>{" "}
-                {payment?.upiPhone}
-              </p>
-            </div>
-
-            {upiPayUrl && (
-              <a
-                href={upiPayUrl}
-                className="mt-4 flex min-h-[44px] items-center justify-center rounded-full border border-brand px-4 text-sm font-semibold text-brand hover:bg-brand/5"
-              >
-                Open UPI app to pay
-              </a>
             )}
           </section>
 

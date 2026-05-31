@@ -35,6 +35,8 @@ export interface SiteSettings {
     /** Stored in MongoDB / local settings — not exposed on public APIs */
     qrImageDataUrl?: string;
     payeeName: string;
+    /** When false, customers never see the QR fallback on the payment page */
+    showQrPayment?: boolean;
   };
   updatedAt?: string;
 }

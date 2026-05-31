@@ -10,8 +10,6 @@ interface Status {
   revenueINR: number;
   productsCount: number;
   combosCount: number;
-  paymentMode: "upi" | "demo";
-  paymentModeLabel: { en: string; te: string };
   mongo: boolean;
 }
 
@@ -39,24 +37,6 @@ export default function AdminDashboard() {
 
       {status && (
         <>
-          <div
-            className={`mt-6 rounded-xl border px-4 py-3 text-sm ${
-              status.paymentMode === "demo"
-                ? "border-amber-300 bg-amber-50 text-amber-900"
-                : "border-forest/30 bg-forest-soft text-forest"
-            }`}
-          >
-            <p className="font-semibold">
-              {status.paymentMode === "demo" ? "Local dev mode" : "UPI / QR payments"}
-            </p>
-            <p className="mt-1">{status.paymentModeLabel.en}</p>
-            <p className="mt-0.5 text-xs opacity-80">{status.paymentModeLabel.te}</p>
-            <p className="mt-2 text-xs">
-              Flow: customer places order → pays via QR/UPI → WhatsApp screenshot → you confirm in
-              Orders → Send to DTDC → customer tracks on /track.
-            </p>
-          </div>
-
           <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <StatCard
               icon={ShoppingBag}

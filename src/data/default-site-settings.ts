@@ -48,5 +48,6 @@ export const defaultSiteSettings: SiteSettings = {
     upiPhone: "6302112848",
     qrImagePath: "/api/payment-qr",
     payeeName: "Lachava Telangana Vantalu",
+    showQrPayment: true,
   },
 };

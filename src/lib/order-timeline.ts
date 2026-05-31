@@ -31,10 +31,10 @@ export function buildOrderTimeline(order: Order): TimelineStep[] {
     },
     {
       id: "awaiting_payment",
-      title: "Pay via UPI / QR",
+      title: "Pay via UPI",
       description: paid
         ? "Payment received — thank you."
-        : "Scan the QR or pay on PhonePe / GPay, then send payment screenshot on WhatsApp.",
+        : "Pay with UPI ID or your UPI app, then send payment screenshot on WhatsApp.",
       done: paid,
       active: !paid,
       at: paid ? String(order.paymentConfirmedAt ?? order.createdAt) : undefined,
