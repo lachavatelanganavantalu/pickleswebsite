@@ -157,6 +157,160 @@ html {
   .shipping-marquee-group[aria-hidden="true"] {
     display: none;
   }
+
+  .home-hero-slide,
+  .home-hero-copy {
+    transition: none;
+  }
+}
+
+/* Hero display — Pacifico + heart dots on i/j (see HeartDotText) */
+.font-hero-display {
+  font-family: var(--font-hero-display), cursive;
+}
+
+.heart-dot-letter {
+  position: relative;
+  display: inline-block;
+}
+
+.heart-dot-mark {
+  position: absolute;
+  left: 50%;
+  top: -0.12em;
+  transform: translateX(-50%);
+  font-size: 0.42em;
+  line-height: 1;
+  color: #ff6b8a;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+}
+
+.heart-dot-letter-j .heart-dot-mark-j {
+  top: 0.38em;
+}
+
+.heart-dot-letter-cap .heart-dot-mark {
+  top: -0.2em;
+  font-size: 0.38em;
+}
+
+.home-hero {
+  position: relative;
+  width: 100%;
+  max-width: var(--content-max);
+  margin-inline: auto;
+  min-height: clamp(16rem, 52vw, 22rem);
+  overflow: hidden;
+  border-radius: 0 0 clamp(0.75rem, 3vw, 1.25rem);
+  background: var(--color-brand-dark);
+}
+
+.home-hero-slides {
+  position: absolute;
+  inset: 0;
+}
+
+.home-hero-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1.2s ease-in-out;
+  pointer-events: none;
+}
+
+.home-hero-slide-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.home-hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.home-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(58, 34, 20, 0.35) 0%,
+    rgba(58, 34, 20, 0.55) 45%,
+    rgba(58, 34, 20, 0.82) 100%
+  );
+  pointer-events: none;
+}
+
+.home-hero-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  min-height: clamp(16rem, 52vw, 22rem);
+  padding: clamp(1.25rem, 5vw, 2.5rem) var(--content-pad-x);
+}
+
+.home-hero-copy {
+  position: absolute;
+  left: var(--content-pad-x);
+  right: var(--content-pad-x);
+  bottom: clamp(2.5rem, 8vw, 3.25rem);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  pointer-events: none;
+}
+
+.home-hero-copy-active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.home-hero-title {
+  font-size: clamp(2.75rem, 14vw, 5.5rem);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  color: #fff;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
+}
+
+.home-hero-subtitle {
+  margin-top: clamp(0.35rem, 2vw, 0.65rem);
+  font-size: clamp(1.35rem, 6vw, 2.35rem);
+  font-weight: 400;
+  line-height: 1.2;
+  color: #f5c842;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+  letter-spacing: 0.02em;
+}
+
+.home-hero-dots {
+  position: absolute;
+  z-index: 3;
+  bottom: clamp(0.65rem, 2.5vw, 1rem);
+  left: 50%;
+  display: flex;
+  translate: -50% 0;
+  gap: 0.5rem;
+}
+
+.home-hero-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  border: none;
+  background: rgba(255, 255, 255, 0.45);
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.home-hero-dot-active {
+  background: #f5c842;
+  transform: scale(1.2);
 }
 
 .app-content {

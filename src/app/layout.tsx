@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Instrument_Serif, Plus_Jakarta_Sans } from "next/font/google";
+import { Instrument_Serif, Pacifico, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/Providers";
 import AppChrome from "@/components/AppChrome";
@@ -15,6 +15,14 @@ const instrument = Instrument_Serif({
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-jakarta",
+});
+
+/** Hero titles — playful script; i/j dots rendered as ♥ via HeartDotText */
+const heroDisplay = Pacifico({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-hero-display",
+  display: "swap",
 });
 
 export const viewport: Viewport = {
@@ -58,7 +66,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${instrument.variable} ${jakarta.variable}`}>
+    <html lang="en" className={`${instrument.variable} ${jakarta.variable} ${heroDisplay.variable}`}>
       <body className="antialiased bg-surface text-ink">
         <Providers>
           <PwaRegister />
