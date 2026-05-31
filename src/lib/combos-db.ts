@@ -3,6 +3,7 @@ import path from "path";
 import { getDb } from "@/lib/mongodb";
 import { comboPacks as defaultCombos } from "@/data/combos";
 import type { ComboPack } from "@/data/combos";
+import { resolveComboImagePath } from "@/lib/catalog-media";
 
 const COLLECTION = "combos";
 const FILE_STORE = path.join(process.cwd(), "data", "combos-store.json");
@@ -45,10 +46,22 @@ function stampDefaults(): ComboPack[] {
 
 function withDefaultImages(combos: ComboPack[]): ComboPack[] {
   return combos.map((c) => {
+    if (c.imageDataUrl?.startsWith("data:image/")) {
+      return { ...c, imagePath: resolveComboImagePath(c) };
+    }
     const def = defaultCombos.find((d) => d.id === c.id);
     const imagePath = c.imagePath?.trim() || def?.imagePath?.trim();
     return imagePath && imagePath !== c.imagePath ? { ...c, imagePath } : c;
   });
+}
+
+function normalizeCombo(combo: ComboPack): ComboPack {
+  const updatedAt = new Date().toISOString();
+  const imageDataUrl = combo.imageDataUrl?.startsWith("data:image/")
+    ? combo.imageDataUrl
+    : undefined;
+  const next: ComboPack = { ...combo, imageDataUrl, updatedAt };
+  return { ...next, imagePath: resolveComboImagePath(next) || combo.imagePath?.trim() || "" };
 }
 
 async function persistCombos(combos: ComboPack[]): Promise<void> {
@@ -107,7 +120,12 @@ export async function getAllCombos(): Promise<ComboPack[]> {
 }
 
 export async function saveAllCombos(combos: ComboPack[]): Promise<void> {
-  await persistCombos(combos);
+  await persistCombos(combos.map(normalizeCombo));
+}
+
+export async function getComboById(id: string): Promise<ComboPack | null> {
+  const combos = await getAllCombos();
+  return combos.find((c) => c.id === id) ?? null;
 }
 
 export function invalidateCombosCache(): void {

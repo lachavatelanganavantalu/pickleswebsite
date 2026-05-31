@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { Plus, Loader2, Trash2 } from "lucide-react";
 import type { ComboPack } from "@/data/combos";
+import AdminImageUpload from "@/components/admin/AdminImageUpload";
+import { validateCatalogImageDataUrl } from "@/lib/catalog-media";
 
 export default function AdminCombosPanel() {
   const [combos, setCombos] = useState<ComboPack[]>([]);
@@ -35,6 +37,26 @@ export default function AdminCombosPanel() {
     setCombos((list) => list.map((c, i) => (i === index ? { ...c, ...patch } : c)));
   };
 
+  const handleImagePick = async (index: number, dataUrl: string) => {
+    const validationError = validateCatalogImageDataUrl(dataUrl);
+    if (validationError) {
+      setMessage(validationError);
+      return;
+    }
+    const res = await fetch("/api/admin/upload", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ dataUrl }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      setMessage((data as { error?: string }).error || "Image upload failed");
+      return;
+    }
+    update(index, { imageDataUrl: dataUrl, imagePath: "" });
+    setMessage("Photo added — click Save all to publish.");
+  };
+
   const addCombo = () => {
     setCombos((list) => [
       ...list,
@@ -46,6 +68,7 @@ export default function AdminCombosPanel() {
         priceINR: 0,
         originalPriceINR: 0,
         available: true,
+        imagePath: "",
       },
     ]);
   };
@@ -142,6 +165,12 @@ export default function AdminCombosPanel() {
                 />
               </label>
             </div>
+            <AdminImageUpload
+              label="Combo photo"
+              previewSrc={c.imageDataUrl || c.imagePath || undefined}
+              onPick={(dataUrl) => void handleImagePick(i, dataUrl)}
+              onClear={() => update(i, { imageDataUrl: undefined, imagePath: "" })}
+            />
             <label className="block">
               <span className="text-xs text-muted">Description (EN)</span>
               <textarea

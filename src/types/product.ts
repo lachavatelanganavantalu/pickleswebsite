@@ -34,6 +34,8 @@ export interface PickleProduct {
   featured: boolean;
   displayOrder: number;
   imagePath: string;
+  /** Stored in MongoDB — served via /api/media/product/[id] */
+  imageDataUrl?: string;
   weightOptions: WeightOption[];
   updatedAt?: string;
 }

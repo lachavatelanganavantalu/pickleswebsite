@@ -1,4 +1,5 @@
 import { PickleProduct, ProductCategory, WeightOption } from "@/types/product";
+import { resolveProductImagePath } from "@/lib/catalog-media";
 
 export function slugify(text: string): string {
   return text
@@ -58,7 +59,12 @@ export function normalizeProduct(raw: PickleProduct): PickleProduct {
     weightOptions.push({ id: "250g", label: "250g", priceINR: 0 });
   }
 
-  return {
+  const updatedAt = new Date().toISOString();
+  const imageDataUrl = raw.imageDataUrl?.startsWith("data:image/")
+    ? raw.imageDataUrl
+    : undefined;
+
+  const normalized: PickleProduct = {
     ...raw,
     id,
     slug,
@@ -72,10 +78,15 @@ export function normalizeProduct(raw: PickleProduct): PickleProduct {
     available: raw.available,
     featured: raw.featured,
     displayOrder: Number(raw.displayOrder) || 0,
-    imagePath: raw.imagePath?.trim() || "",
+    imageDataUrl,
+    imagePath: "",
     weightOptions,
-    updatedAt: new Date().toISOString(),
+    updatedAt,
   };
+
+  normalized.imagePath = resolveProductImagePath(normalized);
+
+  return normalized;
 }
 
 export function validateProduct(

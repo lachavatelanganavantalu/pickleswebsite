@@ -10,6 +10,8 @@ export interface ComboPack {
   originalPriceINR: number;
   available?: boolean;
   imagePath?: string;
+  /** Stored in MongoDB — served via /api/media/combo/[id] */
+  imageDataUrl?: string;
   updatedAt?: string;
 }
 

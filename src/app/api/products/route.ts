@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAllProducts } from "@/lib/products-db";
+import { stripProductForPublic } from "@/lib/catalog-media";
 
 export async function GET(req: NextRequest) {
   try {
@@ -13,14 +14,16 @@ export async function GET(req: NextRequest) {
       const resolvedSlug = slug === "prawn-pickle" ? "chepala-pickle" : slug;
       const product = products.find((p) => p.slug === resolvedSlug);
       if (!product) return NextResponse.json({ error: "Not found" }, { status: 404 });
-      return NextResponse.json(product);
+      return NextResponse.json(stripProductForPublic(product));
     }
 
     if (category === "veg" || category === "non-veg") {
-      return NextResponse.json(products.filter((p) => p.category === category));
+      return NextResponse.json(
+        products.filter((p) => p.category === category).map(stripProductForPublic)
+      );
     }
 
-    return NextResponse.json(products);
+    return NextResponse.json(products.map(stripProductForPublic));
   } catch (err) {
     console.error("GET /api/products:", err);
     return NextResponse.json({ error: "Failed to fetch products" }, { status: 500 });

@@ -8,11 +8,20 @@ import {
 } from "@/data/default-products";
 import { PickleProduct } from "@/types/product";
 import { applyDefaultImages } from "@/lib/product-images";
+import { resolveProductImagePath } from "@/lib/catalog-media";
 
 const COLLECTION = "products";
 const FILE_STORE = path.join(process.cwd(), "data", "products-store.json");
 
 let memoryCache: PickleProduct[] | null = null;
+
+function resolveStoredMedia(products: PickleProduct[]): PickleProduct[] {
+  return products.map((p) =>
+    p.imageDataUrl?.startsWith("data:image/")
+      ? { ...p, imagePath: resolveProductImagePath(p) }
+      : p
+  );
+}
 
 async function readFileStore(): Promise<PickleProduct[]> {
   try {
@@ -62,6 +71,7 @@ function mergeWithMenuSource(stored: PickleProduct[]): PickleProduct[] {
       ...def,
       available: existing.available,
       imagePath: existing.imagePath?.trim() || def.imagePath,
+      imageDataUrl: existing.imageDataUrl,
       displayOrder: existing.displayOrder ?? def.displayOrder,
     };
   });
@@ -104,7 +114,7 @@ export async function getAllProducts(): Promise<PickleProduct[]> {
         await persistProducts(products);
         return products;
       }
-      memoryCache = applyDefaultImages(products);
+      memoryCache = resolveStoredMedia(applyDefaultImages(products));
       return memoryCache;
     } catch (err) {
       console.error("MongoDB products fetch failed, using file store:", err);
@@ -124,8 +134,8 @@ export async function getAllProducts(): Promise<PickleProduct[]> {
   } else {
     products = applyDefaultImages(products);
   }
-  memoryCache = products;
-  return products;
+  memoryCache = resolveStoredMedia(products);
+  return memoryCache;
 }
 
 export async function saveAllProducts(products: PickleProduct[]): Promise<void> {
@@ -152,6 +162,11 @@ export async function deleteProduct(id: string): Promise<boolean> {
   if (filtered.length === products.length) return false;
   await saveAllProducts(filtered);
   return true;
+}
+
+export async function getProductById(id: string): Promise<PickleProduct | null> {
+  const products = await getAllProducts();
+  return products.find((p) => p.id === id) ?? null;
 }
 
 export function invalidateProductsCache(): void {

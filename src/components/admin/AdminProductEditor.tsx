@@ -8,6 +8,8 @@ import {
   ProductTag,
   TAG_LABELS,
 } from "@/types/product";
+import AdminImageUpload from "./AdminImageUpload";
+import { validateCatalogImageDataUrl } from "@/lib/catalog-media";
 import { slugify, validateProduct } from "@/lib/product-admin";
 
 const TAGS = Object.keys(TAG_LABELS) as NonNullable<ProductTag>[];
@@ -25,7 +27,7 @@ export default function AdminProductEditor({
   onClose,
   onSaved,
 }: Props) {
-  const [product, setProduct] = useState<PickleProduct>({ ...initial, imagePath: "" });
+  const [product, setProduct] = useState<PickleProduct>({ ...initial });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
@@ -66,6 +68,26 @@ export default function AdminProductEditor({
     }));
   };
 
+  const handleImagePick = async (dataUrl: string) => {
+    const validationError = validateCatalogImageDataUrl(dataUrl);
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+    const res = await fetch("/api/admin/upload", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ dataUrl }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      setError((data as { error?: string }).error || "Image upload failed");
+      return;
+    }
+    setError("");
+    setProduct((p) => ({ ...p, imageDataUrl: dataUrl, imagePath: "" }));
+  };
+
   const handleSave = async () => {
     const errors = validateProduct(product, existing, isNew ? undefined : product.id);
     if (errors.length) {
@@ -82,7 +104,7 @@ export default function AdminProductEditor({
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...product, imagePath: "" }),
+        body: JSON.stringify(product),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Save failed");
@@ -108,6 +130,16 @@ export default function AdminProductEditor({
 
         <div className="p-5 space-y-5">
           {error && <p className="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2">{error}</p>}
+
+          <AdminImageUpload
+            label="Product photo"
+            previewSrc={product.imageDataUrl || product.imagePath || undefined}
+            onPick={handleImagePick}
+            onClear={() =>
+              setProduct((p) => ({ ...p, imageDataUrl: undefined, imagePath: "" }))
+            }
+            disabled={saving}
+          />
 
           <div className="grid sm:grid-cols-2 gap-4">
             <label className="block">
