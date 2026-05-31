@@ -3,9 +3,22 @@ import crypto from "crypto";
 import { getCustomerSession } from "@/lib/customer-auth";
 import { saveOrderToDb } from "@/lib/orders-db";
 import { generateDisplayOrderId } from "@/lib/order-id";
+import { hasMongoDb, isVercelRuntime } from "@/lib/storage-env";
+
+export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
   try {
+    if (isVercelRuntime() && !hasMongoDb()) {
+      return NextResponse.json(
+        {
+          error:
+            "Orders are not configured on the server. Add MONGODB_URI in Vercel → Settings → Environment Variables, then redeploy.",
+        },
+        { status: 503 }
+      );
+    }
+
     const session = getCustomerSession(req);
     const userId = session?.userId;
     const body = await req.json();
@@ -58,6 +71,15 @@ export async function POST(req: NextRequest) {
     });
   } catch (err) {
     console.error("POST /api/create-order:", err);
-    return NextResponse.json({ error: "Failed to create order" }, { status: 500 });
+    const message = err instanceof Error ? err.message : "Failed to create order";
+    return NextResponse.json(
+      {
+        error:
+          message.includes("MONGODB") || message.includes("Mongo")
+            ? message
+            : "Failed to create order. Please try again or contact us on WhatsApp.",
+      },
+      { status: 500 }
+    );
   }
 }

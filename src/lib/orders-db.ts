@@ -3,6 +3,7 @@ import path from "path";
 import { getDb } from "./mongodb";
 import { normalizePhone } from "./phone";
 import { nextDailySequenceFromFile } from "./order-counter-file";
+import { hasMongoDb, isVercelRuntime, requirePersistentStorage } from "./storage-env";
 
 export interface OrderCustomer {
   name: string;
@@ -86,7 +87,7 @@ async function getOrders(): Promise<Order[]> {
 async function persistOrders(orders: Order[]): Promise<void> {
   memoryOrders = orders;
 
-  if (process.env.MONGODB_URI) {
+  if (hasMongoDb()) {
     try {
       const db = await getDb();
       const col = db.collection(COLLECTION);
@@ -94,31 +95,70 @@ async function persistOrders(orders: Order[]): Promise<void> {
       if (orders.length) await col.insertMany(orders);
       return;
     } catch (err) {
-      console.error("MongoDB orders save failed, using file store:", err);
+      console.error("MongoDB orders save failed:", err);
+      if (isVercelRuntime()) throw err;
     }
   }
 
+  requirePersistentStorage("Saving orders");
   await writeFileOrders(orders);
 }
 
-export async function getNextDailyOrderSequence(dateKey: string): Promise<number> {
-  if (process.env.MONGODB_URI) {
-    try {
-      const db = await getDb();
-      const result = await db.collection(COUNTERS).findOneAndUpdate(
-        { dateKey },
-        { $inc: { seq: 1 } },
-        { upsert: true, returnDocument: "after" }
-      );
-      if (result && typeof result.seq === "number") return result.seq;
-    } catch (err) {
-      console.error("MongoDB order counter failed, using file store:", err);
-    }
+async function insertOrder(order: Order): Promise<void> {
+  if (hasMongoDb()) {
+    const db = await getDb();
+    await db.collection(COLLECTION).insertOne(order);
+    invalidateOrdersCache();
+    return;
   }
+
+  requirePersistentStorage("Creating orders");
+  const orders = await getOrders();
+  orders.unshift(order);
+  await writeFileOrders(orders);
+}
+
+async function patchOrderMongo(
+  orderId: string,
+  patch: Record<string, unknown>
+): Promise<boolean> {
+  if (!hasMongoDb()) return false;
+  const db = await getDb();
+  const result = await db.collection(COLLECTION).updateOne({ orderId }, { $set: patch });
+  if (result.matchedCount > 0) {
+    invalidateOrdersCache();
+    return true;
+  }
+  return false;
+}
+
+export async function getNextDailyOrderSequence(dateKey: string): Promise<number> {
+  if (hasMongoDb()) {
+    const db = await getDb();
+    const result = await db.collection(COUNTERS).findOneAndUpdate(
+      { dateKey },
+      { $inc: { seq: 1 }, $setOnInsert: { dateKey } },
+      { upsert: true, returnDocument: "after" }
+    );
+    if (result && typeof result.seq === "number") return result.seq;
+    throw new Error("Could not generate order number");
+  }
+
+  requirePersistentStorage("Generating order numbers");
   return nextDailySequenceFromFile(dateKey);
 }
 
 export async function getOrderById(orderId: string): Promise<Order | null> {
+  if (hasMongoDb()) {
+    try {
+      const db = await getDb();
+      const doc = await db.collection(COLLECTION).findOne({ orderId });
+      return (doc as Order | null) ?? null;
+    } catch (err) {
+      console.error("MongoDB getOrderById failed:", err);
+    }
+  }
+
   const orders = await getOrders();
   return orders.find((o) => o.orderId === orderId) ?? null;
 }
@@ -140,8 +180,7 @@ export async function saveOrderToDb(
   customer: OrderCustomer,
   userId?: string
 ): Promise<void> {
-  const orders = await getOrders();
-  orders.unshift({
+  await insertOrder({
     orderId,
     displayOrderId,
     userId,
@@ -151,7 +190,6 @@ export async function saveOrderToDb(
     customer,
     createdAt: new Date().toISOString(),
   });
-  await persistOrders(orders);
 }
 
 export async function createPaidOrder(
@@ -175,42 +213,24 @@ export async function createPaidOrder(
     createdAt: new Date().toISOString(),
     paymentConfirmedAt: new Date().toISOString(),
   };
-  const orders = await getOrders();
-  orders.unshift(order);
-  await persistOrders(orders);
+  await insertOrder(order);
   return order;
 }
 
 export async function markOrderPaid(orderId: string, paymentId?: string): Promise<void> {
+  const patch = {
+    paymentStatus: "paid" as const,
+    paymentId: paymentId || "manual",
+    paymentConfirmedAt: new Date().toISOString(),
+  };
+
+  if (await patchOrderMongo(orderId, patch)) return;
+
   const orders = await getOrders();
   const idx = orders.findIndex((o) => o.orderId === orderId);
   if (idx >= 0) {
-    orders[idx] = {
-      ...orders[idx],
-      paymentStatus: "paid",
-      paymentId: paymentId || "manual",
-      paymentConfirmedAt: new Date().toISOString(),
-    };
+    orders[idx] = { ...orders[idx], ...patch };
     await persistOrders(orders);
-    return;
-  }
-
-  if (process.env.MONGODB_URI) {
-    try {
-      const db = await getDb();
-      await db.collection(COLLECTION).updateOne(
-        { orderId },
-        {
-          $set: {
-            paymentStatus: "paid",
-            paymentId: paymentId || "manual",
-            paymentConfirmedAt: new Date(),
-          },
-        }
-      );
-    } catch (err) {
-      console.error("markOrderPaid MongoDB:", err);
-    }
   }
 }
 
@@ -219,41 +239,26 @@ export async function getAllOrders(): Promise<Order[]> {
 }
 
 export async function markDtdcSent(orderId: string): Promise<void> {
+  const patch = { dtdcSentAt: new Date().toISOString() };
+  if (await patchOrderMongo(orderId, patch)) return;
+
   const orders = await getOrders();
   const idx = orders.findIndex((o) => o.orderId === orderId);
   if (idx >= 0) {
-    orders[idx] = { ...orders[idx], dtdcSentAt: new Date().toISOString() };
+    orders[idx] = { ...orders[idx], ...patch };
     await persistOrders(orders);
-    return;
-  }
-
-  if (process.env.MONGODB_URI) {
-    const db = await getDb();
-    await db.collection(COLLECTION).updateOne(
-      { orderId },
-      { $set: { dtdcSentAt: new Date() } }
-    );
   }
 }
 
 export async function markCustomerDispatchNotified(orderId: string): Promise<void> {
+  const patch = { customerDispatchNotifiedAt: new Date().toISOString() };
+  if (await patchOrderMongo(orderId, patch)) return;
+
   const orders = await getOrders();
   const idx = orders.findIndex((o) => o.orderId === orderId);
   if (idx >= 0) {
-    orders[idx] = {
-      ...orders[idx],
-      customerDispatchNotifiedAt: new Date().toISOString(),
-    };
+    orders[idx] = { ...orders[idx], ...patch };
     await persistOrders(orders);
-    return;
-  }
-
-  if (process.env.MONGODB_URI) {
-    const db = await getDb();
-    await db.collection(COLLECTION).updateOne(
-      { orderId },
-      { $set: { customerDispatchNotifiedAt: new Date() } }
-    );
   }
 }
 

@@ -6,6 +6,4 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(self.clients.claim());
 });
 
-self.addEventListener("fetch", (event) => {
-  event.respondWith(fetch(event.request));
-});
+// Do not intercept fetch — passthrough handlers break checkout/API on network errors.
