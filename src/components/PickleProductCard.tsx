@@ -5,6 +5,7 @@ import Link from "next/link";
 import { PickleProduct } from "@/types/product";
 import ProductVisual from "./ProductVisual";
 import WishlistHeartButton from "./WishlistHeartButton";
+import CardQuantitySelect from "./CardQuantitySelect";
 import { formatPriceRange } from "@/lib/format-price";
 import { useCart } from "@/context/CartContext";
 import { cn } from "@/lib/cn";
@@ -24,8 +25,9 @@ export default function PickleProductCard({ product }: Props) {
   const { addItem } = useCart();
   const [optionsOpen, setOptionsOpen] = useState(false);
   const [selectedVariantId, setSelectedVariantId] = useState(
-    product.weightOptions[0]?.id ?? ""
+    () => product.weightOptions[0]?.id ?? ""
   );
+  const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
 
   const prices = product.weightOptions.map((w) => w.priceINR);
@@ -34,17 +36,16 @@ export default function PickleProductCard({ product }: Props) {
   const outOfStock = !product.available || product.tag === "out_of_stock";
 
   const selectedVariant = useMemo(
-    () =>
-      product.weightOptions.find((w) => w.id === selectedVariantId) ??
-      product.weightOptions[0],
+    () => product.weightOptions.find((w) => w.id === selectedVariantId),
     [product.weightOptions, selectedVariantId]
   );
 
   useEffect(() => {
     setOptionsOpen(false);
     setAdded(false);
+    setQuantity(1);
     setSelectedVariantId(product.weightOptions[0]?.id ?? "");
-  }, [product.id, product.weightOptions]);
+  }, [product.id]);
 
   const toggleOptions = () => {
     if (outOfStock) return;
@@ -52,15 +53,23 @@ export default function PickleProductCard({ product }: Props) {
     setAdded(false);
   };
 
+  const handleSelectVariant = (variantId: string) => {
+    setSelectedVariantId(variantId);
+    setAdded(false);
+  };
+
   const handleAddToCart = () => {
     if (outOfStock || !selectedVariant) return;
-    addItem({
-      productId: product.id,
-      productName: product.name,
-      variantId: selectedVariant.id,
-      variantLabel: selectedVariant.label,
-      priceINR: selectedVariant.priceINR,
-    });
+    addItem(
+      {
+        productId: product.id,
+        productName: product.name,
+        variantId: selectedVariant.id,
+        variantLabel: selectedVariant.label,
+        priceINR: selectedVariant.priceINR,
+      },
+      quantity
+    );
     setAdded(true);
     window.setTimeout(() => setAdded(false), 1800);
   };
@@ -76,7 +85,7 @@ export default function PickleProductCard({ product }: Props) {
         {!optionsOpen && <WishlistHeartButton itemId={product.id} />}
 
         {optionsOpen && (
-          <div className="shop-card-options-overlay" role="dialog" aria-label="Select size">
+          <div className="shop-card-options-overlay" role="dialog" aria-label="Select options">
             <button
               type="button"
               className="shop-card-close-btn"
@@ -86,22 +95,33 @@ export default function PickleProductCard({ product }: Props) {
             </button>
 
             <div className="shop-card-options-panel">
-              <p className="shop-card-options-label">Quantity:</p>
+              <p className="shop-card-options-label">Size:</p>
               <div className="shop-card-variant-row">
                 {product.weightOptions.map((opt) => {
-                  const active = selectedVariantId === opt.id;
+                  const isSelected = selectedVariantId === opt.id;
                   return (
                     <button
-                      key={opt.id}
+                      key={`${product.id}-${opt.id}`}
                       type="button"
-                      onClick={() => setSelectedVariantId(opt.id)}
-                      className={cn("shop-card-variant-pill", active && "shop-card-variant-pill-active")}
+                      aria-pressed={isSelected}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleSelectVariant(opt.id);
+                      }}
+                      className={cn(
+                        "shop-card-variant-pill",
+                        isSelected && "shop-card-variant-pill-active"
+                      )}
                     >
                       {opt.label}
                     </button>
                   );
                 })}
               </div>
+
+              <p className="shop-card-options-label shop-card-options-label-spaced">Qty:</p>
+              <CardQuantitySelect value={quantity} onChange={setQuantity} />
             </div>
           </div>
         )}
