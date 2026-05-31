@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { readJsonResponse } from "@/lib/read-json-response";
 import { useCart } from "@/context/CartContext";
 import { useOrder } from "@/context/OrderContext";
 
@@ -48,7 +49,14 @@ export default function PlaceOrderButton({ customer, disabled }: Props) {
           customer,
         }),
       });
-      const data = await res.json();
+      const data = await readJsonResponse<{
+        error?: string;
+        orderId: string;
+        displayOrderId: string;
+        amountINR: number;
+        items: { productName: string; variantLabel: string; quantity: number }[];
+        paymentStatus?: string;
+      }>(res);
       if (!res.ok) throw new Error(data.error || "Could not place order");
 
       const orderPayload = {

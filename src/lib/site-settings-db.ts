@@ -3,6 +3,7 @@ import path from "path";
 import { getDb } from "@/lib/mongodb";
 import { defaultSiteSettings } from "@/data/default-site-settings";
 import { SiteSettings } from "@/types/site-settings";
+import { hasMongoDb, isVercelRuntime } from "./storage-env";
 
 const COLLECTION = "site_settings";
 const DOC_ID = "main";
@@ -43,12 +44,24 @@ function patchLegacyMarketing(settings: SiteSettings): SiteSettings {
   };
 }
 
-function patchSiteSettings(settings: SiteSettings): SiteSettings {
-  const withPayment: SiteSettings = {
-    ...settings,
-    payment: settings.payment ?? defaultSiteSettings.payment,
+function patchSiteSettings(raw: Partial<SiteSettings>): SiteSettings {
+  const settings: SiteSettings = {
+    hero: { ...defaultSiteSettings.hero, ...raw.hero },
+    story: { ...defaultSiteSettings.story, ...raw.story },
+    contact: {
+      ...defaultSiteSettings.contact,
+      ...raw.contact,
+      address: {
+        ...defaultSiteSettings.contact.address,
+        ...raw.contact?.address,
+      },
+    },
+    social: { ...defaultSiteSettings.social, ...raw.social },
+    announcement: raw.announcement ?? defaultSiteSettings.announcement,
+    payment: { ...defaultSiteSettings.payment, ...raw.payment },
+    updatedAt: raw.updatedAt,
   };
-  return patchLegacyMarketing(patchLegacyContact(withPayment));
+  return patchLegacyMarketing(patchLegacyContact(settings));
 }
 
 async function readFile(): Promise<SiteSettings | null> {
@@ -77,13 +90,10 @@ export async function getSiteSettings(): Promise<SiteSettings> {
         const { id: _docId, _id: _mongoId, ...settings } = doc as unknown as {
           id: string;
           _id?: unknown;
-        } & SiteSettings;
+        } & Partial<SiteSettings>;
         void _docId;
         void _mongoId;
-        const patched = patchSiteSettings(settings as SiteSettings);
-        if (patched !== settings) {
-          return saveSiteSettings(patched);
-        }
+        const patched = patchSiteSettings(settings);
         cache = patched;
         return cache;
       }
@@ -95,12 +105,17 @@ export async function getSiteSettings(): Promise<SiteSettings> {
   const fromFile = await readFile();
   if (fromFile) {
     cache = patchSiteSettings(fromFile);
-    if (cache !== fromFile) await writeFile(cache);
+    if (!isVercelRuntime()) await writeFile(cache);
     return cache;
   }
 
   cache = { ...defaultSiteSettings, updatedAt: new Date().toISOString() };
-  await writeFile(cache);
+  if (hasMongoDb()) {
+    return saveSiteSettings(cache);
+  }
+  if (!isVercelRuntime()) {
+    await writeFile(cache);
+  }
   return cache;
 }
 
@@ -120,10 +135,13 @@ export async function saveSiteSettings(settings: SiteSettings): Promise<SiteSett
       return next;
     } catch (err) {
       console.error("MongoDB site settings save failed:", err);
+      if (isVercelRuntime()) throw err;
     }
   }
 
-  await writeFile(next);
+  if (!isVercelRuntime()) {
+    await writeFile(next);
+  }
   return next;
 }
 

@@ -3,6 +3,8 @@ import { getOrderByDisplayId, getOrderById } from "@/lib/orders-db";
 import { normalizePhone } from "@/lib/phone";
 import { buildOrderTimeline } from "@/lib/order-timeline";
 
+export const runtime = "nodejs";
+
 export async function GET(req: NextRequest) {
   const orderId = req.nextUrl.searchParams.get("orderId")?.trim();
   const displayOrderId = req.nextUrl.searchParams.get("displayOrderId")?.trim();

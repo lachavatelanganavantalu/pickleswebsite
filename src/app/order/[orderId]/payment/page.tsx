@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import { MessageCircle } from "lucide-react";
 import OrderTimeline from "@/components/OrderTimeline";
 import { formatINRDecimal } from "@/lib/format-price";
+import { readJsonResponse } from "@/lib/read-json-response";
 import type { TimelineStep } from "@/lib/order-timeline";
 
 interface PaymentInfo {
@@ -40,7 +41,14 @@ export default function OrderPaymentPage() {
     if (!orderId) return;
     void fetch(`/api/orders/${encodeURIComponent(orderId)}`)
       .then(async (res) => {
-        const data = await res.json();
+        const data = await readJsonResponse<{
+          error?: string;
+          order: OrderView;
+          payment: PaymentInfo;
+          timeline?: TimelineStep[];
+          whatsappUrl?: string | null;
+          upiPayUrl?: string | null;
+        }>(res);
         if (!res.ok) throw new Error(data.error || "Could not load order");
         setOrder(data.order);
         setPayment(data.payment);

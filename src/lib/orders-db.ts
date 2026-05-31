@@ -47,6 +47,20 @@ const FILE_STORE = path.join(process.cwd(), "data", "orders-store.json");
 
 let memoryOrders: Order[] | null = null;
 
+function normalizeOrder(raw: Order & { _id?: unknown }): Order {
+  void raw._id;
+  const toIso = (v: Date | string | undefined) =>
+    v instanceof Date ? v.toISOString() : v;
+
+  return {
+    ...raw,
+    createdAt: toIso(raw.createdAt) ?? new Date().toISOString(),
+    paymentConfirmedAt: toIso(raw.paymentConfirmedAt),
+    dtdcSentAt: toIso(raw.dtdcSentAt),
+    customerDispatchNotifiedAt: toIso(raw.customerDispatchNotifiedAt),
+  };
+}
+
 async function readFileOrders(): Promise<Order[]> {
   try {
     const raw = await fs.readFile(FILE_STORE, "utf-8");
@@ -153,9 +167,11 @@ export async function getOrderById(orderId: string): Promise<Order | null> {
     try {
       const db = await getDb();
       const doc = await db.collection(COLLECTION).findOne({ orderId });
-      return (doc as Order | null) ?? null;
+      if (!doc) return null;
+      return normalizeOrder(doc as Order & { _id?: unknown });
     } catch (err) {
       console.error("MongoDB getOrderById failed:", err);
+      if (isVercelRuntime()) throw err;
     }
   }
 
@@ -164,6 +180,18 @@ export async function getOrderById(orderId: string): Promise<Order | null> {
 }
 
 export async function getOrderByDisplayId(displayOrderId: string): Promise<Order | null> {
+  if (hasMongoDb()) {
+    try {
+      const db = await getDb();
+      const doc = await db.collection(COLLECTION).findOne({ displayOrderId });
+      if (!doc) return null;
+      return normalizeOrder(doc as Order & { _id?: unknown });
+    } catch (err) {
+      console.error("MongoDB getOrderByDisplayId failed:", err);
+      if (isVercelRuntime()) throw err;
+    }
+  }
+
   const orders = await getOrders();
   return orders.find((o) => o.displayOrderId === displayOrderId) ?? null;
 }
