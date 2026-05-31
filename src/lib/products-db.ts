@@ -49,23 +49,23 @@ function stampDefaults(): PickleProduct[] {
 
 function needsProductsReseed(products: PickleProduct[]): boolean {
   if (products.length === 0) return false;
-  if (products.length !== defaultProducts.length) return true;
-  if (products.some((p) => LEGACY_PRODUCT_IDS.has(p.id) || !CANONICAL_PRODUCT_IDS.has(p.id))) {
-    return true;
-  }
-  return products.some((p) => {
-    const def = defaultProducts.find((d) => d.id === p.id);
-    if (!def) return true;
+  if (products.some((p) => LEGACY_PRODUCT_IDS.has(p.id))) return true;
+
+  return defaultProducts.some((def) => {
+    const stored = products.find((p) => p.id === def.id);
+    if (!stored) return true;
     return def.weightOptions.some(
-      (w, i) => w.priceINR !== p.weightOptions[i]?.priceINR || w.label !== p.weightOptions[i]?.label
+      (w, i) =>
+        w.priceINR !== stored.weightOptions[i]?.priceINR ||
+        w.label !== stored.weightOptions[i]?.label
     );
   });
 }
 
 function mergeWithMenuSource(stored: PickleProduct[]): PickleProduct[] {
-  const kept = stored.filter((p) => CANONICAL_PRODUCT_IDS.has(p.id));
-  return stampDefaults().map((def) => {
-    const existing = kept.find((p) => p.id === def.id);
+  const custom = stored.filter((p) => !CANONICAL_PRODUCT_IDS.has(p.id));
+  const merged = stampDefaults().map((def) => {
+    const existing = stored.find((p) => p.id === def.id);
     if (!existing) return def;
     return {
       ...def,
@@ -75,6 +75,7 @@ function mergeWithMenuSource(stored: PickleProduct[]): PickleProduct[] {
       displayOrder: existing.displayOrder ?? def.displayOrder,
     };
   });
+  return [...merged, ...custom].sort((a, b) => a.displayOrder - b.displayOrder);
 }
 
 async function persistProducts(products: PickleProduct[]): Promise<void> {
@@ -139,6 +140,7 @@ export async function getAllProducts(): Promise<PickleProduct[]> {
 }
 
 export async function saveAllProducts(products: PickleProduct[]): Promise<void> {
+  invalidateProductsCache();
   const withTs = products.map((p) => ({
     ...p,
     updatedAt: new Date().toISOString(),
@@ -147,6 +149,7 @@ export async function saveAllProducts(products: PickleProduct[]): Promise<void> 
 }
 
 export async function upsertProduct(product: PickleProduct): Promise<PickleProduct> {
+  invalidateProductsCache();
   const products = await getAllProducts();
   const idx = products.findIndex((p) => p.id === product.id);
   const updated = { ...product, updatedAt: new Date().toISOString() };
@@ -157,6 +160,7 @@ export async function upsertProduct(product: PickleProduct): Promise<PickleProdu
 }
 
 export async function deleteProduct(id: string): Promise<boolean> {
+  invalidateProductsCache();
   const products = await getAllProducts();
   const filtered = products.filter((p) => p.id !== id);
   if (filtered.length === products.length) return false;

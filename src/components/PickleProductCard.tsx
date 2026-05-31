@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { PickleProduct } from "@/types/product";
+import { CATEGORY_LABELS, PickleProduct } from "@/types/product";
 import ProductVisual from "./ProductVisual";
 import WishlistHeartButton from "./WishlistHeartButton";
 import CardQuantitySelect from "./CardQuantitySelect";
@@ -15,7 +15,7 @@ interface Props {
 }
 
 function categoryLabel(product: PickleProduct): string {
-  const category = product.category === "veg" ? "Veg" : "Non-Veg";
+  const category = CATEGORY_LABELS[product.category] ?? product.category;
   return product.nameTelugu
     ? `${product.nameTelugu} · ${category}`
     : category;

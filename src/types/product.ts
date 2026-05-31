@@ -1,4 +1,10 @@
-export type ProductCategory = "veg" | "non-veg";
+export type ProductCategory = "veg" | "non-veg" | "combo";
+
+export const CATEGORY_LABELS: Record<ProductCategory, string> = {
+  veg: "Veg",
+  "non-veg": "Non-veg",
+  combo: "Combo",
+};
 
 export type ProductTag =
   | "bestseller"

@@ -191,7 +191,7 @@ export default function AdminProductEditor({
 
           <div className="grid sm:grid-cols-3 gap-4">
             <label className="block">
-              <span className="text-xs font-semibold text-muted uppercase">Category</span>
+              <span className="text-xs font-semibold text-muted uppercase">Veg / Non-veg / Combo</span>
               <select
                 value={product.category}
                 onChange={(e) => update("category", e.target.value as ProductCategory)}
@@ -199,6 +199,7 @@ export default function AdminProductEditor({
               >
                 <option value="veg">Veg</option>
                 <option value="non-veg">Non-veg</option>
+                <option value="combo">Combo</option>
               </select>
             </label>
             <label className="block">

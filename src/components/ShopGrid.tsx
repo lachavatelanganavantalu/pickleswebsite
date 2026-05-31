@@ -57,6 +57,8 @@ export default function ShopGrid({
   const filtered =
     filter === "all" ? products : products.filter((p) => p.category === filter);
 
+  const showComboCards = showCombo && (filter === "all" || filter === "combo");
+
   return (
     <section className="shop-grid-section">
       {(title || subtitle) && (
@@ -73,6 +75,7 @@ export default function ShopGrid({
               ["all", "All"],
               ["veg", "Veg"],
               ["non-veg", "Non-Veg"],
+              ["combo", "Combo"],
             ] as const
           ).map(([key, label]) => (
             <button
@@ -94,11 +97,11 @@ export default function ShopGrid({
 
       {loading ? (
         <p className="py-16 text-center text-sm text-shop-muted">Loading…</p>
-      ) : filtered.length === 0 && !showCombo ? (
+      ) : filtered.length === 0 && !showComboCards ? (
         <p className="py-16 text-center text-sm text-shop-muted">No products found.</p>
       ) : (
         <div className="shop-product-grid">
-          {showCombo &&
+          {showComboCards &&
             initialCombos.map((combo) => <ComboProductCard key={combo.id} combo={combo} />)}
           {filtered.map((p) => (
             <PickleProductCard key={p.id} product={p} />

@@ -25,9 +25,6 @@ export default async function CombosPage() {
                 <p className="mt-1 text-xs text-muted">{c.itemsTelugu}</p>
               )}
               <p className="mt-4 text-2xl font-bold text-brand">{formatINRDecimal(c.priceINR)}</p>
-              <p className="mt-3 text-xs text-muted">
-                Pay via PhonePe / GPay: <strong>63021 12848</strong>
-              </p>
               <ComboOrderButton combo={c} />
             </div>
           </article>

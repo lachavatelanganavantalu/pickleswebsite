@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import OrderTimeline from "@/components/OrderTimeline";
 import { formatINRDecimal } from "@/lib/format-price";
 import type { TimelineStep } from "@/lib/order-timeline";
@@ -117,13 +116,6 @@ export default function TrackOrderPageClient() {
           )}
         </section>
       )}
-
-      <p className="mt-6 text-center text-xs text-muted">
-        Need help?{" "}
-        <Link href="/contact" className="font-semibold text-brand hover:underline">
-          Contact us
-        </Link>
-      </p>
     </div>
   );
 }

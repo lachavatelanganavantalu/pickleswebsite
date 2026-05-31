@@ -35,7 +35,14 @@ export function searchCatalog(
         matchesQuery(p.subtitle, query) ||
         matchesQuery(p.description, query) ||
         matchesQuery(p.slug, query) ||
-        matchesQuery(p.category === "veg" ? "veg vegetarian" : "non-veg non veg meat", query)
+        matchesQuery(
+          p.category === "veg"
+            ? "veg vegetarian"
+            : p.category === "combo"
+              ? "combo pack offer"
+              : "non-veg non veg meat",
+          query
+        )
     )
     .map((p) => {
       const prices = p.weightOptions.map((w) => w.priceINR);

@@ -77,6 +77,7 @@ export default function AdminProductsPanel() {
             <option value="all">All</option>
             <option value="veg">Veg</option>
             <option value="non-veg">Non-veg</option>
+            <option value="combo">Combo</option>
           </select>
           <button
             type="button"
@@ -91,6 +92,10 @@ export default function AdminProductsPanel() {
 
       {loading ? (
         <p className="text-muted">Loading…</p>
+      ) : filtered.length === 0 ? (
+        <p className="text-muted py-8 text-center text-sm">
+          {filter === "all" ? "No products yet. Add your first product above." : `No ${filter} products.`}
+        </p>
       ) : (
         <div className="grid gap-4">
           {filtered.map((p) => (

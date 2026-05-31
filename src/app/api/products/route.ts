@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json(stripProductForPublic(product));
     }
 
-    if (category === "veg" || category === "non-veg") {
+    if (category === "veg" || category === "non-veg" || category === "combo") {
       return NextResponse.json(
         products.filter((p) => p.category === category).map(stripProductForPublic)
       );

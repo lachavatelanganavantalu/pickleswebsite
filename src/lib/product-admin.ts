@@ -96,6 +96,9 @@ export function validateProduct(
 ): string[] {
   const errors: string[] = [];
   if (!product.name.trim()) errors.push("Product name is required");
+  if (!["veg", "non-veg", "combo"].includes(product.category)) {
+    errors.push("Select Veg, Non-veg, or Combo");
+  }
   if (product.description.length > 500) errors.push("Description must be under 500 characters");
 
   const slug = slugify(product.slug || product.name);
