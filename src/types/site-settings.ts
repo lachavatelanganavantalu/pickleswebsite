@@ -32,6 +32,8 @@ export interface SiteSettings {
     upiId: string;
     upiPhone: string;
     qrImagePath: string;
+    /** Stored in MongoDB / local settings — not exposed on public APIs */
+    qrImageDataUrl?: string;
     payeeName: string;
   };
   updatedAt?: string;

@@ -4,6 +4,7 @@ import { getDb } from "@/lib/mongodb";
 import { defaultSiteSettings } from "@/data/default-site-settings";
 import { SiteSettings } from "@/types/site-settings";
 import { hasMongoDb, isVercelRuntime } from "./storage-env";
+import { paymentQrDisplayUrl } from "./payment-qr";
 
 const COLLECTION = "site_settings";
 const DOC_ID = "main";
@@ -119,9 +120,46 @@ export async function getSiteSettings(): Promise<SiteSettings> {
   return cache;
 }
 
+async function loadExistingSettingsUncached(): Promise<SiteSettings | null> {
+  if (hasMongoDb()) {
+    try {
+      const db = await getDb();
+      const doc = await db.collection(COLLECTION).findOne({ id: DOC_ID });
+      if (doc) {
+        const { id: _docId, _id: _mongoId, ...settings } = doc as unknown as {
+          id: string;
+          _id?: unknown;
+        } & Partial<SiteSettings>;
+        void _docId;
+        void _mongoId;
+        return patchSiteSettings(settings);
+      }
+    } catch (err) {
+      console.error("loadExistingSettingsUncached MongoDB:", err);
+    }
+  }
+  const fromFile = await readFile();
+  return fromFile ? patchSiteSettings(fromFile) : null;
+}
+
 export async function saveSiteSettings(settings: SiteSettings): Promise<SiteSettings> {
+  const existing = cache ?? (await loadExistingSettingsUncached());
+  const qrImageDataUrl =
+    settings.payment.qrImageDataUrl ?? existing?.payment?.qrImageDataUrl;
+
   const next: SiteSettings = {
     ...settings,
+    payment: {
+      ...settings.payment,
+      qrImageDataUrl,
+      qrImagePath: qrImageDataUrl
+        ? paymentQrDisplayUrl({
+            ...settings,
+            payment: { ...settings.payment, qrImageDataUrl },
+            updatedAt: new Date().toISOString(),
+          })
+        : settings.payment.qrImagePath,
+    },
     updatedAt: new Date().toISOString(),
   };
   cache = next;

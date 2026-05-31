@@ -3,6 +3,7 @@ import { getOrderById } from "@/lib/orders-db";
 import { getSiteSettings } from "@/lib/site-settings-db";
 import { defaultSiteSettings } from "@/data/default-site-settings";
 import { buildOrderTimeline } from "@/lib/order-timeline";
+import { publicPaymentSettings } from "@/lib/payment-qr";
 import { adminPaymentProofWhatsAppUrl } from "@/lib/payment-whatsapp";
 import { buildUpiPayUrl } from "@/lib/upi";
 
@@ -20,7 +21,7 @@ export async function GET(
     }
 
     const settings = await getSiteSettings();
-    const payment = settings.payment ?? defaultSiteSettings.payment;
+    const payment = publicPaymentSettings(settings);
     const adminWhatsApp =
       settings.contact?.whatsapp?.trim() || defaultSiteSettings.contact.whatsapp;
 

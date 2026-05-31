@@ -46,7 +46,7 @@ export const defaultSiteSettings: SiteSettings = {
   payment: {
     upiId: "6302112848@ybl",
     upiPhone: "6302112848",
-    qrImagePath: "/payment-qr.png",
+    qrImagePath: "/api/payment-qr",
     payeeName: "Lachava Telangana Vantalu",
   },
 };

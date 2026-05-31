@@ -300,19 +300,23 @@ export default function AdminSettingsPanel() {
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({ dataUrl }),
                 });
-                const data = await res.json();
+                const data = await res.json().catch(() => ({}));
                 if (res.ok && data.qrImagePath) {
                   setSettings((s) =>
                     s
                       ? {
                           ...s,
-                          payment: { ...s.payment, qrImagePath: data.qrImagePath },
+                          payment: {
+                            ...s.payment,
+                            qrImagePath: data.qrImagePath,
+                            qrImageDataUrl: dataUrl,
+                          },
                         }
                       : s
                   );
                   setMessage("QR uploaded — save settings to keep UPI details.");
                 } else {
-                  setMessage(data.error || "QR upload failed");
+                  setMessage((data as { error?: string }).error || "QR upload failed");
                 }
               };
               reader.readAsDataURL(file);

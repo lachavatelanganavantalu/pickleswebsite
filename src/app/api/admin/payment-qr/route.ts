@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { promises as fs } from "fs";
-import path from "path";
 import { isAdminRequest } from "@/lib/admin-auth";
 import { invalidateSiteSettingsCache, getSiteSettings, saveSiteSettings } from "@/lib/site-settings-db";
+import { parseDataUrlImage, paymentQrDisplayUrl } from "@/lib/payment-qr";
 
-const QR_PATH = path.join(process.cwd(), "public", "payment-qr.png");
+export const runtime = "nodejs";
+
+const MAX_DATA_URL_LENGTH = 2_500_000;
 
 export async function POST(req: NextRequest) {
   if (!isAdminRequest(req)) {
@@ -16,27 +17,33 @@ export async function POST(req: NextRequest) {
     if (typeof dataUrl !== "string" || !dataUrl.startsWith("data:image/")) {
       return NextResponse.json({ error: "Invalid image data" }, { status: 400 });
     }
-
-    const base64 = dataUrl.split(",")[1];
-    if (!base64) {
+    if (dataUrl.length > MAX_DATA_URL_LENGTH) {
+      return NextResponse.json({ error: "Image too large — use a smaller QR PNG/JPG" }, { status: 400 });
+    }
+    if (!parseDataUrlImage(dataUrl)) {
       return NextResponse.json({ error: "Invalid image data" }, { status: 400 });
     }
-
-    await fs.writeFile(QR_PATH, Buffer.from(base64, "base64"));
 
     const settings = await getSiteSettings();
     const next = await saveSiteSettings({
       ...settings,
       payment: {
         ...settings.payment,
-        qrImagePath: `/payment-qr.png?v=${Date.now()}`,
+        qrImageDataUrl: dataUrl,
+        qrImagePath: paymentQrDisplayUrl({
+          ...settings,
+          payment: { ...settings.payment, qrImageDataUrl: dataUrl },
+          updatedAt: new Date().toISOString(),
+        }),
       },
     });
 
     invalidateSiteSettingsCache();
-    return NextResponse.json({ ok: true, qrImagePath: next.payment.qrImagePath });
+    const qrImagePath = paymentQrDisplayUrl(next);
+    return NextResponse.json({ ok: true, qrImagePath });
   } catch (err) {
     console.error("POST /api/admin/payment-qr:", err);
-    return NextResponse.json({ error: "Upload failed" }, { status: 500 });
+    const message = err instanceof Error ? err.message : "Upload failed";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
