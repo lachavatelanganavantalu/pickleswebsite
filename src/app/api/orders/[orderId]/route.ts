@@ -5,7 +5,6 @@ import { defaultSiteSettings } from "@/data/default-site-settings";
 import { buildOrderTimeline } from "@/lib/order-timeline";
 import { publicPaymentSettings } from "@/lib/payment-qr";
 import { adminPaymentProofWhatsAppUrl } from "@/lib/payment-whatsapp";
-import { buildUpiPayUrl } from "@/lib/upi";
 
 export const runtime = "nodejs";
 
@@ -42,15 +41,6 @@ export async function GET(
       whatsappUrl:
         order.paymentStatus === "pending"
           ? adminPaymentProofWhatsAppUrl(order, adminWhatsApp)
-          : null,
-      upiPayUrl:
-        order.paymentStatus === "pending"
-          ? buildUpiPayUrl({
-              upiId: payment.upiId,
-              payeeName: payment.payeeName,
-              amountINR: order.amountINR,
-              note: order.displayOrderId,
-            })
           : null,
     });
   } catch (err) {

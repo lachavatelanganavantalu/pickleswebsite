@@ -43,7 +43,7 @@ export default function CheckoutSuccessPage() {
 
       {pending && (
         <p className="mt-4 text-sm text-muted">
-          Complete payment via UPI / QR, then send your payment screenshot on WhatsApp.
+          Scan the payment QR or copy UPI ID in PhonePe / GPay, then send your payment screenshot on WhatsApp.
         </p>
       )}
 

@@ -217,9 +217,10 @@ export default function AdminSettingsPanel() {
           }
         />
 
-        <h2 className="font-semibold text-ink pt-4">Payment</h2>
+        <h2 className="font-semibold text-ink pt-4">Payment (QR + UPI ID)</h2>
         <p className="text-xs text-muted">
-          Customers pay with UPI ID first. QR is shown only if they say UPI payment did not work.
+          Customers scan your QR in PhonePe / GPay. UPI ID is for copy-paste only (no automatic app
+          links — those often fail on phones and desktop).
         </p>
         <div className="grid sm:grid-cols-2 gap-4">
           <label className="block">
@@ -292,9 +293,9 @@ export default function AdminSettingsPanel() {
             className="mt-0.5 h-4 w-4 rounded border-border text-accent"
           />
           <span className="text-sm">
-            <span className="font-semibold text-ink">Show QR payment fallback</span>
+            <span className="font-semibold text-ink">Show QR code on payment page</span>
             <span className="mt-0.5 block text-xs text-muted">
-              When off, customers only see UPI ID payment — no QR option at all.
+              Upload your QR image below. When off, customers only see copy UPI ID / phone number.
             </span>
           </span>
         </label>

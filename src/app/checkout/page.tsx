@@ -59,7 +59,7 @@ export default function CheckoutPage() {
   return (
     <div className="app-content py-[clamp(1.5rem,5vw,3rem)]">
       <h1 className="text-xl font-bold text-brand">Checkout</h1>
-      <p className="mt-1 text-sm text-muted">Pay via UPI after placing your order. You can edit the cart anytime.</p>
+      <p className="mt-1 text-sm text-muted">After placing your order, scan the payment QR or copy UPI ID in PhonePe / GPay.</p>
 
       <div className="mt-4">
         <PendingOrderBanner />

@@ -41,12 +41,12 @@ export const messages: Messages = {
   "checkout.title": { en: "Checkout", te: "ఆర్డర్" },
   "checkout.placeOrder": { en: "Place order", te: "ఆర్డర్ పెట్టండి" },
   "checkout.demoNote": {
-    en: "After placing order, pay via UPI / QR on the next screen.",
-    te: "ఆర్డర్ తర్వాత UPI / QR తో చెల్లించండి.",
+    en: "After placing order, scan the payment QR or copy UPI ID on the next screen.",
+    te: "ఆర్డర్ తర్వాత QR స్కాన్ చేయండి లేదా UPI ID కాపీ చేయండి.",
   },
   "checkout.liveNote": {
-    en: "Pay with PhonePe / GPay, then send payment screenshot on WhatsApp.",
-    te: "PhonePe / GPay తో చెల్లించి WhatsApp లో screenshot పంపండి.",
+    en: "Scan QR or copy UPI ID in PhonePe / GPay, then send payment screenshot on WhatsApp.",
+    te: "QR స్కాన్ లేదా UPI ID కాపీ చేసి, WhatsApp లో screenshot పంపండి.",
   },
 
   "success.title": { en: "Order confirmed", te: "ఆర్డర్ నిర్ధారించబడింది" },

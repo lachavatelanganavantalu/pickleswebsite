@@ -7,6 +7,7 @@ import { useCart } from "@/context/CartContext";
 import BrandLogo from "@/components/BrandLogo";
 import ShopSearchOverlay from "@/components/ShopSearchOverlay";
 import PwaInstallButton from "@/components/PwaInstallButton";
+import ShippingFlagsMarquee from "@/components/ShippingFlagsMarquee";
 
 const links = [
   { href: "/", label: "Home" },
@@ -81,6 +82,8 @@ export default function Navbar() {
           </Link>
         </div>
       </div>
+
+      <ShippingFlagsMarquee />
 
       {open && (
         <nav className="border-t border-white/15 bg-brand-dark">

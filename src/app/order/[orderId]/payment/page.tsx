@@ -3,10 +3,11 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { Download, MessageCircle } from "lucide-react";
+import { Copy, Download, MessageCircle } from "lucide-react";
 import OrderTimeline from "@/components/OrderTimeline";
 import EditableCartList from "@/components/EditableCartList";
 import { formatINRDecimal } from "@/lib/format-price";
+import { copyTextToClipboard } from "@/lib/copy-text";
 import { paymentQrDownloadUrl } from "@/lib/payment-qr";
 import { clearPendingOrderSession } from "@/lib/pending-order-session";
 import { readJsonResponse } from "@/lib/read-json-response";
@@ -30,6 +31,8 @@ interface OrderView {
   customer: { name: string; phone: string };
 }
 
+type CopiedField = "upi" | "phone" | null;
+
 export default function OrderPaymentPage() {
   const params = useParams();
   const orderId = params.orderId as string;
@@ -39,11 +42,9 @@ export default function OrderPaymentPage() {
   const [payment, setPayment] = useState<PaymentInfo | null>(null);
   const [timeline, setTimeline] = useState<TimelineStep[]>([]);
   const [whatsappUrl, setWhatsappUrl] = useState<string | null>(null);
-  const [upiPayUrl, setUpiPayUrl] = useState<string | null>(null);
   const [qrBroken, setQrBroken] = useState(false);
-  const [showQrFallback, setShowQrFallback] = useState(false);
   const [downloadingQr, setDownloadingQr] = useState(false);
-  const [copiedUpi, setCopiedUpi] = useState(false);
+  const [copiedField, setCopiedField] = useState<CopiedField>(null);
   const { clearCart, itemCount } = useCart();
 
   useEffect(() => {
@@ -56,14 +57,12 @@ export default function OrderPaymentPage() {
           payment: PaymentInfo;
           timeline?: TimelineStep[];
           whatsappUrl?: string | null;
-          upiPayUrl?: string | null;
         }>(res);
         if (!res.ok) throw new Error(data.error || "Could not load order");
         setOrder(data.order);
         setPayment(data.payment);
         setTimeline(data.timeline ?? []);
         setWhatsappUrl(data.whatsappUrl ?? null);
-        setUpiPayUrl(data.upiPayUrl ?? null);
       })
       .catch((e) => setError(e instanceof Error ? e.message : "Failed to load"))
       .finally(() => setLoading(false));
@@ -75,18 +74,16 @@ export default function OrderPaymentPage() {
     clearPendingOrderSession();
   }, [order?.paymentStatus, clearCart]);
 
-  const canShowQr =
-    Boolean(payment?.showQrPayment && payment?.qrImagePath && !qrBroken);
+  const showQr = Boolean(payment?.showQrPayment && payment?.qrImagePath && !qrBroken);
 
-  const handleCopyUpi = async () => {
-    if (!payment?.upiId) return;
-    try {
-      await navigator.clipboard.writeText(payment.upiId);
-      setCopiedUpi(true);
-      window.setTimeout(() => setCopiedUpi(false), 2000);
-    } catch {
-      /* ignore */
+  const handleCopy = async (field: CopiedField, text: string) => {
+    const ok = await copyTextToClipboard(text);
+    if (!ok) {
+      window.alert("Could not copy. Please select and copy manually.");
+      return;
     }
+    setCopiedField(field);
+    window.setTimeout(() => setCopiedField(null), 2000);
   };
 
   const handleDownloadQr = async () => {
@@ -162,66 +159,21 @@ export default function OrderPaymentPage() {
       {!paid ? (
         <>
           <section className="mt-6 rounded-2xl border border-border bg-white p-5">
-            <h2 className="text-sm font-bold uppercase tracking-wide text-brand">Step 1 — Pay with UPI</h2>
+            <h2 className="text-sm font-bold uppercase tracking-wide text-brand">Step 1 — Pay with QR</h2>
+            <p className="mt-2 text-sm text-muted">
+              Open <strong>PhonePe</strong> or <strong>GPay</strong>, scan the QR below, and pay{" "}
+              <strong className="text-brand">{formatINRDecimal(order.amountINR)}</strong>. Mention order{" "}
+              <strong className="text-brand">{order.displayOrderId}</strong> in the note if possible.
+            </p>
 
-            {!showQrFallback ? (
+            {showQr ? (
               <>
-                <p className="mt-2 text-sm text-muted">
-                  Pay using the UPI ID below or open your UPI app (PhonePe / GPay / Paytm).
-                </p>
-
-                <div className="mt-4 space-y-2 text-sm">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <p>
-                      <span className="font-semibold text-brand">UPI ID:</span> {payment?.upiId}
-                    </p>
-                    {payment?.upiId && (
-                      <button
-                        type="button"
-                        onClick={() => void handleCopyUpi()}
-                        className="rounded-full border border-border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-brand hover:border-brand/40"
-                      >
-                        {copiedUpi ? "Copied" : "Copy"}
-                      </button>
-                    )}
-                  </div>
-                  <p>
-                    <span className="font-semibold text-brand">PhonePe / GPay:</span>{" "}
-                    {payment?.upiPhone}
-                  </p>
-                </div>
-
-                {upiPayUrl && (
-                  <a
-                    href={upiPayUrl}
-                    className="mt-4 flex min-h-[44px] items-center justify-center rounded-full bg-brand px-4 text-sm font-semibold text-white hover:bg-brand-dark"
-                  >
-                    Open UPI app to pay
-                  </a>
-                )}
-
-                {canShowQr && (
-                  <button
-                    type="button"
-                    onClick={() => setShowQrFallback(true)}
-                    className="mt-4 w-full text-left text-sm font-semibold text-brand underline-offset-2 hover:underline"
-                  >
-                    UPI payment not working? Pay with QR code
-                  </button>
-                )}
-              </>
-            ) : (
-              <>
-                <p className="mt-2 text-sm text-muted">
-                  Scan this QR in PhonePe / GPay, or download it and pay from your UPI app.
-                </p>
-
                 <div className="mt-4 flex justify-center">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={payment?.qrImagePath}
-                    alt="UPI payment QR code"
-                    className="max-w-[220px] rounded-xl border border-border"
+                    alt="Payment QR code — scan in PhonePe or GPay"
+                    className="max-w-[240px] rounded-xl border border-border shadow-sm"
                     onError={() => setQrBroken(true)}
                   />
                 </div>
@@ -235,23 +187,59 @@ export default function OrderPaymentPage() {
                   <Download className="h-4 w-4" />
                   {downloadingQr ? "Downloading…" : "Download QR code"}
                 </button>
-
-                <button
-                  type="button"
-                  onClick={() => setShowQrFallback(false)}
-                  className="mt-3 w-full text-sm font-semibold text-muted hover:text-brand"
-                >
-                  ← Back to UPI ID payment
-                </button>
               </>
-            )}
-
-            {showQrFallback && qrBroken && (
-              <p className="mt-4 rounded-lg bg-surface px-3 py-2 text-xs text-muted">
-                QR image not available. Pay manually to{" "}
-                <strong>{payment?.upiPhone}</strong> ({payment?.upiId}).
+            ) : (
+              <p className="mt-4 rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-950">
+                {payment?.showQrPayment === false
+                  ? "QR payment is turned off. Use the UPI ID below in your payment app."
+                  : "QR image is not available yet. Copy the UPI ID below and pay in PhonePe / GPay."}
               </p>
             )}
+
+            <div className="mt-5 space-y-3 rounded-xl bg-surface/80 p-4">
+              <p className="text-xs font-bold uppercase tracking-wide text-brand">
+                Or pay manually with UPI ID
+              </p>
+
+              {payment?.upiId && (
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <p className="text-sm">
+                    <span className="font-semibold text-brand">UPI ID:</span>{" "}
+                    <span className="font-mono text-ink">{payment.upiId}</span>
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => void handleCopy("upi", payment.upiId)}
+                    className="inline-flex min-h-[36px] items-center gap-1.5 rounded-full border border-brand px-3 text-xs font-bold uppercase tracking-wide text-brand hover:bg-brand/5"
+                  >
+                    <Copy className="h-3.5 w-3.5" />
+                    {copiedField === "upi" ? "Copied" : "Copy UPI ID"}
+                  </button>
+                </div>
+              )}
+
+              {payment?.upiPhone && (
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <p className="text-sm">
+                    <span className="font-semibold text-brand">PhonePe / GPay:</span>{" "}
+                    <span className="font-mono text-ink">{payment.upiPhone}</span>
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => void handleCopy("phone", payment.upiPhone)}
+                    className="inline-flex min-h-[36px] items-center gap-1.5 rounded-full border border-border px-3 text-xs font-bold uppercase tracking-wide text-brand hover:border-brand/40"
+                  >
+                    <Copy className="h-3.5 w-3.5" />
+                    {copiedField === "phone" ? "Copied" : "Copy number"}
+                  </button>
+                </div>
+              )}
+
+              <p className="text-xs text-muted">
+                Paste the UPI ID in PhonePe / GPay → Pay → UPI ID. Do not use browser “open app” links —
+                scan QR or copy UPI ID for reliable payment.
+              </p>
+            </div>
           </section>
 
           <section className="mt-4 rounded-2xl border border-border bg-white p-5">
