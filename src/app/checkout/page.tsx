@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { useCurrency } from "@/context/CurrencyContext";
 import { useCustomerAuth } from "@/context/CustomerAuthContext";
-import RazorpayCheckout from "@/components/RazorpayCheckout";
+import PlaceOrderButton from "@/components/PlaceOrderButton";
 
 export default function CheckoutPage() {
   const { items, totalINR } = useCart();
@@ -57,7 +57,7 @@ export default function CheckoutPage() {
   return (
     <div className="app-content py-[clamp(1.5rem,5vw,3rem)]">
       <h1 className="text-xl font-bold text-brand">Checkout</h1>
-      <p className="mt-1 text-sm text-muted">Secure payment via Razorpay (UPI, card, wallet)</p>
+      <p className="mt-1 text-sm text-muted">Pay via UPI / PhonePe / GPay after placing your order</p>
       {user ? (
         <p className="mt-2 text-xs text-forest">
           Logged in — this order will appear in{" "}
@@ -166,7 +166,7 @@ export default function CheckoutPage() {
           </div>
         </div>
 
-        <RazorpayCheckout customer={customer} disabled={!valid} />
+        <PlaceOrderButton customer={customer} disabled={!valid} />
       </div>
     </div>
   );

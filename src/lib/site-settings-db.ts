@@ -44,7 +44,11 @@ function patchLegacyMarketing(settings: SiteSettings): SiteSettings {
 }
 
 function patchSiteSettings(settings: SiteSettings): SiteSettings {
-  return patchLegacyMarketing(patchLegacyContact(settings));
+  const withPayment: SiteSettings = {
+    ...settings,
+    payment: settings.payment ?? defaultSiteSettings.payment,
+  };
+  return patchLegacyMarketing(patchLegacyContact(withPayment));
 }
 
 async function readFile(): Promise<SiteSettings | null> {

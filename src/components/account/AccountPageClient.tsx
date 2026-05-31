@@ -90,6 +90,19 @@ export default function AccountPageClient() {
                       </li>
                     ))}
                   </ul>
+                  <div className="mt-3 flex flex-wrap gap-3 text-xs font-semibold">
+                    {o.paymentStatus === "pending" && (
+                      <Link href={`/order/${o.orderId}/payment`} className="text-brand hover:underline">
+                        Complete payment
+                      </Link>
+                    )}
+                    <Link
+                      href={`/track?displayOrderId=${encodeURIComponent(o.displayOrderId)}&phone=${encodeURIComponent(user.phone)}`}
+                      className="text-brand hover:underline"
+                    >
+                      Track order
+                    </Link>
+                  </div>
                 </li>
               ))}
             </ul>

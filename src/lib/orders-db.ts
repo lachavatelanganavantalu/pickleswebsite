@@ -123,6 +123,11 @@ export async function getOrderById(orderId: string): Promise<Order | null> {
   return orders.find((o) => o.orderId === orderId) ?? null;
 }
 
+export async function getOrderByDisplayId(displayOrderId: string): Promise<Order | null> {
+  const orders = await getOrders();
+  return orders.find((o) => o.displayOrderId === displayOrderId) ?? null;
+}
+
 export async function getOrderByRazorpayId(orderId: string): Promise<Order | null> {
   return getOrderById(orderId);
 }

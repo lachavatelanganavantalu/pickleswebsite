@@ -15,11 +15,11 @@ const items = [
   },
   {
     id: "track",
-    href: "/contact",
+    href: "/track",
     label: "Track Order",
-    shortLabel: "Track Or...",
+    shortLabel: "Track",
     icon: MapPin,
-    match: (path: string) => path === "/contact",
+    match: (path: string) => path === "/track" || path.startsWith("/order/"),
   },
   {
     id: "shop",

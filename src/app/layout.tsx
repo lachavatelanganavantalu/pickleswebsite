@@ -3,6 +3,7 @@ import { Instrument_Serif, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/Providers";
 import AppChrome from "@/components/AppChrome";
+import PwaRegister from "@/components/PwaRegister";
 import { BRAND } from "@/data/brand";
 
 const instrument = Instrument_Serif({
@@ -36,6 +37,13 @@ export const metadata: Metadata = {
     "లచ్చవ్వ తెలంగాణ వంటల — 10 pickles (1 kg & 1/2 kg). 5-pickle combo ₹999. PhonePe / GPay 63021 12848.",
   icons: {
     icon: BRAND.favicon,
+    apple: BRAND.logoFallback,
+  },
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Lachava",
   },
   openGraph: {
     title: "Lachava Telangana Vantalu",
@@ -53,6 +61,7 @@ export default function RootLayout({
     <html lang="en" className={`${instrument.variable} ${jakarta.variable}`}>
       <body className="antialiased bg-surface text-ink">
         <Providers>
+          <PwaRegister />
           <div className="app-shell">
             <AppChrome>{children}</AppChrome>
           </div>

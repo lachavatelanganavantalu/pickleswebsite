@@ -41,12 +41,12 @@ export const messages: Messages = {
   "checkout.title": { en: "Checkout", te: "ఆర్డర్" },
   "checkout.placeOrder": { en: "Place order", te: "ఆర్డర్ పెట్టండి" },
   "checkout.demoNote": {
-    en: "Demo mode — order is marked paid instantly (no Razorpay).",
-    te: "డెమో మోడ్ — Razorpay లేకుండా ఆర్డర్ వెంటనే paid అవుతుంది.",
+    en: "After placing order, pay via UPI / QR on the next screen.",
+    te: "ఆర్డర్ తర్వాత UPI / QR తో చెల్లించండి.",
   },
   "checkout.liveNote": {
-    en: "Secure payment via Razorpay.",
-    te: "Razorpay ద్వారా సురక్షిత చెల్లింపు.",
+    en: "Pay with PhonePe / GPay, then send payment screenshot on WhatsApp.",
+    te: "PhonePe / GPay తో చెల్లించి WhatsApp లో screenshot పంపండి.",
   },
 
   "success.title": { en: "Order confirmed", te: "ఆర్డర్ నిర్ధారించబడింది" },

@@ -43,4 +43,10 @@ export const defaultSiteSettings: SiteSettings = {
     en: "⭐ 5 pickles combo — ₹999 (Chicken, Chinthankaya, Mango, Usirikaya, Lemon · 250g each)",
     te: "⭐ 5 పికిల్స్ కాంబో — ₹999 (చికెన్, చింతకాయ, మామిడికాయ, ఉసిరికాయ, నిమ్మకాయ · 250g)",
   },
+  payment: {
+    upiId: "6302112848@ybl",
+    upiPhone: "6302112848",
+    qrImagePath: "/payment-qr.png",
+    payeeName: "Lachava Telangana Vantalu",
+  },
 };

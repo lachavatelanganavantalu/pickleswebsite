@@ -28,6 +28,12 @@ export interface SiteSettings {
     facebook: string;
   };
   announcement: BilingualText;
+  payment: {
+    upiId: string;
+    upiPhone: string;
+    qrImagePath: string;
+    payeeName: string;
+  };
   updatedAt?: string;
 }
 

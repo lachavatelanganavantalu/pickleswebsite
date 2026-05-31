@@ -10,7 +10,7 @@ interface Status {
   revenueINR: number;
   productsCount: number;
   combosCount: number;
-  paymentMode: "demo" | "live";
+  paymentMode: "upi" | "demo";
   paymentModeLabel: { en: string; te: string };
   mongo: boolean;
 }
@@ -47,17 +47,14 @@ export default function AdminDashboard() {
             }`}
           >
             <p className="font-semibold">
-              {status.paymentMode === "demo" ? "Demo website" : "Live payments"}
+              {status.paymentMode === "demo" ? "Local dev mode" : "UPI / QR payments"}
             </p>
             <p className="mt-1">{status.paymentModeLabel.en}</p>
             <p className="mt-0.5 text-xs opacity-80">{status.paymentModeLabel.te}</p>
-            {status.paymentMode === "demo" && (
-              <p className="mt-2 text-xs">
-                To accept real Razorpay payments: set{" "}
-                <code className="bg-white/60 px-1 rounded">DEMO_PAYMENTS=false</code> and add
-                Razorpay keys in Vercel, then redeploy.
-              </p>
-            )}
+            <p className="mt-2 text-xs">
+              Flow: customer places order → pays via QR/UPI → WhatsApp screenshot → you confirm in
+              Orders → Send to DTDC → customer tracks on /track.
+            </p>
           </div>
 
           <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">

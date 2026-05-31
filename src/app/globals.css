@@ -293,6 +293,105 @@ html {
   color: #fff;
 }
 
+.shop-select-btn-open {
+  background-color: #c9a882;
+}
+
+.shop-card-image-dimmed img {
+  filter: blur(3px) brightness(0.55);
+  transform: scale(1.04);
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.shop-card-options-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.shop-card-close-btn {
+  position: absolute;
+  top: clamp(6px, 2vw, 10px);
+  right: clamp(6px, 2vw, 10px);
+  z-index: 2;
+  border: none;
+  background: transparent;
+  font-size: clamp(10px, 2.8vw, 12px);
+  font-weight: 600;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.shop-card-options-panel {
+  width: 100%;
+  padding: clamp(0.5rem, 3vw, 0.75rem);
+  text-align: center;
+}
+
+.shop-card-options-label {
+  margin-bottom: clamp(6px, 2vw, 10px);
+  font-size: clamp(11px, 3vw, 13px);
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+.shop-card-variant-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(4px, 1.5vw, 8px);
+}
+
+.shop-card-variant-pill {
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.92);
+  padding: clamp(5px, 1.8vw, 7px) clamp(8px, 2.5vw, 12px);
+  font-size: clamp(9px, 2.5vw, 11px);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--color-brand);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.shop-card-variant-pill-active {
+  border-color: var(--color-brand-dark);
+  background: var(--color-brand-dark);
+  color: #fff;
+}
+
+.shop-add-cart-btn {
+  margin-top: clamp(4px, 1.5vw, 6px);
+  display: flex;
+  min-height: var(--shop-btn-h);
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 4px;
+  background-color: var(--color-brand-dark);
+  font-size: var(--shop-btn-text);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.shop-add-cart-btn:hover {
+  background-color: var(--color-brand);
+}
+
 .shop-page-title {
   font-size: clamp(1rem, 3.5vw, 1.25rem);
   font-weight: 700;

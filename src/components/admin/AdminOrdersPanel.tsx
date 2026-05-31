@@ -5,6 +5,7 @@ import { Order, PaymentStatus } from "@/lib/orders-db";
 import ConfirmPaymentButton from "@/components/admin/ConfirmPaymentButton";
 import SendToDtdcButton from "@/components/admin/SendToDtdcButton";
 import NotifyCustomerDispatchButton from "@/components/admin/NotifyCustomerDispatchButton";
+import AdminOrderNotes from "@/components/admin/AdminOrderNotes";
 import { formatINR } from "@/lib/currency";
 import { cn } from "@/lib/cn";
 
@@ -25,8 +26,8 @@ function AdminOrderSteps({ order, onRefresh }: { order: Order; onRefresh: () => 
           <div>
             <p className="text-xs font-semibold text-ink">Confirm payment received</p>
             <p className="mt-0.5 text-xs text-muted">
-              Marks order as paid and opens WhatsApp to {order.customer.name} with payment
-              confirmation.
+              After the customer pays via UPI/QR and sends the WhatsApp screenshot, mark payment
+              confirmed and notify them on WhatsApp.
             </p>
             <div className="mt-2">
               <ConfirmPaymentButton order={order} onConfirmed={onRefresh} />
@@ -225,6 +226,7 @@ export default function AdminOrdersPanel() {
               </ul>
 
               <AdminOrderSteps order={o} onRefresh={load} />
+              <AdminOrderNotes order={o} onSaved={load} />
             </article>
           ))}
         </div>

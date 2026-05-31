@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
-import { isDemoPaymentsEnabled } from "@/lib/demo-payments";
-import { getRazorpay } from "@/lib/razorpay";
 import { getCustomerSession } from "@/lib/customer-auth";
-import { saveOrder } from "@/lib/order-store";
-import { createPaidOrder, saveOrderToDb } from "@/lib/orders-db";
+import { saveOrderToDb } from "@/lib/orders-db";
 import { generateDisplayOrderId } from "@/lib/order-id";
 
 export async function POST(req: NextRequest) {
@@ -22,6 +19,8 @@ export async function POST(req: NextRequest) {
     }
 
     const displayOrderId = await generateDisplayOrderId();
+    const orderId = `lach_${crypto.randomUUID()}`;
+
     const orderItems = items.map(
       (i: {
         productName: string;
@@ -47,56 +46,15 @@ export async function POST(req: NextRequest) {
       country: customer.country || "India",
     };
 
-    if (isDemoPaymentsEnabled()) {
-      const orderId = `demo_${crypto.randomUUID()}`;
-      const paymentId = `demo_pay_${Date.now()}`;
-
-      await createPaidOrder(
-        orderId,
-        displayOrderId,
-        paymentId,
-        orderItems,
-        amountINR,
-        customerData,
-        userId
-      );
-
-      return NextResponse.json({
-        demo: true,
-        orderId,
-        displayOrderId,
-        paymentId,
-        amountINR,
-        paymentStatus: "paid",
-        items: orderItems,
-        customer: customerData,
-      });
-    }
-
-    const razorpay = getRazorpay();
-    const order = await razorpay.orders.create({
-      amount: Math.round(amountINR * 100),
-      currency: "INR",
-      receipt: displayOrderId,
-    });
-
-    saveOrder({
-      orderId: order.id,
-      displayOrderId,
-      amountINR,
-      items: orderItems,
-      customer: customerData,
-    });
-
-    await saveOrderToDb(order.id, displayOrderId, orderItems, amountINR, customerData, userId);
+    await saveOrderToDb(orderId, displayOrderId, orderItems, amountINR, customerData, userId);
 
     return NextResponse.json({
-      demo: false,
-      orderId: order.id,
+      orderId,
       displayOrderId,
-      amount: order.amount,
-      currency: order.currency,
-      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+      amountINR,
+      paymentStatus: "pending",
+      items: orderItems,
+      customer: customerData,
     });
   } catch (err) {
     console.error("POST /api/create-order:", err);

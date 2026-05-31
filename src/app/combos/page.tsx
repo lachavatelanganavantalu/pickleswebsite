@@ -1,4 +1,4 @@
-import Link from "next/link";
+import ComboOrderButton from "@/components/ComboOrderButton";
 import ComboVisual from "@/components/ComboVisual";
 import { getAllCombos } from "@/lib/combos-db";
 import { formatINRDecimal } from "@/lib/format-price";
@@ -28,9 +28,7 @@ export default async function CombosPage() {
               <p className="mt-3 text-xs text-muted">
                 Pay via PhonePe / GPay: <strong>63021 12848</strong>
               </p>
-              <Link href="/contact" className="shop-select-btn mt-5">
-                ORDER THIS COMBO
-              </Link>
+              <ComboOrderButton combo={c} />
             </div>
           </article>
         ))}

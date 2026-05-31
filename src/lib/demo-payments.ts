@@ -1,10 +1,7 @@
-/** Demo checkout: Pay marks order paid without Razorpay. Set DEMO_PAYMENTS=false to disable. */
+/** Legacy flag — UPI flow always creates pending orders; demo only affects admin banner. */
 export function isDemoPaymentsEnabled(): boolean {
-  if (process.env.DEMO_PAYMENTS === "false") return false;
-  if (process.env.DEMO_PAYMENTS === "true") return true;
-  if (process.env.NEXT_PUBLIC_DEMO_PAYMENTS === "true") return true;
-  return (
-    !process.env.RAZORPAY_KEY_SECRET?.trim() ||
-    !process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID?.trim()
-  );
+  const flag = process.env.DEMO_PAYMENTS?.trim().toLowerCase();
+  if (flag === "false" || flag === "0" || flag === "no") return false;
+  if (flag === "true" || flag === "1" || flag === "yes") return true;
+  return process.env.NODE_ENV === "development";
 }
