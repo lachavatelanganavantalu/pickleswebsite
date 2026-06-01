@@ -1,5 +1,6 @@
 import { ProductTag, TAG_LABELS } from "@/types/product";
 import { cn } from "@/lib/cn";
+import { isDisabledProductTag } from "@/lib/product-stock";
 
 interface Props {
   tag: ProductTag;
@@ -7,7 +8,7 @@ interface Props {
 }
 
 export default function ProductTagBadge({ tag, className }: Props) {
-  if (!tag || tag === "out_of_stock") return null;
+  if (!tag || isDisabledProductTag(tag)) return null;
   const meta = TAG_LABELS[tag];
   return (
     <span
@@ -29,10 +30,24 @@ export function StockBadge({
   available: boolean;
   tag: ProductTag;
 }) {
-  if (available && tag !== "out_of_stock") return null;
+  if (available && !isDisabledProductTag(tag)) return null;
+  const label =
+    tag && isDisabledProductTag(tag)
+      ? TAG_LABELS[tag].label
+      : TAG_LABELS.out_of_stock.label;
+  const className =
+    tag && isDisabledProductTag(tag)
+      ? TAG_LABELS[tag].className
+      : TAG_LABELS.out_of_stock.className;
+
   return (
-    <span className="inline-flex rounded-full bg-gray-500 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white">
-      Out of stock
+    <span
+      className={cn(
+        "inline-flex rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
+        className
+      )}
+    >
+      {label}
     </span>
   );
 }

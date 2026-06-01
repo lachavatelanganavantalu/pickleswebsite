@@ -2,7 +2,12 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Plus, Pencil, Trash2, Copy } from "lucide-react";
-import { PickleProduct, ProductCategory } from "@/types/product";
+import { PickleProduct, ProductCategory, TAG_LABELS } from "@/types/product";
+import {
+  getProductUnavailableLabel,
+  isDisabledProductTag,
+  isProductPurchasable,
+} from "@/lib/product-stock";
 import ProductVisual from "@/components/ProductVisual";
 import { createEmptyProduct, duplicateProduct } from "@/lib/product-admin";
 import AdminProductEditor from "./AdminProductEditor";
@@ -111,7 +116,13 @@ export default function AdminProductsPanel() {
                   <p className="font-semibold text-ink truncate">{p.name}</p>
                   <p className="text-xs text-muted truncate">{p.slug} · {p.category}</p>
                   <p className="text-xs text-muted mt-1">
-                    {p.available ? "Available" : "Hidden"} · Order {p.displayOrder}
+                    {!isProductPurchasable(p)
+                      ? getProductUnavailableLabel(p)
+                      : p.tag
+                        ? TAG_LABELS[p.tag].label
+                        : "Available"}{" "}
+                    · Order {p.displayOrder}
+                    {p.tag && isDisabledProductTag(p.tag) ? " · not orderable" : ""}
                   </p>
                 </div>
               </div>

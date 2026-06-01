@@ -9,6 +9,11 @@ import CardQuantitySelect from "./CardQuantitySelect";
 import { formatPriceRange } from "@/lib/format-price";
 import { useCart } from "@/context/CartContext";
 import { cn } from "@/lib/cn";
+import {
+  getProductUnavailableCta,
+  getProductUnavailableLabel,
+  isProductPurchasable,
+} from "@/lib/product-stock";
 
 interface Props {
   product: PickleProduct;
@@ -33,7 +38,8 @@ export default function PickleProductCard({ product }: Props) {
   const prices = product.weightOptions.map((w) => w.priceINR);
   const minPrice = Math.min(...prices);
   const maxPrice = Math.max(...prices);
-  const outOfStock = !product.available || product.tag === "out_of_stock";
+  const outOfStock = !isProductPurchasable(product);
+  const unavailableLabel = getProductUnavailableLabel(product);
 
   const selectedVariant = useMemo(
     () => product.weightOptions.find((w) => w.id === selectedVariantId),
@@ -149,7 +155,7 @@ export default function PickleProductCard({ product }: Props) {
         </Link>
         <p className="shop-product-tags">{categoryLabel(product)}</p>
         <p className="shop-product-price">
-          {outOfStock ? "Out of stock" : formatPriceRange(minPrice, maxPrice)}
+          {unavailableLabel ?? formatPriceRange(minPrice, maxPrice)}
         </p>
         <button
           type="button"
@@ -162,7 +168,7 @@ export default function PickleProductCard({ product }: Props) {
           )}
           aria-expanded={optionsOpen}
         >
-          SELECT OPTIONS
+          {outOfStock ? getProductUnavailableCta(product) : "SELECT OPTIONS"}
         </button>
       </div>
     </article>

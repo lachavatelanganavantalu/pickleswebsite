@@ -11,8 +11,14 @@ import {
 import AdminImageUpload from "./AdminImageUpload";
 import { validateCatalogImageDataUrl } from "@/lib/catalog-media";
 import { slugify, validateProduct } from "@/lib/product-admin";
+import {
+  DISABLED_PRODUCT_TAGS,
+  isDisabledProductTag,
+} from "@/lib/product-stock";
 
-const TAGS = Object.keys(TAG_LABELS) as NonNullable<ProductTag>[];
+const PROMO_TAGS = (Object.keys(TAG_LABELS) as NonNullable<ProductTag>[]).filter(
+  (t) => !DISABLED_PRODUCT_TAGS.includes(t as (typeof DISABLED_PRODUCT_TAGS)[number])
+);
 
 interface Props {
   product: PickleProduct;
@@ -35,6 +41,23 @@ export default function AdminProductEditor({
 
   const update = <K extends keyof PickleProduct>(key: K, value: PickleProduct[K]) => {
     setProduct((p) => ({ ...p, [key]: value }));
+  };
+
+  const handleTagChange = (value: string) => {
+    const tag = (value || null) as ProductTag;
+    setProduct((p) => ({
+      ...p,
+      tag,
+      available: tag && isDisabledProductTag(tag) ? false : p.available,
+    }));
+  };
+
+  const handleAvailableChange = (checked: boolean) => {
+    setProduct((p) => ({
+      ...p,
+      available: checked,
+      tag: checked && p.tag && isDisabledProductTag(p.tag) ? null : p.tag,
+    }));
   };
 
   const updateWeight = (
@@ -225,31 +248,53 @@ export default function AdminProductEditor({
           </div>
 
           <div className="grid sm:grid-cols-2 gap-4">
-            <label className="block">
-              <span className="text-xs font-semibold text-muted uppercase">Tag</span>
+            <label className="block sm:col-span-1">
+              <span className="text-xs font-semibold text-muted uppercase">Shop status</span>
               <select
-                value={product.tag ?? ""}
-                onChange={(e) =>
-                  update("tag", (e.target.value || null) as ProductTag)
+                value={
+                  product.tag && isDisabledProductTag(product.tag) ? product.tag : ""
                 }
+                onChange={(e) => handleTagChange(e.target.value)}
                 className="mt-1 w-full rounded-lg border border-border px-3 py-2 text-sm"
               >
+                <option value="">Available to order</option>
+                {DISABLED_PRODUCT_TAGS.map((t) => (
+                  <option key={t} value={t}>
+                    {TAG_LABELS[t].label} — disables ordering
+                  </option>
+                ))}
+              </select>
+              <p className="mt-1 text-[11px] text-muted leading-snug">
+                Out of stock or 100+ orders served hides add-to-cart and shows that label on the shop.
+              </p>
+            </label>
+            <label className="block">
+              <span className="text-xs font-semibold text-muted uppercase">Promo badge</span>
+              <select
+                value={
+                  product.tag && !isDisabledProductTag(product.tag) ? product.tag : ""
+                }
+                onChange={(e) => handleTagChange(e.target.value)}
+                disabled={Boolean(product.tag && isDisabledProductTag(product.tag))}
+                className="mt-1 w-full rounded-lg border border-border px-3 py-2 text-sm disabled:opacity-50"
+              >
                 <option value="">None</option>
-                {TAGS.map((t) => (
+                {PROMO_TAGS.map((t) => (
                   <option key={t} value={t}>
                     {TAG_LABELS[t].label}
                   </option>
                 ))}
               </select>
             </label>
-            <div className="flex flex-col gap-3 pt-5">
+            <div className="flex flex-col gap-3 pt-5 sm:col-span-2">
               <label className="flex items-center gap-2 text-sm">
                 <input
                   type="checkbox"
                   checked={product.available}
-                  onChange={(e) => update("available", e.target.checked)}
+                  onChange={(e) => handleAvailableChange(e.target.checked)}
+                  disabled={Boolean(product.tag && isDisabledProductTag(product.tag))}
                 />
-                Available
+                Available to order
               </label>
               <label className="flex items-center gap-2 text-sm">
                 <input

@@ -1,5 +1,6 @@
 import { PickleProduct, ProductCategory, WeightOption } from "@/types/product";
 import { resolveProductImagePath } from "@/lib/catalog-media";
+import { isDisabledProductTag } from "@/lib/product-stock";
 
 export function slugify(text: string): string {
   return text
@@ -74,8 +75,10 @@ export function normalizeProduct(raw: PickleProduct): PickleProduct {
     description: raw.description?.trim() ?? "",
     category: raw.category,
     spiceLevel: Math.min(5, Math.max(1, Number(raw.spiceLevel) || 3)),
-    tag: raw.available && raw.tag === "out_of_stock" ? null : raw.tag,
-    available: raw.available,
+    tag:
+      raw.available && raw.tag && isDisabledProductTag(raw.tag) ? null : raw.tag,
+    available:
+      raw.tag && isDisabledProductTag(raw.tag) ? false : raw.available,
     featured: raw.featured,
     displayOrder: Number(raw.displayOrder) || 0,
     imageDataUrl,

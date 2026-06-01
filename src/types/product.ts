@@ -15,6 +15,7 @@ export type ProductTag =
   | "limited"
   | "healthy"
   | "out_of_stock"
+  | "orders_served_100"
   | null;
 
 export interface WeightOption {
@@ -55,6 +56,10 @@ export const TAG_LABELS: Record<NonNullable<ProductTag>, { label: string; classN
   limited: { label: "Limited", className: "bg-amber-600 text-white" },
   healthy: { label: "Healthy pick", className: "bg-lime-600 text-white" },
   out_of_stock: { label: "Out of stock", className: "bg-gray-500 text-white" },
+  orders_served_100: {
+    label: "100+ orders served",
+    className: "bg-amber-800 text-white",
+  },
 };
 
 export function spiceDisplay(level: number): string {

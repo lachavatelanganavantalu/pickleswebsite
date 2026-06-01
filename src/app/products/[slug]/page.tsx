@@ -11,6 +11,11 @@ import WishlistHeartButton from "@/components/WishlistHeartButton";
 import { useCart } from "@/context/CartContext";
 import { useCurrency } from "@/context/CurrencyContext";
 import { formatINRDecimal } from "@/lib/format-price";
+import {
+  getProductUnavailableCta,
+  getProductUnavailableLabel,
+  isProductPurchasable,
+} from "@/lib/product-stock";
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -79,7 +84,8 @@ export default function ProductDetailPage() {
     );
   }
 
-  const outOfStock = !product.available || product.tag === "out_of_stock";
+  const outOfStock = !isProductPurchasable(product);
+  const unavailableLabel = getProductUnavailableLabel(product);
   const backHref = "/products";
   const prices = product.weightOptions.map((w) => w.priceINR);
   const minPrice = Math.min(...prices);
@@ -122,8 +128,14 @@ export default function ProductDetailPage() {
         <h1 className="mt-1 text-xl font-bold text-brand">{product.name}</h1>
         <p className="text-sm text-muted">{product.subtitle}</p>
         <p className="mt-2 text-sm font-bold text-brand">
-          {formatINRDecimal(minPrice)}
-          {minPrice !== maxPrice && ` – ${formatINRDecimal(maxPrice)}`}
+          {unavailableLabel ? (
+            <span className="text-gray-600">{unavailableLabel}</span>
+          ) : (
+            <>
+              {formatINRDecimal(minPrice)}
+              {minPrice !== maxPrice && ` – ${formatINRDecimal(maxPrice)}`}
+            </>
+          )}
         </p>
 
         <div className="mt-8">
@@ -161,7 +173,7 @@ export default function ProductDetailPage() {
             className="shop-select-btn disabled:opacity-50"
           >
             {outOfStock
-              ? "OUT OF STOCK"
+              ? getProductUnavailableCta(product)
               : added
                 ? "ADDED — OPENING CART…"
                 : `ADD TO CART — ${format((selected?.priceINR ?? 0) * quantity)}`}
