@@ -237,14 +237,14 @@ html {
 .home-hero {
   position: relative;
   width: 100%;
-  min-height: clamp(11rem, 38vh, 28rem);
+  min-height: clamp(14rem, 48vh, 34rem);
   overflow: hidden;
   background: var(--color-brand-dark);
 }
 
 @media (min-width: 768px) {
   .home-hero {
-    min-height: clamp(14rem, 42vh, 32rem);
+    min-height: clamp(16rem, 44vh, 36rem);
   }
 }
 
@@ -278,9 +278,10 @@ html {
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(58, 34, 20, 0.35) 0%,
-    rgba(58, 34, 20, 0.55) 45%,
-    rgba(58, 34, 20, 0.82) 100%
+    rgba(58, 34, 20, 0.5) 0%,
+    rgba(58, 34, 20, 0.45) 40%,
+    rgba(58, 34, 20, 0.75) 70%,
+    rgba(58, 34, 20, 0.88) 100%
   );
   pointer-events: none;
 }
@@ -292,16 +293,79 @@ html {
   align-items: flex-end;
   width: 100%;
   min-height: inherit;
-  padding: clamp(1rem, 4vw, 2.5rem) var(--content-pad-x);
-  padding-bottom: clamp(2.25rem, 7vw, 3.5rem);
+  padding: clamp(0.75rem, 3.5vw, 2rem) var(--content-pad-x);
+  padding-bottom: clamp(2.5rem, 8vw, 3.75rem);
+}
+
+.home-hero-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.65rem, 3vw, 1.25rem);
+  width: 100%;
+  max-width: 72rem;
+  margin-inline: auto;
+}
+
+@media (min-width: 640px) {
+  .home-hero-layout {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: center;
+    gap: clamp(1rem, 4vw, 2.5rem);
+  }
+}
+
+.home-hero-portrait-wrap {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.home-hero-portrait-frame {
+  --hero-portrait-size: clamp(5.75rem, 34vw, 12.5rem);
+  width: var(--hero-portrait-size);
+  height: var(--hero-portrait-size);
+  padding: clamp(0.2rem, 1.1vw, 0.4rem);
+  border-radius: 50%;
+  background: linear-gradient(145deg, #f5c842 0%, #c9a227 55%, #f5c842 100%);
+  box-shadow:
+    0 0 0 clamp(2px, 0.6vw, 4px) rgba(255, 255, 255, 0.25),
+    0 clamp(6px, 2.5vw, 16px) clamp(20px, 5vw, 40px) rgba(0, 0, 0, 0.45);
+}
+
+.home-hero-portrait-photo {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center 22%;
+  display: block;
+  background: var(--color-brand-dark);
+}
+
+.home-hero-copy-stack {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  min-width: 0;
+  min-height: clamp(3.75rem, 22vw, 8rem);
+  text-align: center;
+}
+
+@media (min-width: 640px) {
+  .home-hero-copy-stack {
+    text-align: left;
+    max-width: min(100%, 36rem);
+  }
 }
 
 .home-hero-copy {
   position: absolute;
-  left: var(--content-pad-x);
-  right: var(--content-pad-x);
-  bottom: clamp(2rem, 6vw, 3rem);
-  max-width: min(100%, 52rem);
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
   opacity: 0;
   transform: translateY(8px);
   transition: opacity 0.8s ease, transform 0.8s ease;
