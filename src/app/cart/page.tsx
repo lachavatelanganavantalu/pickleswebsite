@@ -5,10 +5,13 @@ import EditableCartList from "@/components/EditableCartList";
 import PendingOrderBanner from "@/components/PendingOrderBanner";
 import { useCart } from "@/context/CartContext";
 import { useCurrency } from "@/context/CurrencyContext";
+import { useCustomerAuth } from "@/context/CustomerAuthContext";
+import { loginUrl } from "@/lib/customer-login-url";
 
 export default function CartPage() {
   const { items, totalINR } = useCart();
   const { format } = useCurrency();
+  const { user, loading: authLoading } = useCustomerAuth();
 
   if (items.length === 0) {
     return (
@@ -50,11 +53,16 @@ export default function CartPage() {
       </div>
 
       <div className="mt-6 flex flex-col gap-3">
+        {!authLoading && !user && (
+          <p className="text-center text-xs text-muted">
+            Log in or sign up to place your order.
+          </p>
+        )}
         <Link
-          href="/checkout"
+          href={user ? "/checkout" : loginUrl("/checkout")}
           className="flex w-full min-h-[48px] items-center justify-center rounded-full bg-brand text-sm font-bold uppercase tracking-wide text-white hover:bg-brand-dark"
         >
-          Proceed to checkout
+          {user ? "Proceed to checkout" : "Log in to checkout"}
         </Link>
         <Link
           href="/products"

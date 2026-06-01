@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { readJsonResponse } from "@/lib/read-json-response";
 import { useCart } from "@/context/CartContext";
 import { useOrder } from "@/context/OrderContext";
+import { useCustomerAuth } from "@/context/CustomerAuthContext";
+import { loginUrl } from "@/lib/customer-login-url";
 import { writePendingOrderSession } from "@/lib/pending-order-session";
 
 interface CustomerForm {
@@ -26,11 +28,16 @@ interface Props {
 export default function PlaceOrderButton({ customer, disabled }: Props) {
   const { items, totalINR } = useCart();
   const { setLastOrder } = useOrder();
+  const { user } = useCustomerAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const handlePlaceOrder = async () => {
+    if (!user) {
+      router.push(loginUrl("/checkout"));
+      return;
+    }
     if (disabled || items.length === 0) return;
     setLoading(true);
     setError("");
@@ -58,6 +65,10 @@ export default function PlaceOrderButton({ customer, disabled }: Props) {
         items: { productName: string; variantLabel: string; quantity: number }[];
         paymentStatus?: string;
       }>(res);
+      if (res.status === 401) {
+        router.push(loginUrl("/checkout"));
+        throw new Error(data.error || "Please log in to place an order.");
+      }
       if (!res.ok) throw new Error(data.error || "Could not place order");
 
       const orderPayload = {

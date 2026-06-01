@@ -2,17 +2,20 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import { useCurrency } from "@/context/CurrencyContext";
 import { useCustomerAuth } from "@/context/CustomerAuthContext";
+import { loginUrl } from "@/lib/customer-login-url";
 import PlaceOrderButton from "@/components/PlaceOrderButton";
 import EditableCartList from "@/components/EditableCartList";
 import PendingOrderBanner from "@/components/PendingOrderBanner";
 
 export default function CheckoutPage() {
+  const router = useRouter();
   const { items, totalINR } = useCart();
   const { format } = useCurrency();
-  const { user } = useCustomerAuth();
+  const { user, loading: authLoading } = useCustomerAuth();
   const [customer, setCustomer] = useState({
     name: "",
     email: "",
@@ -23,6 +26,13 @@ export default function CheckoutPage() {
     zip: "",
     country: "India",
   });
+
+  useEffect(() => {
+    if (authLoading) return;
+    if (!user) {
+      router.replace(loginUrl("/checkout"));
+    }
+  }, [authLoading, user, router]);
 
   useEffect(() => {
     if (user?.phone) {
@@ -41,6 +51,14 @@ export default function CheckoutPage() {
     customer.city.trim() &&
     customer.state.trim() &&
     customer.zip.trim();
+
+  if (authLoading || !user) {
+    return (
+      <div className="app-content py-20 text-center text-sm text-muted">
+        {authLoading ? "Checking login…" : "Redirecting to log in…"}
+      </div>
+    );
+  }
 
   if (items.length === 0) {
     return (
@@ -64,21 +82,12 @@ export default function CheckoutPage() {
       <div className="mt-4">
         <PendingOrderBanner />
       </div>
-      {user ? (
-        <p className="mt-2 text-xs text-forest">
-          Logged in — this order will appear in{" "}
-          <Link href="/account" className="font-semibold underline">
-            My account
-          </Link>
-        </p>
-      ) : (
-        <p className="mt-2 text-xs text-muted">
-          <Link href="/account" className="font-semibold text-brand hover:underline">
-            Create an account
-          </Link>{" "}
-          to see order history (mobile + password).
-        </p>
-      )}
+      <p className="mt-2 text-xs text-forest">
+        Logged in as {user.phone} — order will appear in{" "}
+        <Link href="/account" className="font-semibold underline">
+          My account
+        </Link>
+      </p>
 
       <div className="mt-8 space-y-8">
         <form className="space-y-4 rounded-xl bg-white p-5 border border-border" onSubmit={(e) => e.preventDefault()}>

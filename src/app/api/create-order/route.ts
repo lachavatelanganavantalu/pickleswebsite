@@ -20,7 +20,13 @@ export async function POST(req: NextRequest) {
     }
 
     const session = getCustomerSession(req);
-    const userId = session?.userId;
+    if (!session) {
+      return NextResponse.json(
+        { error: "Please log in to place an order." },
+        { status: 401 }
+      );
+    }
+    const userId = session.userId;
     const body = await req.json();
     const { amountINR, items, customer } = body;
 

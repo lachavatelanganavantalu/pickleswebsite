@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useCustomerAuth } from "@/context/CustomerAuthContext";
+import { LOGIN_NEXT_PARAM, sanitizeLoginNext } from "@/lib/customer-login-url";
 import { formatPhoneDisplay } from "@/lib/phone";
 import { formatINR } from "@/lib/currency";
 
@@ -11,6 +12,8 @@ type Tab = "login" | "register";
 
 export default function AccountPageClient() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const loginNext = sanitizeLoginNext(searchParams.get(LOGIN_NEXT_PARAM));
   const { user, orders, loading, login, register, logout, changePassword } = useCustomerAuth();
   const [tab, setTab] = useState<Tab>("login");
   const [phone, setPhone] = useState("");
@@ -24,6 +27,12 @@ export default function AccountPageClient() {
   const inputClass =
     "mt-1 w-full rounded-xl border border-border bg-white px-3 py-2.5 text-sm focus:border-brand/50 focus:outline-none";
 
+  useEffect(() => {
+    if (!loading && user && loginNext) {
+      router.replace(loginNext);
+    }
+  }, [loading, user, loginNext, router]);
+
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -36,7 +45,7 @@ export default function AccountPageClient() {
       return;
     }
     setPassword("");
-    router.refresh();
+    router.replace(loginNext ?? "/account");
   };
 
   const handleChangePassword = async (e: React.FormEvent) => {
@@ -166,6 +175,11 @@ export default function AccountPageClient() {
   return (
     <div className="app-content py-[clamp(1.5rem,5vw,3rem)] max-w-md mx-auto">
       <h1 className="shop-page-title">My account</h1>
+      {loginNext === "/checkout" ? (
+        <p className="mt-2 rounded-lg bg-surface px-3 py-2 text-sm text-brand font-medium">
+          Log in or sign up to place your order.
+        </p>
+      ) : null}
       <p className="mt-1 text-sm text-muted">
         Create an account with your mobile number and a password you choose. No email required.
       </p>

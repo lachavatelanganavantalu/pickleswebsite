@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import AccountPageClient from "@/components/account/AccountPageClient";
 
 export const metadata = {
@@ -5,5 +6,13 @@ export const metadata = {
 };
 
 export default function AccountPage() {
-  return <AccountPageClient />;
+  return (
+    <Suspense
+      fallback={
+        <div className="app-content py-20 text-center text-sm text-muted">Loading…</div>
+      }
+    >
+      <AccountPageClient />
+    </Suspense>
+  );
 }
