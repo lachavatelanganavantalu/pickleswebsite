@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { FSSAI_CERTIFICATE, FSSAI_LOGO } from "@/data/gallery";
+import { FSSAI_CERTIFICATE } from "@/data/gallery";
 
 export default function FssaiHeroBadge() {
   const [open, setOpen] = useState(false);
@@ -30,8 +30,7 @@ export default function FssaiHeroBadge() {
         aria-label="View FSSAI certificate"
         title="FSSAI certified — view certificate"
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={FSSAI_LOGO} alt="" className="home-fssai-badge-img" />
+        <span className="home-fssai-badge-label">fssai</span>
       </button>
 
       {open && (

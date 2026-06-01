@@ -328,13 +328,13 @@ html {
   z-index: 4;
   top: max(0.65rem, env(safe-area-inset-top, 0px));
   right: max(var(--content-pad-x), env(safe-area-inset-right, 0px));
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: clamp(2.75rem, 11vw, 3.75rem);
-  height: clamp(2.75rem, 11vw, 3.75rem);
-  padding: 0.25rem;
-  border-radius: 0.5rem;
+  min-height: 2rem;
+  padding: 0.35rem 0.65rem;
+  border: none;
+  border-radius: 0.35rem;
   background: rgba(255, 255, 255, 0.92);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
   cursor: pointer;
@@ -346,10 +346,14 @@ html {
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
-.home-fssai-badge-img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+.home-fssai-badge-label {
+  font-size: clamp(0.8rem, 2.8vw, 0.95rem);
+  font-style: italic;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: lowercase;
+  color: var(--color-brand-dark, #3a2214);
+  line-height: 1;
 }
 
 .home-fssai-modal {
