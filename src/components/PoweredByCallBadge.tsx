@@ -31,8 +31,8 @@ export default function PoweredByCallBadge({ className }: Props) {
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={POWERED_BY_IMAGE_PATH}
-            alt="Powered by — tap to call"
-            className="h-auto max-h-14 w-auto max-w-[min(100%,16rem)] object-contain sm:max-h-16 sm:max-w-[18rem]"
+            alt="DTDC Courier & Logistics Husnabad — tap to call"
+            className="h-auto max-h-20 w-auto max-w-[min(100%,11rem)] object-contain sm:max-h-24 sm:max-w-[12.5rem]"
             onError={() => setImageOk(false)}
           />
         ) : (

@@ -17,8 +17,8 @@ export function getDtdcTelHref(): string {
   return digits.startsWith("91") ? `tel:+${digits}` : `tel:+91${digits}`;
 }
 
-/** Drop your artwork at `public/powered-by.png` (or .webp / .svg). */
-export const POWERED_BY_IMAGE_PATH = "/powered-by.png";
+/** DTDC Husnabad badge on the track page (`public/DTDCH.png`). */
+export const POWERED_BY_IMAGE_PATH = "/DTDCH.png";
 
 export function buildDtdcMessage(order: Order): string {
   const lines = [
