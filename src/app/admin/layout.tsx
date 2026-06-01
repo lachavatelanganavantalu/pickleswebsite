@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     template: "%s | Lachava Admin",
   },
   description: "Admin — orders, products, analytics, and settings",
-  manifest: "/admin-manifest.webmanifest",
+  manifest: "/admin/manifest.webmanifest",
   robots: { index: false, follow: false },
   appleWebApp: {
     capable: true,

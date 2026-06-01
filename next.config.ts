@@ -1,7 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  async redirects() {
+    return [
+      {
+        source: "/combopack.png",
+        destination: "/combo.jpeg",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

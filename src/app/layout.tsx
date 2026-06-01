@@ -5,6 +5,7 @@ import Providers from "@/components/Providers";
 import AppChrome from "@/components/AppChrome";
 import PwaRegister from "@/components/PwaRegister";
 import { BRAND } from "@/data/brand";
+import { getSiteUrl } from "@/lib/site-url";
 
 const instrument = Instrument_Serif({
   weight: "400",
@@ -34,9 +35,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://lachava.vercel.app"
-  ),
+  metadataBase: new URL(getSiteUrl()),
   title: {
     default: "Lachava | Telangana Vantalu",
     template: "%s | Lachava",
