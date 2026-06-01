@@ -4,21 +4,27 @@
   "description": "లచ్చవ్వ తెలంగాణ వంటల — order pickles online",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f7f2ea",
+  "background_color": "#4a2c1a",
   "theme_color": "#4a2c1a",
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "/logo.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/combopack.png",
+      "src": "/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }

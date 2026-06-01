@@ -24,8 +24,8 @@ export default function BrandLogo({
 
   if (variant === "header") {
     return (
-      <Link href={href} className="inline-flex flex-col items-center hover:opacity-95 transition-opacity">
-        <div className="flex h-[clamp(3rem,10vw,3.5rem)] w-[clamp(3rem,10vw,3.5rem)] items-center justify-center overflow-hidden rounded-full bg-white shadow-sm ring-2 ring-gold/80">
+      <Link href={href} className="inline-flex items-center hover:opacity-95 transition-opacity">
+        <div className="flex h-[clamp(2.5rem,8vw,3.125rem)] w-[clamp(2.5rem,8vw,3.125rem)] shrink-0 items-center justify-center overflow-hidden rounded-full bg-white shadow-sm ring-2 ring-gold/80">
           {src === "none" ? (
             <span className="font-display text-xl font-bold text-brand">ల</span>
           ) : (

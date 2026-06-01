@@ -44,8 +44,11 @@ export const metadata: Metadata = {
   description:
     "లచ్చవ్వ తెలంగాణ వంటల — 10 pickles (1 kg & 1/2 kg). 5-pickle combo ₹999. PhonePe / GPay 63021 12848.",
   icons: {
-    icon: BRAND.favicon,
-    apple: BRAND.logoFallback,
+    icon: [
+      { url: BRAND.favicon, sizes: "512x512", type: "image/png" },
+      { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: [{ url: BRAND.appleTouchIcon, sizes: "180x180", type: "image/png" }],
   },
   manifest: "/manifest.webmanifest",
   appleWebApp: {
@@ -57,6 +60,20 @@ export const metadata: Metadata = {
     title: "Lachava Telangana Vantalu",
     description: "లచ్చవ్వ తెలంగాణ వంటల — official pickle menu",
     type: "website",
+    images: [
+      {
+        url: BRAND.ogImage,
+        width: 1200,
+        height: 630,
+        alt: "Lachava Pickles",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Lachava Telangana Vantalu",
+    description: "లచ్చవ్వ తెలంగాణ వంటల — official pickle menu",
+    images: [BRAND.ogImage],
   },
 };
 

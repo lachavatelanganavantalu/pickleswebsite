@@ -27,34 +27,31 @@ export default function Navbar() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 bg-brand pt-[env(safe-area-inset-top)] text-white">
-      <div
-        className="relative mx-auto flex items-center justify-between px-[var(--content-pad-x)]"
-        style={{ height: "var(--header-h)", maxWidth: "var(--content-max)" }}
-      >
-        <button
-          type="button"
-          onClick={() => setOpen(!open)}
-          className="flex min-h-[44px] min-w-[4.5rem] items-center gap-2 pl-1 text-white"
-          aria-label="Menu"
-        >
-          {open ? (
-            <X className="h-[clamp(1.25rem,4vw,1.375rem)] w-[clamp(1.25rem,4vw,1.375rem)]" strokeWidth={2} />
-          ) : (
-            <Menu className="h-[clamp(1.25rem,4vw,1.375rem)] w-[clamp(1.25rem,4vw,1.375rem)]" strokeWidth={2} />
-          )}
-          <span className="text-[clamp(0.625rem,2.4vw,0.75rem)] font-bold uppercase tracking-[0.12em]">
-            MENU
-          </span>
-        </button>
-
-        <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-          <div className="pointer-events-auto">
-            <BrandLogo size="md" variant="header" />
-          </div>
+    <header className="site-header">
+      <div className="site-header-bar">
+        <div className="site-header-start">
+          <button
+            type="button"
+            onClick={() => setOpen(!open)}
+            className="flex min-h-[44px] min-w-[4.5rem] items-center gap-2 pl-1 text-white"
+            aria-label="Menu"
+          >
+            {open ? (
+              <X className="h-[clamp(1.25rem,4vw,1.375rem)] w-[clamp(1.25rem,4vw,1.375rem)]" strokeWidth={2} />
+            ) : (
+              <Menu className="h-[clamp(1.25rem,4vw,1.375rem)] w-[clamp(1.25rem,4vw,1.375rem)]" strokeWidth={2} />
+            )}
+            <span className="text-[clamp(0.625rem,2.4vw,0.75rem)] font-bold uppercase tracking-[0.12em]">
+              MENU
+            </span>
+          </button>
         </div>
 
-        <div className="flex min-w-[4.5rem] items-center justify-end gap-0.5">
+        <div className="site-header-center">
+          <BrandLogo size="md" variant="header" />
+        </div>
+
+        <div className="site-header-end">
           <PwaInstallButton />
           <button
             type="button"
@@ -87,10 +84,7 @@ export default function Navbar() {
 
       {open && (
         <nav className="border-t border-white/15 bg-brand-dark">
-          <div
-            className="mx-auto px-[var(--content-pad-x)] py-3"
-            style={{ maxWidth: "var(--content-max)" }}
-          >
+          <div className="mx-auto w-full px-[var(--content-pad-x)] py-3">
             <div className="space-y-0.5">
               {links.map((l) => (
                 <Link
