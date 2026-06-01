@@ -21,20 +21,24 @@ export function getDtdcTelHref(): string {
 export const POWERED_BY_IMAGE_PATH = "/DTDCH.png";
 
 export function buildDtdcMessage(order: Order): string {
-  const { customer } = order;
-  const cityStateZip = [customer.city, customer.state].filter(Boolean).join(", ");
-  const cityLine = [cityStateZip, customer.zip].filter(Boolean).join(" ");
+  const country = order.customer.country?.trim() || "India";
+  const email = order.customer.email?.trim() || "";
+  const phone = order.customer.phone?.trim() || "";
+  const city = order.customer.city?.trim() || "";
+  const state = order.customer.state?.trim() || "";
+  const zip = order.customer.zip?.trim() || "";
+  const cityStateZip = [city, state].filter(Boolean).join(", ") + (zip ? ` ${zip}` : "");
 
-  return [
+  const lines = [
     `Order ID: ${order.displayOrderId}`,
-    `Customer: ${customer.name}`,
-    `Phone: ${customer.phone}`,
-    `Email: ${customer.email || ""}`,
+    `Customer: ${order.customer.name}`,
     "Delivery address:",
-    customer.address,
-    cityLine,
-    customer.country || "India",
-  ].join("\n");
+    order.customer.address?.trim() || "",
+    cityStateZip.trim(),
+    `${country}.Email: ${email} Phone: ${phone}`,
+  ];
+
+  return lines.filter((line) => line !== "").join("\n");
 }
 
 export function dtdcWhatsAppUrl(order: Order): string {
