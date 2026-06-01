@@ -15,7 +15,7 @@ export interface ComboPack {
   updatedAt?: string;
 }
 
-export const COMBO_PACK_IMAGE = "/combopack.png";
+export const COMBO_PACK_IMAGE = "/combo.jpeg";
 
 /** Official combo from client menu (WhatsApp / page). */
 export const comboPacks: ComboPack[] = [

@@ -72,7 +72,7 @@ export const defaultProducts: PickleProduct[] = [
     available: true,
     featured: false,
     displayOrder: 4,
-    imagePath: "/products/chinthankaya-pickle.jpg",
+    imagePath: "/products/chinthankaya-pickle.jpeg",
     weightOptions: [
       { id: "500g", label: "1/2 kg (500g)", priceINR: 500 },
       { id: "1kg", label: "1 kg", priceINR: 900 },

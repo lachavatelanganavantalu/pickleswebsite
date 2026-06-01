@@ -37,6 +37,15 @@ function needsCombosReseed(combos: ComboPack[]): boolean {
   if (combos.some((c) => LEGACY_COMBO_IDS.has(c.id))) return true;
   const defaultIds = new Set(defaultCombos.map((c) => c.id));
   if (combos.length !== defaultCombos.length) return true;
+  if (
+    !combos.every((c) => {
+      const def = defaultCombos.find((d) => d.id === c.id);
+      if (!def) return false;
+      return (c.imagePath?.trim() || "") === (def.imagePath?.trim() || "");
+    })
+  ) {
+    return true;
+  }
   return !combos.every((c) => defaultIds.has(c.id));
 }
 

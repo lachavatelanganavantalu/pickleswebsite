@@ -54,6 +54,7 @@ function needsProductsReseed(products: PickleProduct[]): boolean {
   return defaultProducts.some((def) => {
     const stored = products.find((p) => p.id === def.id);
     if (!stored) return true;
+    if ((stored.imagePath?.trim() || "") !== (def.imagePath?.trim() || "")) return true;
     return def.weightOptions.some(
       (w, i) =>
         w.priceINR !== stored.weightOptions[i]?.priceINR ||
@@ -70,7 +71,7 @@ function mergeWithMenuSource(stored: PickleProduct[]): PickleProduct[] {
     return {
       ...def,
       available: existing.available,
-      imagePath: existing.imagePath?.trim() || def.imagePath,
+      imagePath: def.imagePath?.trim() || existing.imagePath?.trim() || "",
       imageDataUrl: existing.imageDataUrl,
       displayOrder: existing.displayOrder ?? def.displayOrder,
     };
