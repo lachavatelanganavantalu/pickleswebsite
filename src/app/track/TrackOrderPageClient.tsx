@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import OrderTimeline from "@/components/OrderTimeline";
+import PoweredByCallBadge from "@/components/PoweredByCallBadge";
 import { formatINRDecimal } from "@/lib/format-price";
 import type { TimelineStep } from "@/lib/order-timeline";
 
@@ -116,6 +117,8 @@ export default function TrackOrderPageClient() {
           )}
         </section>
       )}
+
+      <PoweredByCallBadge />
     </div>
   );
 }

@@ -10,6 +10,16 @@ export function getDtdcWhatsAppNumber(): string {
   );
 }
 
+/** Opens the phone dialer on mobile (and tel-capable devices). */
+export function getDtdcTelHref(): string {
+  const digits = getDtdcWhatsAppNumber().replace(/\D/g, "");
+  if (!digits) return "tel:+919949525111";
+  return digits.startsWith("91") ? `tel:+${digits}` : `tel:+91${digits}`;
+}
+
+/** Drop your artwork at `public/powered-by.png` (or .webp / .svg). */
+export const POWERED_BY_IMAGE_PATH = "/powered-by.png";
+
 export function buildDtdcMessage(order: Order): string {
   const lines = [
     "DTDC Shipment Request — Lachava Pickles",
