@@ -55,17 +55,6 @@ export default function HomeHeroCarousel() {
 
       <div className="home-hero-content">
         <div className="home-hero-layout">
-          <div className="home-hero-portrait-wrap">
-            <div className="home-hero-portrait-frame">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={LACHAVA_PHOTO}
-                alt="Lachava preparing traditional pickles"
-                className="home-hero-portrait-photo"
-              />
-            </div>
-          </div>
-
           <div className="home-hero-copy-stack">
             {SLIDES.map((slide, index) => (
               <div
@@ -81,6 +70,17 @@ export default function HomeHeroCarousel() {
                 </p>
               </div>
             ))}
+          </div>
+
+          <div className="home-hero-portrait-wrap">
+            <div className="home-hero-portrait-frame">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={LACHAVA_PHOTO}
+                alt="Lachava preparing traditional pickles"
+                className="home-hero-portrait-photo"
+              />
+            </div>
           </div>
         </div>
       </div>

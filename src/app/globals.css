@@ -293,37 +293,35 @@ html {
   align-items: flex-end;
   width: 100%;
   min-height: inherit;
-  padding: clamp(0.75rem, 3.5vw, 2rem) var(--content-pad-x);
-  padding-bottom: clamp(2.5rem, 8vw, 3.75rem);
+  padding-top: clamp(0.75rem, 3.5vw, 2rem);
+  padding-inline: max(var(--content-pad-x), env(safe-area-inset-left, 0px))
+    max(var(--content-pad-x), env(safe-area-inset-right, 0px));
+  padding-bottom: max(
+    clamp(2.5rem, 8vw, 3.75rem),
+    calc(env(safe-area-inset-bottom, 0px) + 2rem)
+  );
 }
 
 .home-hero-layout {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: clamp(0.65rem, 3vw, 1.25rem);
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: clamp(0.5rem, 3vw, 2.5rem);
   width: 100%;
   max-width: 72rem;
   margin-inline: auto;
 }
 
-@media (min-width: 640px) {
-  .home-hero-layout {
-    flex-direction: row;
-    align-items: flex-end;
-    justify-content: center;
-    gap: clamp(1rem, 4vw, 2.5rem);
-  }
-}
-
 .home-hero-portrait-wrap {
   flex-shrink: 0;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
+  align-self: flex-end;
 }
 
 .home-hero-portrait-frame {
-  --hero-portrait-size: clamp(5.75rem, 34vw, 12.5rem);
+  --hero-portrait-size: clamp(4.5rem, 26vw, 12.5rem);
   width: var(--hero-portrait-size);
   height: var(--hero-portrait-size);
   padding: clamp(0.2rem, 1.1vw, 0.4rem);
@@ -346,17 +344,48 @@ html {
 
 .home-hero-copy-stack {
   position: relative;
-  width: 100%;
   flex: 1;
   min-width: 0;
-  min-height: clamp(3.75rem, 22vw, 8rem);
-  text-align: center;
+  min-height: clamp(3.75rem, 20vw, 8rem);
+  text-align: left;
+  padding-right: clamp(0.25rem, 1vw, 0.5rem);
+}
+
+@media (max-width: 380px) {
+  .home-hero-layout {
+    gap: clamp(0.35rem, 2vw, 0.5rem);
+  }
+
+  .home-hero-portrait-frame {
+    --hero-portrait-size: clamp(3.75rem, 24vw, 5.25rem);
+  }
+
+  .home-hero-title {
+    font-size: clamp(1.2rem, calc(4vw + 0.7rem), 1.45rem);
+  }
+
+  .home-hero-subtitle {
+    font-size: clamp(0.9rem, calc(3vw + 0.5rem), 1rem);
+  }
 }
 
 @media (min-width: 640px) {
   .home-hero-copy-stack {
-    text-align: left;
     max-width: min(100%, 36rem);
+  }
+
+  .home-hero-portrait-frame {
+    --hero-portrait-size: clamp(7rem, 22vw, 12.5rem);
+  }
+}
+
+@media (min-width: 1024px) {
+  .home-hero-layout {
+    gap: clamp(1.5rem, 3vw, 3rem);
+  }
+
+  .home-hero-portrait-frame {
+    --hero-portrait-size: clamp(8rem, 16vw, 13rem);
   }
 }
 
