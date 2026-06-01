@@ -21,30 +21,20 @@ export function getDtdcTelHref(): string {
 export const POWERED_BY_IMAGE_PATH = "/DTDCH.png";
 
 export function buildDtdcMessage(order: Order): string {
-  const lines = [
-    "DTDC Shipment Request — Lachava Pickles",
-    `Attn: ${DTDC_CONTACT_NAME}`,
-    "",
+  const { customer } = order;
+  const cityStateZip = [customer.city, customer.state].filter(Boolean).join(", ");
+  const cityLine = [cityStateZip, customer.zip].filter(Boolean).join(" ");
+
+  return [
     `Order ID: ${order.displayOrderId}`,
-    `Customer: ${order.customer.name}`,
-    `Phone: ${order.customer.phone}`,
-    `Email: ${order.customer.email || "—"}`,
-    "",
+    `Customer: ${customer.name}`,
+    `Phone: ${customer.phone}`,
+    `Email: ${customer.email || ""}`,
     "Delivery address:",
-    order.customer.address,
-    `${order.customer.city}, ${order.customer.state} ${order.customer.zip}`,
-    order.customer.country || "India",
-    "",
-    "Order items:",
-    ...order.items.map(
-      (i) =>
-        `• ${i.productName} (${i.variantLabel}) × ${i.quantity} — ₹${i.priceINR * i.quantity}`
-    ),
-    "",
-    `Order total: ₹${order.amountINR}`,
-    order.paymentId ? `Payment ref: ${order.paymentId}` : "",
-  ].filter(Boolean);
-  return lines.join("\n");
+    customer.address,
+    cityLine,
+    customer.country || "India",
+  ].join("\n");
 }
 
 export function dtdcWhatsAppUrl(order: Order): string {
