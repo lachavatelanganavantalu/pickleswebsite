@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import PwaInstallButton from "@/components/PwaInstallButton";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -73,6 +74,9 @@ export default function AdminLoginPage() {
         >
           {loading ? "Signing in…" : "Sign in"}
         </button>
+        <div className="mt-4 [&_button]:border-border [&_button]:text-muted [&_button]:hover:bg-surface">
+          <PwaInstallButton variant="admin" />
+        </div>
       </form>
     </div>
   );

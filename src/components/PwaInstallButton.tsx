@@ -24,7 +24,13 @@ function isIosDevice(): boolean {
   );
 }
 
-export default function PwaInstallButton() {
+type Variant = "shop" | "admin";
+
+interface Props {
+  variant?: Variant;
+}
+
+export default function PwaInstallButton({ variant = "shop" }: Props) {
   const [standalone, setStandalone] = useState(true);
   const [ios, setIos] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
@@ -79,27 +85,52 @@ export default function PwaInstallButton() {
     }
 
     if (ios) {
-      showHint("Tap Share, then choose “Add to Home Screen”.");
+      showHint(
+        variant === "admin"
+          ? "Tap Share, then “Add to Home Screen” to install Lachava Admin."
+          : "Tap Share, then choose “Add to Home Screen”."
+      );
       return;
     }
 
-    showHint("Open your browser menu and choose “Install app” or “Add to Home screen”.");
+    showHint(
+      variant === "admin"
+        ? "Open the browser menu and choose “Install app” for Lachava Admin."
+        : "Open your browser menu and choose “Install app” or “Add to Home screen”."
+    );
   };
 
   if (standalone) return null;
+
+  const isAdmin = variant === "admin";
 
   return (
     <div ref={wrapRef} className="relative">
       <button
         type="button"
         onClick={() => void handleInstall()}
-        className="flex h-10 min-w-[2.5rem] items-center justify-center gap-1 rounded-lg px-1.5 text-white hover:bg-white/10 sm:h-11 sm:min-w-0 sm:px-2"
-        aria-label="Install app"
+        className={
+          isAdmin
+            ? "flex w-full items-center justify-center gap-2 rounded-lg border border-surface/20 px-3 py-2.5 text-sm font-semibold text-surface/80 hover:bg-surface/10 hover:text-white"
+            : "flex h-10 min-w-[2.5rem] items-center justify-center gap-1 rounded-lg px-1.5 text-white hover:bg-white/10 sm:h-11 sm:min-w-0 sm:px-2"
+        }
+        aria-label={isAdmin ? "Install admin app" : "Install app"}
         aria-expanded={hintOpen}
       >
-        <Download className="h-[clamp(1rem,3.2vw,1.125rem)] w-[clamp(1rem,3.2vw,1.125rem)]" strokeWidth={2.25} />
-        <span className="hidden min-[420px]:inline text-[clamp(0.5625rem,2vw,0.625rem)] font-bold uppercase tracking-[0.1em]">
-          Install
+        <Download
+          className={
+            isAdmin ? "h-4 w-4 shrink-0" : "h-[clamp(1rem,3.2vw,1.125rem)] w-[clamp(1rem,3.2vw,1.125rem)]"
+          }
+          strokeWidth={2.25}
+        />
+        <span
+          className={
+            isAdmin
+              ? "truncate"
+              : "hidden min-[420px]:inline text-[clamp(0.5625rem,2vw,0.625rem)] font-bold uppercase tracking-[0.1em]"
+          }
+        >
+          {isAdmin ? "Install admin app" : "Install"}
         </span>
       </button>
 
@@ -107,7 +138,11 @@ export default function PwaInstallButton() {
         <div
           role="dialog"
           aria-label="Install instructions"
-          className="absolute right-0 top-full z-[60] mt-2 w-[min(16rem,calc(100vw-2rem))] rounded-xl border border-white/20 bg-brand-dark p-3 text-left shadow-lg"
+          className={
+            isAdmin
+              ? "absolute left-0 right-0 top-full z-[60] mt-2 rounded-xl border border-surface/20 bg-ink p-3 text-left shadow-lg"
+              : "absolute right-0 top-full z-[60] mt-2 w-[min(16rem,calc(100vw-2rem))] rounded-xl border border-white/20 bg-brand-dark p-3 text-left shadow-lg"
+          }
         >
           <div className="flex items-start justify-between gap-2">
             <p className="text-xs leading-relaxed text-white/90">{hintText}</p>

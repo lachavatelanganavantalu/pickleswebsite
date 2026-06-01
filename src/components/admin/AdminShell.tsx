@@ -15,6 +15,7 @@ import {
   X,
 } from "lucide-react";
 import { cn } from "@/lib/cn";
+import PwaInstallButton from "@/components/PwaInstallButton";
 
 const nav = [
   { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -99,14 +100,17 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
           ))}
         </nav>
 
-        <button
-          type="button"
-          onClick={logout}
-          className="m-3 flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-surface/60 hover:bg-surface/10 hover:text-white"
-        >
-          <LogOut className="h-4 w-4 shrink-0" />
-          Log out
-        </button>
+        <div className="m-3 space-y-2">
+          <PwaInstallButton variant="admin" />
+          <button
+            type="button"
+            onClick={logout}
+            className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-surface/60 hover:bg-surface/10 hover:text-white"
+          >
+            <LogOut className="h-4 w-4 shrink-0" />
+            Log out
+          </button>
+        </div>
       </aside>
 
       <div className="admin-content-column">

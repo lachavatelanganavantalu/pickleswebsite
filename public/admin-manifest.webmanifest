@@ -1,13 +1,14 @@
 {
-  "name": "Lachava Pickles",
-  "short_name": "Lachava",
-  "description": "లచ్చవ్వ తెలంగాణ వంటల — order pickles online",
-  "start_url": "/",
-  "scope": "/",
+  "id": "/admin",
+  "name": "Lachava Admin",
+  "short_name": "Admin",
+  "description": "Manage Lachava orders, products, and site settings",
+  "start_url": "/admin/login",
+  "scope": "/admin",
   "display": "standalone",
-  "background_color": "#4a2c1a",
-  "theme_color": "#4a2c1a",
-  "orientation": "portrait-primary",
+  "background_color": "#1c1917",
+  "theme_color": "#1c1917",
+  "orientation": "any",
   "icons": [
     {
       "src": "/icon-192.png",

@@ -7,6 +7,7 @@ Drop your files here (no other images are used on the site):
 | `logo.png` | Navbar & branding (optional: keep `logo.svg` as fallback) |
 | `favicon.ico` | Browser tab icon |
 | `DTDCH.png` | Track page “Powered by” DTDC badge (tap → calls +91 99495 25111) |
+| `admin-manifest.webmanifest` | Separate installable **Lachava Admin** PWA (`/admin` scope) |
 | `gallery/1–3.jpeg` | Home gallery carousel |
 | `fssai-logo.png` | Hero FSSAI badge (tap opens certificate) |
 | `fssai-certificate.png` | FSSAI certificate modal image |
