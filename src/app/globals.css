@@ -505,14 +505,31 @@ html {
 }
 
 @media (min-width: 768px) {
-  .home-about-grid:not(.home-about-grid-portrait-only) {
-    grid-template-columns: minmax(12rem, 16rem) 1fr;
+  .home-about-grid {
+    grid-template-columns: minmax(11rem, 14rem) 1fr;
     gap: clamp(2rem, 6vw, 3.5rem);
+    align-items: start;
   }
 }
 
-.home-about-grid-portrait-only {
-  justify-items: center;
+.home-about-story {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.85rem, 2.5vw, 1.15rem);
+}
+
+.home-about-story-p {
+  font-size: clamp(0.9rem, 2.4vw, 1rem);
+  line-height: 1.65;
+  color: var(--color-ink, #3a2214);
+  text-wrap: pretty;
+}
+
+@media (min-width: 768px) {
+  .home-about-story-p {
+    font-size: 1rem;
+    line-height: 1.7;
+  }
 }
 
 .home-about-portrait-wrap {

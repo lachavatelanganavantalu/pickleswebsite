@@ -1,4 +1,5 @@
 import { ABOUT_PORTRAIT } from "@/data/gallery";
+import { ABOUT_STORY_PARAGRAPHS } from "@/data/about-story";
 
 export default function HomeAboutSection() {
   return (
@@ -10,7 +11,7 @@ export default function HomeAboutSection() {
         </h2>
         <p className="mt-1 text-sm font-medium text-brand">Lachava Telangana Pickles</p>
 
-        <div className="home-about-grid home-about-grid-portrait-only mt-8">
+        <div className="home-about-grid mt-8">
           <div className="home-about-portrait-wrap">
             <div className="home-about-portrait-frame">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -20,6 +21,14 @@ export default function HomeAboutSection() {
                 className="home-about-portrait-photo"
               />
             </div>
+          </div>
+
+          <div className="home-about-copy home-about-story">
+            {ABOUT_STORY_PARAGRAPHS.map((paragraph) => (
+              <p key={paragraph.slice(0, 48)} className="home-about-story-p">
+                {paragraph}
+              </p>
+            ))}
           </div>
         </div>
       </div>
