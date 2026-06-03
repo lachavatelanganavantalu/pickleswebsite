@@ -23,11 +23,7 @@ export default function HomeAboutSection() {
           </div>
 
           <div className="home-about-copy">
-            <p className="text-base leading-relaxed text-ink">
-              Thank you for visiting our page. We prepare homestyle Telangana pickles in small batches —
-              sun-dried spices, stone-ground masala, and recipes passed down from our grandmother&apos;s kitchen.
-            </p>
-            <p className="mt-4 text-base leading-relaxed text-muted">
+            <p className="text-base leading-relaxed text-muted">
               Order by the jar (1 kg &amp; 1/2 kg) or try our{" "}
               <strong className="text-brand">5-pickle combo for ₹999</strong> — Chicken, Chinthankaya, Mango,
               Usirikaya &amp; Lemon (250g each).
