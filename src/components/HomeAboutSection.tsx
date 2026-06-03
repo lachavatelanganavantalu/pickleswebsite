@@ -23,12 +23,7 @@ export default function HomeAboutSection() {
           </div>
 
           <div className="home-about-copy">
-            <p className="text-base leading-relaxed text-muted">
-              Order by the jar (1 kg &amp; 1/2 kg) or try our{" "}
-              <strong className="text-brand">5-pickle combo for ₹999</strong> — Chicken, Chinthankaya, Mango,
-              Usirikaya &amp; Lemon (250g each).
-            </p>
-            <p className="mt-4 text-sm font-semibold text-brand">
+            <p className="text-sm font-semibold text-brand">
               PhonePe / GPay: 63021 12848 · FSSAI certified
             </p>
           </div>
