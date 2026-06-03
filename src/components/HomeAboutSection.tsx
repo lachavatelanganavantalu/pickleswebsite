@@ -10,7 +10,7 @@ export default function HomeAboutSection() {
         </h2>
         <p className="mt-1 text-sm font-medium text-brand">Lachava Telangana Pickles</p>
 
-        <div className="home-about-grid mt-8">
+        <div className="home-about-grid home-about-grid-portrait-only mt-8">
           <div className="home-about-portrait-wrap">
             <div className="home-about-portrait-frame">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -20,12 +20,6 @@ export default function HomeAboutSection() {
                 className="home-about-portrait-photo"
               />
             </div>
-          </div>
-
-          <div className="home-about-copy">
-            <p className="text-sm font-semibold text-brand">
-              PhonePe / GPay: 63021 12848 · FSSAI certified
-            </p>
           </div>
         </div>
       </div>
