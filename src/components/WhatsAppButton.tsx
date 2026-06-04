@@ -1,6 +1,6 @@
 "use client";
 
-import { MessageCircle } from "lucide-react";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
 
 const WHATSAPP =
   process.env.NEXT_PUBLIC_WHATSAPP_NUMBER?.replace(/\D/g, "") || "916302112848";
@@ -14,7 +14,7 @@ export default function WhatsAppButton() {
       aria-label="Chat on WhatsApp"
       className="whatsapp-fab"
     >
-      <MessageCircle />
+      <WhatsAppIcon />
     </a>
   );
 }

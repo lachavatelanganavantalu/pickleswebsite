@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Order } from "@/lib/orders-db";
 import { customerDispatchWhatsAppUrl } from "@/lib/customer-whatsapp";
-import { MessageCircle } from "lucide-react";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
 
 interface Props {
   order: Order;
@@ -36,7 +36,7 @@ export default function NotifyCustomerDispatchButton({ order, onNotified }: Prop
         rel="noopener noreferrer"
         className="inline-flex items-center gap-1.5 rounded-lg bg-[#25D366] px-4 py-2.5 text-xs font-semibold text-white hover:opacity-90 transition-opacity"
       >
-        <MessageCircle className="h-4 w-4" />
+        <WhatsAppIcon className="h-4 w-4" />
         Notify customer — dispatched
       </a>
       {!notified && (

@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { Copy, Download, MessageCircle } from "lucide-react";
+import { Copy, Download } from "lucide-react";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
 import OrderTimeline from "@/components/OrderTimeline";
 import EditableCartList from "@/components/EditableCartList";
 import { formatINRDecimal } from "@/lib/format-price";
@@ -257,7 +258,7 @@ export default function OrderPaymentPage() {
                 rel="noopener noreferrer"
                 className="mt-4 inline-flex w-full min-h-[48px] items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 text-sm font-bold uppercase tracking-wide text-white hover:opacity-95"
               >
-                <MessageCircle className="h-5 w-5" />
+                <WhatsAppIcon className="h-5 w-5" />
                 WhatsApp payment screenshot
               </a>
             )}

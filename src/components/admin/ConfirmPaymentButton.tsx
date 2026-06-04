@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Order } from "@/lib/orders-db";
 import { customerPaymentWhatsAppUrl } from "@/lib/customer-whatsapp";
-import { MessageCircle } from "lucide-react";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
 
 interface Props {
   order: Order;
@@ -44,7 +44,7 @@ export default function ConfirmPaymentButton({ order, onConfirmed }: Props) {
         disabled={loading}
         className="inline-flex items-center gap-1.5 rounded-lg bg-brand px-4 py-2.5 text-xs font-semibold text-white hover:bg-brand-dark disabled:opacity-50"
       >
-        <MessageCircle className="h-4 w-4" />
+        <WhatsAppIcon className="h-4 w-4" />
         {loading ? "Confirming…" : "Confirm payment & WhatsApp customer"}
       </button>
     </div>
