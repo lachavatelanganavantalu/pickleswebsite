@@ -8,7 +8,6 @@ interface Props {
   showWordmark?: boolean;
   size?: "sm" | "md" | "lg";
   href?: string;
-  variant?: "default" | "header";
 }
 
 const heights = { sm: 32, md: 40, lg: 52 };
@@ -17,34 +16,9 @@ export default function BrandLogo({
   showWordmark = true,
   size = "md",
   href = "/",
-  variant = "default",
 }: Props) {
   const [src, setSrc] = useState<string>(BRAND.logo);
   const h = heights[size];
-
-  if (variant === "header") {
-    return (
-      <Link href={href} className="inline-flex items-center hover:opacity-95 transition-opacity">
-        <div className="flex h-[clamp(2.5rem,8vw,3.125rem)] w-[clamp(2.5rem,8vw,3.125rem)] shrink-0 items-center justify-center overflow-hidden rounded-full bg-white shadow-sm ring-2 ring-gold/80">
-          {src === "none" ? (
-            <span className="font-display text-xl font-bold text-brand">ల</span>
-          ) : (
-            <img
-              src={src}
-              alt="Lachava Telangana Vantalu"
-              width={56}
-              height={56}
-              className="h-full w-full object-contain"
-              onError={() => {
-                if (src === BRAND.logo) setSrc(BRAND.logoFallback);
-                else setSrc("none");
-              }}
-            />
-          )}
-        </div>
-      </Link>
-    );
-  }
 
   const mark =
     src === "none" ? (

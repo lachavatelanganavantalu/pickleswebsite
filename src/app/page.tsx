@@ -2,7 +2,6 @@ import { getAllCombos } from "@/lib/combos-db";
 import { getAllProducts } from "@/lib/products-db";
 import HomeHeroCarousel from "@/components/HomeHeroCarousel";
 import HomeAboutSection from "@/components/HomeAboutSection";
-import HomeGalleryCarousel from "@/components/HomeGalleryCarousel";
 import ShopGrid from "@/components/ShopGrid";
 
 export default async function Home() {
@@ -19,7 +18,6 @@ export default async function Home() {
         subtitle="1 kg & 1/2 kg — official menu"
       />
       <HomeAboutSection />
-      <HomeGalleryCarousel />
     </>
   );
 }

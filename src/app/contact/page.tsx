@@ -1,4 +1,5 @@
 import Link from "next/link";
+import SocialLinks from "@/components/SocialLinks";
 
 export const metadata = {
   title: "Contact",
@@ -28,6 +29,13 @@ export default function ContactPage() {
         >
           Chat on WhatsApp
         </a>
+
+        <div className="mt-6 border-t border-border pt-6">
+          <p className="text-xs font-semibold uppercase tracking-widest text-shop-muted">
+            Follow us
+          </p>
+          <SocialLinks className="mt-3" />
+        </div>
       </div>
 
       <p className="mt-6 text-sm text-muted">

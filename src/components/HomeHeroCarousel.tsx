@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
 import HeartDotText from "@/components/HeartDotText";
 import FssaiHeroBadge from "@/components/FssaiHeroBadge";
+import SocialLinks from "@/components/SocialLinks";
+import HeroBrandMark from "@/components/HeroBrandMark";
 
 const SLIDES = [
   {
@@ -52,10 +54,14 @@ export default function HomeHeroCarousel() {
 
       <div className="home-hero-overlay" aria-hidden />
 
-      <FssaiHeroBadge />
+      <div className="home-hero-top-bar">
+        <SocialLinks variant="on-hero" />
+        <FssaiHeroBadge />
+      </div>
 
       <div className="home-hero-content">
-        <div className="home-hero-layout home-hero-layout-full">
+        <div className="home-hero-layout">
+          <HeroBrandMark />
           <div className="home-hero-copy-stack">
             {SLIDES.map((slide, index) => (
               <div

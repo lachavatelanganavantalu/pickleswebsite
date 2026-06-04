@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ShoppingBag, Menu, X, Search } from "lucide-react";
 import { useCart } from "@/context/CartContext";
-import BrandLogo from "@/components/BrandLogo";
 import ShopSearchOverlay from "@/components/ShopSearchOverlay";
 import PwaInstallButton from "@/components/PwaInstallButton";
 import ShippingFlagsMarquee from "@/components/ShippingFlagsMarquee";
@@ -45,10 +44,6 @@ export default function Navbar() {
               MENU
             </span>
           </button>
-        </div>
-
-        <div className="site-header-center">
-          <BrandLogo size="md" variant="header" />
         </div>
 
         <div className="site-header-end">

@@ -1,8 +1,12 @@
-export const GALLERY_IMAGES = [
-  { src: "/gallery/1.jpeg", alt: "Lachava pickles kitchen" },
-  { src: "/gallery/2.jpeg", alt: "Traditional Telangana pickle preparation" },
-  { src: "/gallery/3.jpeg", alt: "Homestyle pickle jars" },
-] as const;
+const GALLERY_PHOTO_COUNT = 20;
+
+export const GALLERY_IMAGES = Array.from({ length: GALLERY_PHOTO_COUNT }, (_, index) => {
+  const n = index + 1;
+  return {
+    src: `/gallery/${n}.jpeg`,
+    alt: `Lachava kitchen and pickles — photo ${n}`,
+  };
+});
 
 export const ABOUT_PORTRAIT = "/bg/herosectionframe.jpeg";
 

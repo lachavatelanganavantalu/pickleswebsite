@@ -26,6 +26,7 @@ export interface SiteSettings {
   social: {
     instagram: string;
     facebook: string;
+    youtube?: string;
   };
   announcement: BilingualText;
   payment: {

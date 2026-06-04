@@ -36,8 +36,10 @@ export const defaultSiteSettings: SiteSettings = {
     },
   },
   social: {
-    instagram: "",
+    instagram:
+      "https://www.instagram.com/lachava.telanganavontallu?igsh=MXIwNDFpZDV2cnpoNg==",
     facebook: "",
+    youtube: "https://www.youtube.com/@Lachava.telanganavontallu",
   },
   announcement: {
     en: "⭐ 5 pickles combo — ₹999 (Chicken, Chinthankaya, Mango, Usirikaya, Lemon · 250g each)",

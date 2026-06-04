@@ -1,4 +1,5 @@
 import Link from "next/link";
+import SocialLinks from "@/components/SocialLinks";
 
 export default function Footer() {
   return (
@@ -13,6 +14,7 @@ export default function Footer() {
             <p className="mt-4 max-w-sm text-sm text-surface/60 leading-relaxed">
               Official menu — 10 pickles (1 kg & 1/2 kg). 5-pickle combo ₹999.
             </p>
+            <SocialLinks className="mt-5" variant="on-dark" />
           </div>
 
           <div>

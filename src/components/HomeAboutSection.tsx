@@ -1,5 +1,7 @@
 import { ABOUT_PORTRAIT } from "@/data/gallery";
 import { ABOUT_STORY_PARAGRAPHS } from "@/data/about-story";
+import HomeGalleryCarousel from "@/components/HomeGalleryCarousel";
+import SocialLinks from "@/components/SocialLinks";
 
 export default function HomeAboutSection() {
   return (
@@ -29,8 +31,11 @@ export default function HomeAboutSection() {
                 {paragraph}
               </p>
             ))}
+            <SocialLinks className="mt-6" />
           </div>
         </div>
+
+        <HomeGalleryCarousel embedded />
       </div>
     </section>
   );
