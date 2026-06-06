@@ -64,8 +64,29 @@ function needsProductsReseed(products: PickleProduct[]): boolean {
   });
 }
 
+function dedupeProductsById(products: PickleProduct[]): PickleProduct[] {
+  const byId = new Map<string, PickleProduct>();
+
+  for (const product of products) {
+    const existing = byId.get(product.id);
+    if (!existing) {
+      byId.set(product.id, product);
+      continue;
+    }
+
+    const existingTime = Date.parse(existing.updatedAt ?? "") || 0;
+    const nextTime = Date.parse(product.updatedAt ?? "") || 0;
+    if (nextTime >= existingTime) {
+      byId.set(product.id, product);
+    }
+  }
+
+  return [...byId.values()].sort((a, b) => a.displayOrder - b.displayOrder);
+}
+
 function mergeWithMenuSource(stored: PickleProduct[]): PickleProduct[] {
-  const custom = stored.filter((p) => !CANONICAL_PRODUCT_IDS.has(p.id));
+  const uniqueStored = dedupeProductsById(stored);
+  const custom = uniqueStored.filter((p) => !CANONICAL_PRODUCT_IDS.has(p.id));
   const merged = stampDefaults().map((def) => {
     const existing = stored.find((p) => p.id === def.id);
     if (!existing) return def;
@@ -85,19 +106,19 @@ function finalizeProducts(products: PickleProduct[]): PickleProduct[] {
 }
 
 async function persistProducts(products: PickleProduct[]): Promise<void> {
-  memoryCache = finalizeProducts(products);
+  memoryCache = finalizeProducts(dedupeProductsById(products));
   if (process.env.MONGODB_URI) {
     try {
       const db = await getDb();
       const col = db.collection(COLLECTION);
       await col.deleteMany({});
-      if (products.length) await col.insertMany(products);
+      if (memoryCache.length) await col.insertMany(memoryCache);
       return;
     } catch (err) {
       console.error("MongoDB products save failed, using file store:", err);
     }
   }
-  await writeFileStore(products);
+  await writeFileStore(memoryCache);
 }
 
 export async function getAllProducts(): Promise<PickleProduct[]> {
@@ -113,12 +134,14 @@ export async function getAllProducts(): Promise<PickleProduct[]> {
           .sort({ displayOrder: 1 })
           .toArray()) as unknown as PickleProduct[]
       );
+      const hadDuplicates = products.length !== dedupeProductsById(products).length;
+      products = dedupeProductsById(products);
       if (products.length === 0) {
         products = stampDefaults();
         await persistProducts(products);
         return memoryCache!;
       }
-      if (needsProductsReseed(products)) {
+      if (hadDuplicates || needsProductsReseed(products)) {
         products = mergeWithMenuSource(products);
         await persistProducts(products);
         return memoryCache!;
@@ -130,14 +153,16 @@ export async function getAllProducts(): Promise<PickleProduct[]> {
     }
   }
 
-  let products = await readFileStore();
+  const raw = await readFileStore();
+  const hadDuplicates = raw.length !== dedupeProductsById(raw).length;
+  let products = dedupeProductsById(raw);
   if (products.length === 0) {
     products = stampDefaults();
     await writeFileStore(products);
     memoryCache = finalizeProducts(products);
     return memoryCache;
   }
-  if (needsProductsReseed(products)) {
+  if (hadDuplicates || needsProductsReseed(products)) {
     products = mergeWithMenuSource(products);
     await writeFileStore(products);
   } else {

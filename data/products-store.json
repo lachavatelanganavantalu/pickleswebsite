@@ -25,7 +25,8 @@
         "priceINR": 1500
       }
     ],
-    "updatedAt": "2026-05-31T10:33:54.437Z"
+    "updatedAt": "2026-06-06T19:01:30.579Z",
+    "imageDataUrl": null
   },
   {
     "id": "chepala-pickle",
@@ -53,7 +54,37 @@
         "priceINR": 950
       }
     ],
-    "updatedAt": "2026-05-31T10:33:54.437Z"
+    "updatedAt": "2026-06-06T19:01:30.580Z",
+    "imageDataUrl": null
+  },
+  {
+    "id": "prawn-pickle",
+    "slug": "prawn-pickle",
+    "name": "Prawn Pickle",
+    "nameTelugu": "రొయ్యల",
+    "subtitle": "1 kg · 1/2 kg",
+    "description": "",
+    "category": "non-veg",
+    "spiceLevel": 3,
+    "tag": null,
+    "available": true,
+    "featured": false,
+    "displayOrder": 3,
+    "imagePath": "/products/prawn-pickle.jpg",
+    "weightOptions": [
+      {
+        "id": "500g",
+        "label": "1/2 kg (500g)",
+        "priceINR": 500
+      },
+      {
+        "id": "1kg",
+        "label": "1 kg",
+        "priceINR": 950
+      }
+    ],
+    "updatedAt": "2026-06-06T19:01:30.580Z",
+    "imageDataUrl": null
   },
   {
     "id": "chicken-pickle",
@@ -81,7 +112,8 @@
         "priceINR": 1200
       }
     ],
-    "updatedAt": "2026-05-31T10:33:54.437Z"
+    "updatedAt": "2026-06-06T19:01:30.580Z",
+    "imageDataUrl": null
   },
   {
     "id": "chinthankaya-pickle",
@@ -96,7 +128,7 @@
     "available": true,
     "featured": false,
     "displayOrder": 4,
-    "imagePath": "/products/chinthankaya-pickle.jpg",
+    "imagePath": "/products/chinthankaya-pickle.jpeg",
     "weightOptions": [
       {
         "id": "500g",
@@ -109,7 +141,8 @@
         "priceINR": 900
       }
     ],
-    "updatedAt": "2026-05-31T10:33:54.437Z"
+    "updatedAt": "2026-06-06T19:01:30.580Z",
+    "imageDataUrl": null
   },
   {
     "id": "usirikaya-pickle",
@@ -137,7 +170,8 @@
         "priceINR": 800
       }
     ],
-    "updatedAt": "2026-05-31T10:33:54.437Z"
+    "updatedAt": "2026-06-06T19:01:30.580Z",
+    "imageDataUrl": null
   },
   {
     "id": "nimmakaya-pickle",
@@ -165,7 +199,8 @@
         "priceINR": 800
       }
     ],
-    "updatedAt": "2026-05-31T10:33:54.437Z"
+    "updatedAt": "2026-06-06T19:01:30.580Z",
+    "imageDataUrl": null
   },
   {
     "id": "mamidikaya-pickle",
@@ -193,7 +228,8 @@
         "priceINR": 800
       }
     ],
-    "updatedAt": "2026-05-31T10:33:54.437Z"
+    "updatedAt": "2026-06-06T19:01:30.580Z",
+    "imageDataUrl": null
   },
   {
     "id": "mamidikaya-allam-pickle",
@@ -221,7 +257,8 @@
         "priceINR": 800
       }
     ],
-    "updatedAt": "2026-05-31T10:33:54.437Z"
+    "updatedAt": "2026-06-06T19:01:30.580Z",
+    "imageDataUrl": null
   },
   {
     "id": "tomato-pickle",
@@ -249,7 +286,8 @@
         "priceINR": 600
       }
     ],
-    "updatedAt": "2026-05-31T10:33:54.437Z"
+    "updatedAt": "2026-06-06T19:01:30.580Z",
+    "imageDataUrl": null
   },
   {
     "id": "kakarakaya-pickle",
@@ -277,6 +315,7 @@
         "priceINR": 800
       }
     ],
-    "updatedAt": "2026-05-31T10:33:54.437Z"
+    "updatedAt": "2026-06-06T19:01:30.580Z",
+    "imageDataUrl": null
   }
 ]
