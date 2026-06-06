@@ -9,6 +9,7 @@ import {
 import { PickleProduct } from "@/types/product";
 import { applyDefaultImages } from "@/lib/product-images";
 import { resolveProductImagePath } from "@/lib/catalog-media";
+import { toPlainDocuments } from "@/lib/serialize-doc";
 
 const COLLECTION = "products";
 const FILE_STORE = path.join(process.cwd(), "data", "products-store.json");
@@ -35,7 +36,7 @@ async function readFileStore(): Promise<PickleProduct[]> {
 async function writeFileStore(products: PickleProduct[]): Promise<void> {
   await fs.mkdir(path.dirname(FILE_STORE), { recursive: true });
   await fs.writeFile(FILE_STORE, JSON.stringify(products, null, 2), "utf-8");
-  memoryCache = products;
+  memoryCache = finalizeProducts(products);
 }
 
 function stampDefaults(): PickleProduct[] {
@@ -79,8 +80,12 @@ function mergeWithMenuSource(stored: PickleProduct[]): PickleProduct[] {
   return [...merged, ...custom].sort((a, b) => a.displayOrder - b.displayOrder);
 }
 
+function finalizeProducts(products: PickleProduct[]): PickleProduct[] {
+  return resolveStoredMedia(applyDefaultImages(toPlainDocuments(products)));
+}
+
 async function persistProducts(products: PickleProduct[]): Promise<void> {
-  memoryCache = products;
+  memoryCache = finalizeProducts(products);
   if (process.env.MONGODB_URI) {
     try {
       const db = await getDb();
@@ -96,27 +101,29 @@ async function persistProducts(products: PickleProduct[]): Promise<void> {
 }
 
 export async function getAllProducts(): Promise<PickleProduct[]> {
-  if (memoryCache?.length) return memoryCache;
+  if (memoryCache?.length) return finalizeProducts(memoryCache);
 
   if (process.env.MONGODB_URI) {
     try {
       const db = await getDb();
       const col = db.collection(COLLECTION);
-      let products = (await col
-        .find({})
-        .sort({ displayOrder: 1 })
-        .toArray()) as unknown as PickleProduct[];
+      let products = toPlainDocuments(
+        (await col
+          .find({})
+          .sort({ displayOrder: 1 })
+          .toArray()) as unknown as PickleProduct[]
+      );
       if (products.length === 0) {
         products = stampDefaults();
         await persistProducts(products);
-        return products;
+        return memoryCache!;
       }
       if (needsProductsReseed(products)) {
         products = mergeWithMenuSource(products);
         await persistProducts(products);
-        return products;
+        return memoryCache!;
       }
-      memoryCache = resolveStoredMedia(applyDefaultImages(products));
+      memoryCache = finalizeProducts(products);
       return memoryCache;
     } catch (err) {
       console.error("MongoDB products fetch failed, using file store:", err);
@@ -127,8 +134,8 @@ export async function getAllProducts(): Promise<PickleProduct[]> {
   if (products.length === 0) {
     products = stampDefaults();
     await writeFileStore(products);
-    memoryCache = products;
-    return products;
+    memoryCache = finalizeProducts(products);
+    return memoryCache;
   }
   if (needsProductsReseed(products)) {
     products = mergeWithMenuSource(products);
@@ -136,7 +143,7 @@ export async function getAllProducts(): Promise<PickleProduct[]> {
   } else {
     products = applyDefaultImages(products);
   }
-  memoryCache = resolveStoredMedia(products);
+  memoryCache = finalizeProducts(products);
   return memoryCache;
 }
 

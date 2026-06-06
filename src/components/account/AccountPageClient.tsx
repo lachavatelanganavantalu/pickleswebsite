@@ -15,7 +15,7 @@ export default function AccountPageClient() {
   const searchParams = useSearchParams();
   const loginNext = sanitizeLoginNext(searchParams.get(LOGIN_NEXT_PARAM));
   const { user, orders, loading, login, register, logout, changePassword } = useCustomerAuth();
-  const [tab, setTab] = useState<Tab>("login");
+  const [tab, setTab] = useState<Tab>("register");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");

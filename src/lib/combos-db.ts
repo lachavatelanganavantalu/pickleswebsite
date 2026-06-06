@@ -4,6 +4,7 @@ import { getDb } from "@/lib/mongodb";
 import { comboPacks as defaultCombos } from "@/data/combos";
 import type { ComboPack } from "@/data/combos";
 import { resolveComboImagePath } from "@/lib/catalog-media";
+import { toPlainDocuments } from "@/lib/serialize-doc";
 
 const COLLECTION = "combos";
 const FILE_STORE = path.join(process.cwd(), "data", "combos-store.json");
@@ -26,10 +27,14 @@ async function readFile(): Promise<ComboPack[]> {
   }
 }
 
+function finalizeCombos(combos: ComboPack[]): ComboPack[] {
+  return withDefaultImages(toPlainDocuments(combos));
+}
+
 async function writeFile(combos: ComboPack[]): Promise<void> {
   await fs.mkdir(path.dirname(FILE_STORE), { recursive: true });
   await fs.writeFile(FILE_STORE, JSON.stringify(combos, null, 2), "utf-8");
-  cache = combos;
+  cache = finalizeCombos(combos);
 }
 
 function needsCombosReseed(combos: ComboPack[]): boolean {
@@ -74,7 +79,7 @@ function normalizeCombo(combo: ComboPack): ComboPack {
 }
 
 async function persistCombos(combos: ComboPack[]): Promise<void> {
-  cache = combos;
+  cache = finalizeCombos(combos);
   if (process.env.MONGODB_URI) {
     try {
       const db = await getDb();
@@ -90,23 +95,25 @@ async function persistCombos(combos: ComboPack[]): Promise<void> {
 }
 
 export async function getAllCombos(): Promise<ComboPack[]> {
-  if (cache?.length) return withDefaultImages(cache);
+  if (cache?.length) return finalizeCombos(cache);
 
   if (process.env.MONGODB_URI) {
     try {
       const db = await getDb();
-      let combos = (await db.collection(COLLECTION).find({}).toArray()) as unknown as ComboPack[];
+      let combos = toPlainDocuments(
+        (await db.collection(COLLECTION).find({}).toArray()) as unknown as ComboPack[]
+      );
       if (combos.length === 0) {
         combos = stampDefaults();
         await persistCombos(combos);
-        return combos;
+        return cache!;
       }
       if (needsCombosReseed(combos)) {
         combos = stampDefaults();
         await persistCombos(combos);
-        return combos;
+        return cache!;
       }
-      cache = withDefaultImages(combos);
+      cache = finalizeCombos(combos);
       return cache;
     } catch (err) {
       console.error("MongoDB combos fetch failed:", err);
@@ -117,14 +124,13 @@ export async function getAllCombos(): Promise<ComboPack[]> {
   if (combos.length === 0) {
     combos = stampDefaults();
     await writeFile(combos);
-    cache = combos;
-    return combos;
+    return cache!;
   }
   if (needsCombosReseed(combos)) {
     combos = stampDefaults();
     await writeFile(combos);
   }
-  cache = withDefaultImages(combos);
+  cache = finalizeCombos(combos);
   return cache;
 }
 
