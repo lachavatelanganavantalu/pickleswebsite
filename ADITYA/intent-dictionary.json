@@ -1,0 +1,280 @@
+{
+  "site_id": "lachava-pickles",
+  "site_name": "Lachava Telangana Pickles",
+  "homepage_url": "https://pickleswebsite-xi.vercel.app",
+  "matching_mode": "dictionary-first",
+  "global_terms": [
+    "ask",
+    "help",
+    "search",
+    "pickles",
+    "combo",
+    "account",
+    "change password",
+    "contact",
+    "support",
+    "whatsapp",
+    "cart",
+    "checkout",
+    "track",
+    "payment",
+    "upi"
+  ],
+  "workflows": [
+    {
+      "workflow_id": "open_launcher",
+      "name": "Open assistant",
+      "intent_hints": [
+        "ask",
+        "help",
+        "assistant",
+        "open assistant"
+      ],
+      "examples": [
+        "ask",
+        "help",
+        "assistant",
+        "open assistant",
+        "ask assistant",
+        "show assistant",
+        "help me"
+      ]
+    },
+    {
+      "workflow_id": "search_content",
+      "name": "Search pickles",
+      "intent_hints": [
+        "search",
+        "find",
+        "lookup",
+        "show me"
+      ],
+      "examples": [
+        "search",
+        "find",
+        "lookup",
+        "show me",
+        "show me this",
+        "search mango pickle",
+        "find chicken pickle"
+      ]
+    },
+    {
+      "workflow_id": "add_to_cart",
+      "name": "Add to cart",
+      "intent_hints": [
+        "buy",
+        "add to cart",
+        "order",
+        "purchase",
+        "get"
+      ],
+      "examples": [
+        "buy",
+        "add to cart",
+        "order",
+        "purchase",
+        "get",
+        "buy mutton pickle 1 kg",
+        "buy chicken pickle",
+        "add mango pickle 1 kg"
+      ]
+    },
+    {
+      "workflow_id": "browse_shop",
+      "name": "Browse shop",
+      "intent_hints": [
+        "shop",
+        "browse",
+        "pickles",
+        "products",
+        "menu"
+      ],
+      "examples": [
+        "shop",
+        "browse",
+        "pickles",
+        "products",
+        "menu",
+        "show pickles",
+        "open shop"
+      ]
+    },
+    {
+      "workflow_id": "browse_combos",
+      "name": "Browse combos",
+      "intent_hints": [
+        "combo",
+        "combos",
+        "5 pickles",
+        "999"
+      ],
+      "examples": [
+        "combo",
+        "combos",
+        "5 pickles",
+        "999",
+        "5 pickles combo",
+        "999 combo"
+      ]
+    },
+    {
+      "workflow_id": "view_cart",
+      "name": "View cart",
+      "intent_hints": [
+        "cart",
+        "my cart",
+        "view cart",
+        "basket"
+      ],
+      "examples": [
+        "cart",
+        "my cart",
+        "view cart",
+        "basket",
+        "open cart"
+      ]
+    },
+    {
+      "workflow_id": "review_cart_and_checkout",
+      "name": "Review cart and checkout",
+      "intent_hints": [
+        "checkout",
+        "proceed to checkout",
+        "go to checkout",
+        "pay now"
+      ],
+      "examples": [
+        "checkout",
+        "proceed to checkout",
+        "go to checkout",
+        "pay now",
+        "cart",
+        "review cart"
+      ]
+    },
+    {
+      "workflow_id": "track_order",
+      "name": "Track order",
+      "intent_hints": [
+        "track",
+        "track order",
+        "order status",
+        "where is my order"
+      ],
+      "examples": [
+        "track",
+        "track order",
+        "order status",
+        "where is my order",
+        "track my order"
+      ]
+    },
+    {
+      "workflow_id": "navigate_to_account",
+      "name": "Open account",
+      "intent_hints": [
+        "account",
+        "my account",
+        "login",
+        "register",
+        "sign up",
+        "signup",
+        "orders"
+      ],
+      "examples": [
+        "account",
+        "my account",
+        "login",
+        "register",
+        "sign up",
+        "signup",
+        "orders",
+        "create account",
+        "my orders"
+      ]
+    },
+    {
+      "workflow_id": "sign_up",
+      "name": "Sign up",
+      "intent_hints": [
+        "sign up",
+        "signup",
+        "create account",
+        "register"
+      ],
+      "examples": [
+        "sign up",
+        "signup",
+        "create account",
+        "register",
+        "sign-up",
+        "new account"
+      ]
+    },
+    {
+      "workflow_id": "sign_in",
+      "name": "Log in",
+      "intent_hints": [
+        "log in",
+        "login",
+        "sign in"
+      ],
+      "examples": [
+        "log in",
+        "login",
+        "sign in",
+        "signin"
+      ]
+    },
+    {
+      "workflow_id": "change_password",
+      "name": "Change password",
+      "intent_hints": [
+        "change password",
+        "update password",
+        "reset password"
+      ],
+      "examples": [
+        "change password",
+        "update password",
+        "reset password"
+      ]
+    },
+    {
+      "workflow_id": "contact_support",
+      "name": "Contact support",
+      "intent_hints": [
+        "contact",
+        "help",
+        "support",
+        "whatsapp",
+        "message support"
+      ],
+      "examples": [
+        "contact",
+        "help",
+        "support",
+        "whatsapp",
+        "message support"
+      ]
+    },
+    {
+      "workflow_id": "complete_payment",
+      "name": "Complete payment",
+      "intent_hints": [
+        "payment",
+        "pay",
+        "upi",
+        "complete payment"
+      ],
+      "examples": [
+        "payment",
+        "pay",
+        "upi",
+        "complete payment",
+        "send payment proof"
+      ]
+    }
+  ]
+}

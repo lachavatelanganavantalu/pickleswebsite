@@ -1,0 +1,58 @@
+{
+  "site_id": "your-next-site",
+  "site_name": "Your Next Site",
+  "version": "1.0.0",
+  "stack_hint": "next.js",
+  "homepage_url": "https://example.com",
+  "routes": [
+    {
+      "route_id": "home",
+      "path": "/",
+      "label": "Home",
+      "entry_texts": ["Home", "Shop", "Products"],
+      "success_hints": ["Home", "Shop", "Products"]
+    }
+  ],
+  "elements": [
+    {
+      "element_id": "launcher",
+      "role": "navigation",
+      "label": "Assistant launcher",
+      "text_hints": ["Ask", "Chat", "Help"],
+      "selector_hint": "[aria-label='Open assistant']",
+      "route_hint": "/"
+    }
+  ],
+  "workflows": [
+    {
+      "workflow_id": "open_launcher",
+      "name": "Open assistant launcher",
+      "intent_hints": ["ask", "help", "assistant"],
+      "routes": ["home"],
+      "steps": [
+        {
+          "step_id": "open_launcher_step",
+          "description": "Open the assistant launcher from the app shell.",
+          "actions": [
+            {
+              "action_id": "open_assistant",
+              "kind": "click",
+              "label": "Open assistant",
+              "target_texts": ["Ask", "Chat", "Help"],
+              "route_id": "home",
+              "element_id": "launcher",
+              "wait_after_ms": 150,
+              "requires_human": false,
+              "allowed": true,
+              "human_handoff_message": null,
+              "success_hints": ["Ask", "Chat", "Help"]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "sensitive_keywords": ["otp", "password", "payment", "delete", "confirm"],
+  "restricted_actions": ["payment_authorization", "delete_account"],
+  "notes": "Starter manifest for a React/Next storefront integration."
+}

@@ -9,10 +9,11 @@ import { searchCatalog, SearchResult } from "@/lib/search-products";
 
 interface Props {
   open: boolean;
+  initialQuery?: string;
   onClose: () => void;
 }
 
-export default function ShopSearchOverlay({ open, onClose }: Props) {
+export default function ShopSearchOverlay({ open, initialQuery = "", onClose }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState("");
   const [products, setProducts] = useState<PickleProduct[]>([]);
@@ -22,7 +23,7 @@ export default function ShopSearchOverlay({ open, onClose }: Props) {
 
   useEffect(() => {
     if (!open) return;
-    setQuery("");
+    setQuery(initialQuery);
     setResults([]);
     setLoading(true);
     Promise.all([fetch("/api/products"), fetch("/api/combos")])
@@ -33,7 +34,7 @@ export default function ShopSearchOverlay({ open, onClose }: Props) {
         setCombos(Array.isArray(combosData) ? combosData : []);
       })
       .finally(() => setLoading(false));
-  }, [open]);
+  }, [open, initialQuery]);
 
   useEffect(() => {
     if (!open) return;
@@ -87,6 +88,7 @@ export default function ShopSearchOverlay({ open, onClose }: Props) {
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search pickles, combos…"
             aria-label="Search products"
+            data-testid="search-bar"
             className="min-w-0 flex-1 bg-transparent text-sm text-white placeholder:text-white/60 outline-none"
             autoComplete="off"
             enterKeyHint="search"

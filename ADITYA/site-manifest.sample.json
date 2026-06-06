@@ -1,0 +1,71 @@
+{
+  "site_id": "example-site",
+  "site_name": "Example Site",
+  "version": "1.0.0",
+  "homepage_url": "https://example.com",
+  "stack_hint": "next.js",
+  "routes": [
+    {
+      "route_id": "settings",
+      "path": "/settings",
+      "label": "Settings",
+      "entry_texts": ["Settings", "Account settings"],
+      "success_hints": ["Settings"]
+    }
+  ],
+  "elements": [
+    {
+      "element_id": "search_bar",
+      "role": "search",
+      "label": "Search",
+      "text_hints": ["Search", "Find"],
+      "selector_hint": "[data-testid='search-bar']",
+      "route_hint": "/",
+      "allow_autofill": true
+    },
+    {
+      "element_id": "delete_sessions",
+      "role": "danger",
+      "label": "Delete sessions",
+      "text_hints": ["Delete sessions", "Remove sessions"],
+      "route_hint": "/settings/sessions",
+      "requires_human": true,
+      "sensitive": true
+    }
+  ],
+  "workflows": [
+    {
+      "workflow_id": "search_content",
+      "name": "Search content",
+      "intent_hints": ["search", "find", "lookup"],
+      "routes": ["settings"],
+      "steps": [
+        {
+          "step_id": "focus_search",
+          "description": "Focus the search bar",
+          "actions": [
+            {
+              "action_id": "click_search",
+              "kind": "click",
+              "label": "Search",
+              "target_texts": ["Search", "Find"],
+              "wait_after_ms": 200
+            },
+            {
+              "action_id": "type_search",
+              "kind": "type",
+              "label": "Type search term",
+              "target_texts": ["Search", "Find"],
+              "element_id": "search_bar",
+              "value": "{{intent_text}}",
+              "wait_after_ms": 300
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "sensitive_keywords": ["otp", "password", "payment", "delete", "confirm"],
+  "restricted_actions": ["delete_sessions"],
+  "notes": "Developer-provided semantic manifest for the website agent."
+}

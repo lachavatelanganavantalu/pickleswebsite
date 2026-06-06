@@ -1,0 +1,499 @@
+{
+  "site_id": "lachava-pickles",
+  "site_name": "Lachava Telangana Pickles",
+  "version": "1.0.0",
+  "homepage_url": "https://pickleswebsite-xi.vercel.app",
+  "stack_hint": "next.js",
+  "routes": [
+    {
+      "route_id": "home",
+      "path": "/",
+      "label": "Home",
+      "entry_texts": ["Home", "Shop", "Pickles"],
+      "success_hints": ["Home", "Our Pickles", "Pickles"]
+    },
+    {
+      "route_id": "products",
+      "path": "/products",
+      "label": "Pickles",
+      "entry_texts": ["Pickles", "Products", "Shop"],
+      "success_hints": ["Pickles", "Products"]
+    },
+    {
+      "route_id": "veg_pickles",
+      "path": "/veg-pickles",
+      "label": "Veg Pickles",
+      "entry_texts": ["Veg", "Vegetarian pickles"],
+      "success_hints": ["Veg"]
+    },
+    {
+      "route_id": "non_veg_pickles",
+      "path": "/non-veg-pickles",
+      "label": "Non-Veg Pickles",
+      "entry_texts": ["Non-veg", "Chicken", "Mutton", "Fish"],
+      "success_hints": ["Non-Veg", "Non-veg"]
+    },
+    {
+      "route_id": "combos",
+      "path": "/combos",
+      "label": "Combos",
+      "entry_texts": ["Combo", "Combos", "5 pickles combo"],
+      "success_hints": ["Combo", "Combos"]
+    },
+    {
+      "route_id": "cart",
+      "path": "/cart",
+      "label": "Cart",
+      "entry_texts": ["Cart", "My cart", "View cart"],
+      "success_hints": ["Cart", "Your cart"]
+    },
+    {
+      "route_id": "checkout",
+      "path": "/checkout",
+      "label": "Checkout",
+      "entry_texts": ["Checkout", "Proceed to checkout"],
+      "success_hints": ["Checkout", "Delivery details"]
+    },
+    {
+      "route_id": "account",
+      "path": "/account",
+      "label": "Account",
+      "entry_texts": ["Account", "My account", "Login", "Register"],
+      "success_hints": ["Account", "My orders"]
+    },
+    {
+      "route_id": "wishlist",
+      "path": "/wishlist",
+      "label": "Wishlist",
+      "entry_texts": ["Wishlist", "Saved items"],
+      "success_hints": ["Wishlist"]
+    },
+    {
+      "route_id": "track",
+      "path": "/track",
+      "label": "Track Order",
+      "entry_texts": ["Track", "Track order", "Order status"],
+      "success_hints": ["Track", "Track order"]
+    },
+    {
+      "route_id": "contact",
+      "path": "/contact",
+      "label": "Contact",
+      "entry_texts": ["Contact", "Help", "Support", "WhatsApp"],
+      "success_hints": ["Contact", "WhatsApp"]
+    }
+  ],
+  "elements": [
+    {
+      "element_id": "launcher",
+      "role": "navigation",
+      "label": "Assistant launcher",
+      "text_hints": ["Ask", "Chat", "Help"],
+      "selector_hint": "[aria-label='Open assistant']",
+      "route_hint": "/"
+    },
+    {
+      "element_id": "search_bar",
+      "role": "search",
+      "label": "Search shop",
+      "text_hints": ["Search", "Find"],
+      "selector_hint": "[data-testid='search-bar']",
+      "route_hint": "/",
+      "allow_autofill": true
+    },
+    {
+      "element_id": "cart_link",
+      "role": "navigation",
+      "label": "Cart",
+      "text_hints": ["Cart", "View cart"],
+      "selector_hint": "[aria-label='Cart']",
+      "route_hint": "/cart"
+    },
+    {
+      "element_id": "primary_cta",
+      "role": "button",
+      "label": "Primary action",
+      "text_hints": ["Add to cart", "Proceed to checkout", "Place order", "Continue"],
+      "route_hint": "/"
+    },
+    {
+      "element_id": "change_password",
+      "role": "danger",
+      "label": "Change password",
+      "text_hints": ["Change password", "Update password"],
+      "route_hint": "/account",
+      "requires_human": true,
+      "sensitive": true
+    },
+    {
+      "element_id": "submit_support",
+      "role": "submit",
+      "label": "Contact support",
+      "text_hints": ["Contact", "WhatsApp", "Support"],
+      "route_hint": "/contact"
+    },
+    {
+      "element_id": "place_order",
+      "role": "danger",
+      "label": "Place order",
+      "text_hints": ["Place order", "Confirm order"],
+      "route_hint": "/checkout",
+      "requires_human": true,
+      "sensitive": true
+    },
+    {
+      "element_id": "payment_submit",
+      "role": "danger",
+      "label": "Complete payment",
+      "text_hints": ["Pay", "Payment", "UPI"],
+      "route_hint": "/order",
+      "requires_human": true,
+      "sensitive": true
+    }
+  ],
+  "workflows": [
+    {
+      "workflow_id": "open_launcher",
+      "name": "Open assistant",
+      "intent_hints": ["ask", "help", "assistant", "open assistant"],
+      "routes": ["home"],
+      "steps": [
+        {
+          "step_id": "open_launcher_step",
+          "description": "Open the assistant panel.",
+          "actions": [
+            {
+              "action_id": "open_assistant",
+              "kind": "noop",
+              "label": "Open assistant",
+              "requires_human": false,
+              "allowed": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "workflow_id": "search_content",
+      "name": "Search pickles",
+      "intent_hints": ["search", "find", "lookup", "show me"],
+      "routes": ["home", "products"],
+      "steps": [
+        {
+          "step_id": "focus_search",
+          "description": "Open search and type the query.",
+          "actions": [
+            {
+              "action_id": "open_search",
+              "kind": "open_search",
+              "label": "Search",
+              "element_id": "search_bar",
+              "value": "{{intent_text}}",
+              "wait_after_ms": 200
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "workflow_id": "add_to_cart",
+      "name": "Add to cart",
+      "intent_hints": ["buy", "add to cart", "order", "purchase", "get"],
+      "routes": ["home", "products"],
+      "steps": [
+        {
+          "step_id": "resolve_product",
+          "description": "Find the requested pickle in the catalog.",
+          "actions": [
+            {
+              "action_id": "add_product_to_cart",
+              "kind": "add_to_cart",
+              "label": "Add to cart",
+              "element_id": "primary_cta",
+              "value": "{{intent_text}}",
+              "wait_after_ms": 150
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "workflow_id": "browse_shop",
+      "name": "Browse shop",
+      "intent_hints": ["shop", "browse", "pickles", "products", "menu"],
+      "routes": ["products"],
+      "steps": [
+        {
+          "step_id": "go_products",
+          "description": "Navigate to the full pickle catalog.",
+          "actions": [
+            {
+              "action_id": "nav_products",
+              "kind": "navigate",
+              "label": "Pickles",
+              "route_id": "products",
+              "path": "/products",
+              "wait_after_ms": 200
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "workflow_id": "browse_combos",
+      "name": "Browse combos",
+      "intent_hints": ["combo", "combos", "5 pickles", "999"],
+      "routes": ["combos"],
+      "steps": [
+        {
+          "step_id": "go_combos",
+          "description": "Navigate to combo packs.",
+          "actions": [
+            {
+              "action_id": "nav_combos",
+              "kind": "navigate",
+              "label": "Combos",
+              "route_id": "combos",
+              "path": "/combos",
+              "wait_after_ms": 200
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "workflow_id": "view_cart",
+      "name": "View cart",
+      "intent_hints": ["cart", "my cart", "view cart", "basket"],
+      "routes": ["cart"],
+      "steps": [
+        {
+          "step_id": "go_cart",
+          "description": "Open the shopping cart.",
+          "actions": [
+            {
+              "action_id": "nav_cart",
+              "kind": "navigate",
+              "label": "Cart",
+              "route_id": "cart",
+              "path": "/cart",
+              "element_id": "cart_link",
+              "wait_after_ms": 200
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "workflow_id": "review_cart_and_checkout",
+      "name": "Review cart and checkout",
+      "intent_hints": ["checkout", "proceed to checkout", "go to checkout", "pay now"],
+      "routes": ["cart", "checkout"],
+      "steps": [
+        {
+          "step_id": "go_checkout",
+          "description": "Navigate to checkout.",
+          "actions": [
+            {
+              "action_id": "nav_checkout",
+              "kind": "navigate",
+              "label": "Checkout",
+              "route_id": "checkout",
+              "path": "/checkout",
+              "wait_after_ms": 200
+            }
+          ]
+        },
+        {
+          "step_id": "pause_before_order",
+          "description": "Pause before placing an order.",
+          "requires_human": true,
+          "actions": [
+            {
+              "action_id": "pause_checkout",
+              "kind": "pause",
+              "label": "Place order",
+              "element_id": "place_order",
+              "requires_human": true,
+              "human_handoff_message": "Please review your delivery details and place the order manually."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "workflow_id": "track_order",
+      "name": "Track order",
+      "intent_hints": ["track", "track order", "order status", "where is my order"],
+      "routes": ["track"],
+      "steps": [
+        {
+          "step_id": "go_track",
+          "description": "Open order tracking.",
+          "actions": [
+            {
+              "action_id": "nav_track",
+              "kind": "navigate",
+              "label": "Track order",
+              "route_id": "track",
+              "path": "/track",
+              "wait_after_ms": 200
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "workflow_id": "navigate_to_account",
+      "name": "Open account",
+      "intent_hints": ["account", "my account", "login", "register", "sign up", "signup", "orders"],
+      "routes": ["account"],
+      "steps": [
+        {
+          "step_id": "go_account",
+          "description": "Navigate to account page.",
+          "actions": [
+            {
+              "action_id": "nav_account",
+              "kind": "navigate",
+              "label": "Account",
+              "route_id": "account",
+              "path": "/account",
+              "wait_after_ms": 200
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "workflow_id": "sign_up",
+      "name": "Sign up",
+      "intent_hints": ["sign up", "signup", "create account", "register"],
+      "routes": ["account"],
+      "steps": [
+        {
+          "step_id": "go_sign_up",
+          "description": "Navigate to the sign up tab.",
+          "actions": [
+            {
+              "action_id": "nav_sign_up",
+              "kind": "navigate",
+              "label": "Sign up",
+              "route_id": "account",
+              "path": "/account?tab=register",
+              "wait_after_ms": 150
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "workflow_id": "sign_in",
+      "name": "Log in",
+      "intent_hints": ["log in", "login", "sign in"],
+      "routes": ["account"],
+      "steps": [
+        {
+          "step_id": "go_sign_in",
+          "description": "Navigate to the log in tab.",
+          "actions": [
+            {
+              "action_id": "nav_sign_in",
+              "kind": "navigate",
+              "label": "Log in",
+              "route_id": "account",
+              "path": "/account?tab=login",
+              "wait_after_ms": 150
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "workflow_id": "change_password",
+      "name": "Change password",
+      "intent_hints": ["change password", "update password", "reset password"],
+      "routes": ["account"],
+      "steps": [
+        {
+          "step_id": "go_account_password",
+          "description": "Open account for password change.",
+          "actions": [
+            {
+              "action_id": "nav_account_for_password",
+              "kind": "navigate",
+              "label": "Account",
+              "route_id": "account",
+              "path": "/account",
+              "wait_after_ms": 200
+            }
+          ]
+        },
+        {
+          "step_id": "pause_for_sensitive_action",
+          "description": "Pause before password change.",
+          "requires_human": true,
+          "actions": [
+            {
+              "action_id": "pause_before_password_change",
+              "kind": "pause",
+              "label": "Change password",
+              "element_id": "change_password",
+              "requires_human": true,
+              "human_handoff_message": "Please complete the password change manually on your account page."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "workflow_id": "contact_support",
+      "name": "Contact support",
+      "intent_hints": ["contact", "help", "support", "whatsapp", "message support"],
+      "routes": ["contact"],
+      "steps": [
+        {
+          "step_id": "open_contact",
+          "description": "Open contact and WhatsApp support.",
+          "actions": [
+            {
+              "action_id": "nav_contact",
+              "kind": "navigate",
+              "label": "Contact",
+              "route_id": "contact",
+              "path": "/contact",
+              "element_id": "submit_support",
+              "wait_after_ms": 200
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "workflow_id": "complete_payment",
+      "name": "Complete payment",
+      "intent_hints": ["payment", "pay", "upi", "complete payment"],
+      "routes": ["checkout"],
+      "steps": [
+        {
+          "step_id": "pause_for_payment",
+          "description": "Pause before payment submission.",
+          "requires_human": true,
+          "actions": [
+            {
+              "action_id": "pause_before_payment",
+              "kind": "pause",
+              "label": "Complete payment",
+              "element_id": "payment_submit",
+              "requires_human": true,
+              "human_handoff_message": "Please complete UPI payment and send your payment screenshot on WhatsApp."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "sensitive_keywords": ["otp", "password", "payment", "delete", "confirm", "pin", "upi"],
+  "restricted_actions": ["change_password", "place_order", "complete_payment"],
+  "notes": "Lachava Telangana Pickles — manifest for public shop flows with human pause at checkout, payment, and password."
+}

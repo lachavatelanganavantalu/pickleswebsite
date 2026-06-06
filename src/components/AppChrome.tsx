@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import BottomNav from "@/components/BottomNav";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import AdityaAssistant from "@/components/aditya/AdityaAssistant";
 
 export default function AppChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -18,6 +19,7 @@ export default function AppChrome({ children }: { children: React.ReactNode }) {
       <Navbar />
       <main className="app-main">{children}</main>
       <BottomNav />
+      <AdityaAssistant />
       <WhatsAppButton />
     </>
   );

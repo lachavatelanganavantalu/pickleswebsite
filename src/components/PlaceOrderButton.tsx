@@ -2,26 +2,15 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { readJsonResponse } from "@/lib/read-json-response";
 import { useCart } from "@/context/CartContext";
 import { useOrder } from "@/context/OrderContext";
 import { useCustomerAuth } from "@/context/CustomerAuthContext";
 import { loginUrl } from "@/lib/customer-login-url";
 import { writePendingOrderSession } from "@/lib/pending-order-session";
-
-interface CustomerForm {
-  name: string;
-  email: string;
-  phone: string;
-  address: string;
-  city: string;
-  state: string;
-  zip: string;
-  country: string;
-}
+import { submitCartOrder, type OrderCustomer } from "@/lib/submit-cart-order";
 
 interface Props {
-  customer: CustomerForm;
+  customer: OrderCustomer;
   disabled?: boolean;
 }
 
@@ -43,47 +32,15 @@ export default function PlaceOrderButton({ customer, disabled }: Props) {
     setError("");
 
     try {
-      const res = await fetch("/api/create-order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          amountINR: totalINR,
-          items: items.map((i) => ({
-            productName: i.productName,
-            variantLabel: i.variantLabel,
-            quantity: i.quantity,
-            priceINR: i.priceINR,
-          })),
-          customer,
-        }),
-      });
-      const data = await readJsonResponse<{
-        error?: string;
-        orderId: string;
-        displayOrderId: string;
-        amountINR: number;
-        items: { productName: string; variantLabel: string; quantity: number }[];
-        paymentStatus?: string;
-      }>(res);
-      if (res.status === 401) {
-        router.push(loginUrl("/checkout"));
-        throw new Error(data.error || "Please log in to place an order.");
-      }
-      if (!res.ok) throw new Error(data.error || "Could not place order");
-
-      const orderPayload = {
-        orderId: data.orderId,
-        displayOrderId: data.displayOrderId,
-        paymentId: "",
-        amountINR: data.amountINR,
-        items: data.items,
-        paymentStatus: data.paymentStatus || "pending",
-      };
+      const orderPayload = await submitCartOrder({ customer, items, totalINR });
 
       setLastOrder(orderPayload);
       writePendingOrderSession(orderPayload);
-      router.push(`/order/${data.orderId}/payment`);
+      router.push(`/order/${orderPayload.orderId}/payment`);
     } catch (e) {
+      if (e instanceof Error && e.message.includes("log in")) {
+        router.push(loginUrl("/checkout"));
+      }
       setError(e instanceof Error ? e.message : "Order failed");
     } finally {
       setLoading(false);

@@ -33,6 +33,13 @@ export default function AccountPageClient() {
     }
   }, [loading, user, loginNext, router]);
 
+  useEffect(() => {
+    const mode = searchParams.get("tab");
+    if (mode === "login" || mode === "register") {
+      setTab(mode);
+    }
+  }, [searchParams]);
+
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");

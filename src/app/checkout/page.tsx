@@ -7,6 +7,7 @@ import { useCart } from "@/context/CartContext";
 import { useCurrency } from "@/context/CurrencyContext";
 import { useCustomerAuth } from "@/context/CustomerAuthContext";
 import { loginUrl } from "@/lib/customer-login-url";
+import { loadCheckoutDraft, hasCheckoutDraftFields } from "@/lib/checkout-draft";
 import PlaceOrderButton from "@/components/PlaceOrderButton";
 import EditableCartList from "@/components/EditableCartList";
 import PendingOrderBanner from "@/components/PendingOrderBanner";
@@ -38,6 +39,22 @@ export default function CheckoutPage() {
     if (user?.phone) {
       setCustomer((c) => (c.phone ? c : { ...c, phone: user.phone }));
     }
+  }, [user?.phone]);
+
+  useEffect(() => {
+    const draft = loadCheckoutDraft();
+    if (!draft || !hasCheckoutDraftFields(draft)) return;
+
+    setCustomer((current) => ({
+      name: draft.name || current.name,
+      email: draft.email || current.email,
+      phone: draft.phone || current.phone || user?.phone || "",
+      address: draft.address || current.address,
+      city: draft.city || current.city,
+      state: draft.state || current.state,
+      zip: draft.zip || current.zip,
+      country: draft.country || current.country,
+    }));
   }, [user?.phone]);
 
   const update = (field: keyof typeof customer, value: string) => {

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ShoppingBag, Menu, X, Search } from "lucide-react";
 import { useCart } from "@/context/CartContext";
+import { useAditya } from "@/context/AdityaContext";
 import ShopSearchOverlay from "@/components/ShopSearchOverlay";
 import PwaInstallButton from "@/components/PwaInstallButton";
 import ShippingFlagsMarquee from "@/components/ShippingFlagsMarquee";
@@ -17,13 +18,23 @@ const links = [
 
 export default function Navbar() {
   const { itemCount } = useCart();
+  const { registerSearchHandler } = useAditya();
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [searchSeed, setSearchSeed] = useState("");
   const [cartReady, setCartReady] = useState(false);
 
   useEffect(() => {
     setCartReady(true);
   }, []);
+
+  useEffect(() => {
+    return registerSearchHandler((query) => {
+      setOpen(false);
+      setSearchSeed(query);
+      setSearchOpen(true);
+    });
+  }, [registerSearchHandler]);
 
   return (
     <header className="site-header">
@@ -52,6 +63,7 @@ export default function Navbar() {
             type="button"
             onClick={() => {
               setOpen(false);
+              setSearchSeed("");
               setSearchOpen(true);
             }}
             className="flex h-10 w-10 items-center justify-center text-white sm:h-11 sm:w-11"
@@ -96,7 +108,14 @@ export default function Navbar() {
         </nav>
       )}
 
-      <ShopSearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
+      <ShopSearchOverlay
+        open={searchOpen}
+        initialQuery={searchSeed}
+        onClose={() => {
+          setSearchOpen(false);
+          setSearchSeed("");
+        }}
+      />
     </header>
   );
 }

@@ -1,0 +1,42 @@
+{
+  "adapter": "react-next",
+  "output_dir": "ON SITE Documentation",
+  "files_created": [
+    "quickstart/site-manifest.json",
+    "quickstart/README.md",
+    "quickstart/agent-bootstrap.ts",
+    "quickstart/agent-client.ts",
+    "quickstart/agent-activity-panel.tsx",
+    "docs/INTEGRATION.md",
+    "docs/WEBSITE_ONBOARDING.md",
+    "docs/ADAPTERS.md",
+    "docs/PRODUCT_OVERVIEW.md",
+    "docs/PRODUCT_ROADMAP.md",
+    "docs/RELEASE_READINESS.md",
+    "docs/COMPLIANCE.md",
+    "docs/DEPLOYMENT.md",
+    "docs/COMPATIBILITY.md",
+    "docs/SHOPIFY.md",
+    "docs/WOOCOMMERCE.md",
+    "docs/ADOBE_COMMERCE.md",
+    "docs/VISIBILITY.md",
+    "site-manifest.sample.json",
+    "README.md"
+  ],
+  "file_count": 20,
+  "docs_copied": [
+    "INTEGRATION.md",
+    "WEBSITE_ONBOARDING.md",
+    "ADAPTERS.md",
+    "PRODUCT_OVERVIEW.md",
+    "PRODUCT_ROADMAP.md",
+    "RELEASE_READINESS.md",
+    "COMPLIANCE.md",
+    "DEPLOYMENT.md",
+    "COMPATIBILITY.md",
+    "SHOPIFY.md",
+    "WOOCOMMERCE.md",
+    "ADOBE_COMMERCE.md",
+    "VISIBILITY.md"
+  ]
+}

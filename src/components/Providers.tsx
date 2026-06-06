@@ -6,6 +6,7 @@ import { CurrencyProvider } from "@/context/CurrencyContext";
 import { OrderProvider } from "@/context/OrderContext";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { CustomerAuthProvider } from "@/context/CustomerAuthContext";
+import { AdityaProvider } from "@/context/AdityaContext";
 
 export default function Providers({ children }: { children: ReactNode }) {
   return (
@@ -13,7 +14,9 @@ export default function Providers({ children }: { children: ReactNode }) {
       <CurrencyProvider>
         <CustomerAuthProvider>
           <CartProvider>
-            <OrderProvider>{children}</OrderProvider>
+            <OrderProvider>
+              <AdityaProvider>{children}</AdityaProvider>
+            </OrderProvider>
           </CartProvider>
         </CustomerAuthProvider>
       </CurrencyProvider>
