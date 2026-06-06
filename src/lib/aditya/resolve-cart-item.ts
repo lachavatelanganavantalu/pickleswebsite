@@ -88,13 +88,24 @@ function scoreProduct(product: PickleProduct, query: string): number {
   const name = normalize(product.name);
   const slug = normalize(product.slug);
   const telugu = normalize(product.nameTelugu ?? "");
+  const querySlug = q.replace(/\s+/g, "-");
 
   let score = 0;
 
-  if (name === q || slug === q.replace(/\s+/g, "-")) score = 100;
-  else if (name.includes(q) || q.includes(name)) score = 80 + name.length;
-  else if (telugu && (telugu.includes(q) || q.includes(telugu))) score = 75;
-  else {
+  if (name === q || slug === querySlug) {
+    score = 100;
+  } else if (slug === `${querySlug}-pickle` || name === `${q} pickle`) {
+    score = 98;
+  } else if (name.includes(q) || q.includes(name)) {
+    score = 80 + q.length;
+    const queryTokens = new Set(q.split(" ").filter(Boolean));
+    const extraTokens = name
+      .split(" ")
+      .filter((token) => token !== "pickle" && !queryTokens.has(token));
+    score -= extraTokens.length * 18;
+  } else if (telugu && (telugu.includes(q) || q.includes(telugu))) {
+    score = 75;
+  } else {
     const tokens = q.split(" ").filter((token) => token.length > 2);
     const overlap = tokens.filter(
       (token) =>
@@ -105,11 +116,12 @@ function scoreProduct(product: PickleProduct, query: string): number {
     score = overlap > 0 ? 50 + overlap * 15 : 0;
   }
 
-  if (/\bmango\b/.test(q) && !/\ballam\b/.test(q) && slug.includes("allam")) {
-    score -= 40;
-  }
+  const wantsAllam = /\ballam\b/.test(q);
+  const wantsMamidikaya = /\b(mango|mamidikaya|mamidi)\b/.test(q);
 
-  if (/\bmango\b/.test(q) && slug === "mamidikaya-pickle") {
+  if (slug.includes("allam")) {
+    score += wantsAllam ? 20 : -45;
+  } else if (slug === "mamidikaya-pickle" && wantsMamidikaya && !wantsAllam) {
     score += 25;
   }
 

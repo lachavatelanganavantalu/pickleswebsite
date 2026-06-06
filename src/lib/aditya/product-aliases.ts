@@ -4,6 +4,7 @@ export const PRODUCT_QUERY_ALIASES: Record<string, string[]> = {
   chinthankaya: ["chinthankaya", "chinthakaya", "chinthakya", "chintakaya", "chintha"],
   usirikaya: ["usirikaya", "usiri", "usirika"],
   mamidikaya: ["mamidikaya", "mango", "mamidi"],
+  "mamidikaya allam": ["mamidikaya allam", "mango allam", "mango ginger", "allam pickle"],
   nimmakaya: ["nimmakaya", "nimmakai", "lemon"],
   chicken: ["chicken", "chiken"],
   chepala: ["chepala", "fish", "prawn", "chepa"],
@@ -23,7 +24,15 @@ export function expandProductQuery(query: string): string[] {
   const variants = new Set<string>([normalized]);
 
   for (const aliases of Object.values(PRODUCT_QUERY_ALIASES)) {
-    if (aliases.some((alias) => normalized.includes(alias) || alias.includes(normalized))) {
+    const matched = aliases.some((alias) => {
+      if (normalized === alias) return true;
+      const pattern = new RegExp(
+        `\\b${alias.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`,
+      );
+      return pattern.test(normalized);
+    });
+
+    if (matched) {
       for (const alias of aliases) variants.add(alias);
     }
   }
