@@ -1269,8 +1269,6 @@ a.shop-add-cart-btn {
   left: clamp(0.75rem, 3vw, 1.25rem);
   bottom: var(--fab-offset);
   display: flex;
-  flex-direction: column;
-  gap: 1px;
   width: var(--fab-size);
   height: var(--fab-size);
   align-items: center;
@@ -1282,16 +1280,28 @@ a.shop-add-cart-btn {
   transition: transform 0.15s ease;
 }
 
+.aditya-fab-mark {
+  position: relative;
+  display: block;
+  width: clamp(1.85rem, 6vw, 2.15rem);
+  height: clamp(1.85rem, 6vw, 2.15rem);
+}
+
 .aditya-fab-icon {
-  width: clamp(1.15rem, 4vw, 1.35rem);
-  height: clamp(1.15rem, 4vw, 1.35rem);
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .aditya-fab-label {
-  font-size: 0.625rem;
+  position: absolute;
+  top: 43%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: clamp(0.6875rem, 2.6vw, 0.8125rem);
   font-weight: 800;
   line-height: 1;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.01em;
   text-transform: lowercase;
 }
 

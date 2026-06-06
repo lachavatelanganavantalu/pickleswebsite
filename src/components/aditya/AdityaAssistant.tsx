@@ -325,8 +325,10 @@ export default function AdityaAssistant() {
           setPanelState("closed");
         }}
       >
-        <MessageCircle className="aditya-fab-icon" aria-hidden />
-        <span className="aditya-fab-label">ai</span>
+        <span className="aditya-fab-mark" aria-hidden>
+          <MessageCircle className="aditya-fab-icon" />
+          <span className="aditya-fab-label">ai</span>
+        </span>
       </button>
 
       {panelOpen ? (
