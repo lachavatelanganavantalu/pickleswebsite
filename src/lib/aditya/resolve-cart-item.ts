@@ -4,6 +4,7 @@ import { isProductPurchasable } from "@/lib/product-stock";
 import {
   expandProductQuery,
   isExplicitComboQuery,
+  isGenericProductToken,
 } from "@/lib/aditya/product-aliases";
 
 const normalize = (text: string) =>
@@ -106,7 +107,11 @@ function scoreProduct(product: PickleProduct, query: string): number {
   } else if (telugu && (telugu.includes(q) || q.includes(telugu))) {
     score = 75;
   } else {
-    const tokens = q.split(" ").filter((token) => token.length > 2);
+    const tokens = q.split(" ").filter(
+      (token) => token.length > 2 && !isGenericProductToken(token),
+    );
+    if (tokens.length === 0) return 0;
+
     const overlap = tokens.filter(
       (token) =>
         name.includes(token) ||
