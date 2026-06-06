@@ -1,6 +1,5 @@
 import siteManifest from "../../../ADITYA/site-manifest.json";
 import intentDictionary from "../../../ADITYA/intent-dictionary.json";
-import type { CheckoutDeliveryDraft } from "@/lib/checkout-draft";
 import { isBuyIntent, parseBuyOrder } from "./parse-buy-intent";
 import { matchSensitiveChatIntent } from "./match-sensitive-intent";
 import { matchPlaceOrderIntent } from "./match-place-order-intent";

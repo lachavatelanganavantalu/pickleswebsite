@@ -7,7 +7,7 @@ import { AdityaBrandFooter } from "@/components/aditya/AgentActivityPanel";
 import { runAgentIntent } from "@/lib/aditya/agent-client";
 import { applyCartAction } from "@/lib/aditya/apply-cart-action";
 import { buildAssistantReply } from "@/lib/aditya/build-assistant-reply";
-import type { AdityaIntentResponse, AdityaResolvedAction } from "@/lib/aditya/types";
+import type { AdityaResolvedAction } from "@/lib/aditya/types";
 import {
   saveCheckoutDraft,
   hasCheckoutDraftFields,
@@ -26,7 +26,10 @@ import {
   SENSITIVE_MESSAGE_HIDDEN,
 } from "@/lib/aditya/sensitive-messages";
 import { loginUrl } from "@/lib/customer-login-url";
-import { writePendingOrderSession } from "@/lib/pending-order-session";
+import {
+  readPendingOrderSession,
+  writePendingOrderSession,
+} from "@/lib/pending-order-session";
 import { useAditya } from "@/context/AdityaContext";
 import { useCart } from "@/context/CartContext";
 import { useCustomerAuth } from "@/context/CustomerAuthContext";
