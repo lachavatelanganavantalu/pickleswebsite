@@ -22,6 +22,9 @@ export function buildAssistantReply(
     response.workflow_id?.startsWith("sensitive_") &&
     response.assistant_reply
   ) {
+    if (notices.length > 0) {
+      return `${response.assistant_reply} ${notices.join(" ")}`;
+    }
     return response.assistant_reply;
   }
 

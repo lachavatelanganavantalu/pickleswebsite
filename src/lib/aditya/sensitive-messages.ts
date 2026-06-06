@@ -9,7 +9,7 @@ export const SENSITIVE_DELETE_LABEL = "Delete from chat";
 export const SENSITIVE_MESSAGE_HIDDEN = "Sensitive message hidden for your security.";
 
 export const SENSITIVE_PAYMENT_HANDOFF_MESSAGE =
-  "Payments cannot be completed in chat. Open the secure payment page and pay with UPI or QR there. Never share payment details in this chat.";
+  "Payments cannot be completed in chat — including GPay, PhonePe, or UPI. Use the secure payment page on this site. Never share UPI PINs, OTPs, or card details here.";
 
 export const SENSITIVE_CHANGE_PASSWORD_NAV_MESSAGE =
   "I'll open your account page. Change your password only in the secure form there — never type passwords in chat.";

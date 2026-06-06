@@ -47,16 +47,24 @@ const PAYMENT_HANDOFF_PHRASES = [
   "do payment",
   "pay my order",
   "pay the order",
+  "pay the amount",
+  "pay amount",
+  "pay via gpay",
+  "pay via phonepe",
+  "pay via upi",
+  "pay through gpay",
+  "pay with gpay",
+  "pay using gpay",
 ];
 
-function escapeRegex(value: string): string {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
-function phraseMatches(text: string, phrase: string): boolean {
-  const pattern = new RegExp(`\\b${escapeRegex(normalize(phrase))}\\b`);
-  return pattern.test(text);
-}
+const PAYMENT_HANDOFF_PATTERNS = [
+  /\bpay\s+(?:the\s+)?(?:amount|money|order|bill|total|balance|fee)\b/,
+  /\bpay\s+(?:via|through|using|with|in)\s+/,
+  /\bpayment\s+(?:via|through|using|with|in)\s+/,
+  /\b(?:make|do|complete|submit)\s+(?:a\s+)?payment\b/,
+  /\b(?:gpay|google pay|phonepe|phone pe|paytm|bhim|upi)\b.*\bpay(?:ment)?\b/,
+  /\bpay(?:ment)?\b.*\b(?:gpay|google pay|phonepe|phone pe|paytm|bhim|upi)\b/,
+];
 
 export function detectSharedSecret(intent: string): SharedSecretKind | null {
   const raw = intent.trim();
@@ -71,13 +79,34 @@ export function detectSharedSecret(intent: string): SharedSecretKind | null {
   return null;
 }
 
+function escapeRegex(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function phraseMatches(text: string, phrase: string): boolean {
+  const pattern = new RegExp(`\\b${escapeRegex(normalize(phrase))}\\b`);
+  return pattern.test(text);
+}
+
 export function isPaymentHandoffIntent(intent: string): boolean {
   const norm = normalize(intent);
   if (detectSharedSecret(intent)) return false;
 
-  return PAYMENT_HANDOFF_PHRASES.some(
-    (phrase) => norm === phrase || phraseMatches(norm, phrase),
-  );
+  if (
+    PAYMENT_HANDOFF_PHRASES.some(
+      (phrase) => norm === normalize(phrase) || phraseMatches(norm, phrase),
+    )
+  ) {
+    return true;
+  }
+
+  return PAYMENT_HANDOFF_PATTERNS.some((pattern) => pattern.test(norm));
+}
+
+export function isPaymentHandoffWorkflow(
+  workflowId: string | null | undefined,
+): boolean {
+  return workflowId === "sensitive_payment_handoff";
 }
 
 function buildBlockedResponse(

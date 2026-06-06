@@ -18,6 +18,7 @@ import {
 import { submitCartOrder } from "@/lib/submit-cart-order";
 import {
   detectSharedSecret,
+  isPaymentHandoffWorkflow,
   isSensitiveSharedWorkflow,
 } from "@/lib/aditya/match-sensitive-intent";
 import {
@@ -235,6 +236,20 @@ export default function AdityaAssistant() {
             router.push("/checkout");
           }
         } else if (response.matched) {
+          if (isPaymentHandoffWorkflow(response.workflow_id)) {
+            const pending = readPendingOrderSession();
+            if (pending?.orderId) {
+              notices.push("Opening the secure payment page for your order.");
+              router.push(`/order/${pending.orderId}/payment`);
+            } else if (items.length > 0) {
+              notices.push("Opening checkout — complete payment on the secure page.");
+              router.push(user ? "/checkout" : loginUrl("/checkout"));
+            } else {
+              notices.push("Place an order first, then pay on the secure payment page.");
+              router.push("/products");
+            }
+          }
+
           for (const action of response.actions) {
             if (action.kind === "pause") break;
             await executeAction(
@@ -276,7 +291,7 @@ export default function AdityaAssistant() {
         setBusy(false);
       }
     },
-    [executeAction, router],
+    [executeAction, items.length, router, user],
   );
 
   const onSubmit = async (event: FormEvent) => {
@@ -293,7 +308,7 @@ export default function AdityaAssistant() {
       <button
         type="button"
         className="aditya-fab"
-        aria-label="Open assistant"
+        aria-label="Open AI assistant"
         aria-expanded={panelOpen}
         onClick={() => {
           if (panelState === "closed") {
@@ -307,7 +322,8 @@ export default function AdityaAssistant() {
           setPanelState("closed");
         }}
       >
-        <MessageCircle className="h-[clamp(1.35rem,4.5vw,1.65rem)] w-[clamp(1.35rem,4.5vw,1.65rem)]" />
+        <MessageCircle className="aditya-fab-icon" aria-hidden />
+        <span className="aditya-fab-label">ai</span>
       </button>
 
       {panelOpen ? (

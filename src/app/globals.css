@@ -1269,6 +1269,8 @@ a.shop-add-cart-btn {
   left: clamp(0.75rem, 3vw, 1.25rem);
   bottom: var(--fab-offset);
   display: flex;
+  flex-direction: column;
+  gap: 1px;
   width: var(--fab-size);
   height: var(--fab-size);
   align-items: center;
@@ -1278,6 +1280,19 @@ a.shop-add-cart-btn {
   color: #fff;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
   transition: transform 0.15s ease;
+}
+
+.aditya-fab-icon {
+  width: clamp(1.15rem, 4vw, 1.35rem);
+  height: clamp(1.15rem, 4vw, 1.35rem);
+}
+
+.aditya-fab-label {
+  font-size: 0.625rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
 }
 
 .aditya-fab:hover {
