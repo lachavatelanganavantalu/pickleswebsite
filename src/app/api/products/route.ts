@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
     const products = await getAllProducts();
 
     if (slug) {
-      const resolvedSlug = slug === "prawn-pickle" ? "chepala-pickle" : slug;
+      const resolvedSlug = slug === "royyala-pickle" ? "prawn-pickle" : slug;
       const product = products.find((p) => p.slug === resolvedSlug);
       if (!product) return NextResponse.json({ error: "Not found" }, { status: 404 });
       return NextResponse.json(stripProductForPublic(product));

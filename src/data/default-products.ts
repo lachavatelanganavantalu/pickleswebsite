@@ -41,6 +41,25 @@ export const defaultProducts: PickleProduct[] = [
     ],
   },
   {
+    id: "prawn-pickle",
+    slug: "prawn-pickle",
+    name: "Prawn Pickle",
+    nameTelugu: "రొయ్యల",
+    subtitle: "1 kg · 1/2 kg",
+    description: "",
+    category: "non-veg",
+    spiceLevel: 3,
+    tag: null,
+    available: true,
+    featured: false,
+    displayOrder: 3,
+    imagePath: "/products/prawn-pickle.jpg",
+    weightOptions: [
+      { id: "500g", label: "1/2 kg (500g)", priceINR: 500 },
+      { id: "1kg", label: "1 kg", priceINR: 950 },
+    ],
+  },
+  {
     id: "chicken-pickle",
     slug: "chicken-pickle",
     name: "Chicken Pickle",
@@ -52,7 +71,7 @@ export const defaultProducts: PickleProduct[] = [
     tag: null,
     available: true,
     featured: false,
-    displayOrder: 3,
+    displayOrder: 4,
     imagePath: "/products/chicken-pickle.jpg",
     weightOptions: [
       { id: "500g", label: "1/2 kg (500g)", priceINR: 600 },
@@ -71,7 +90,7 @@ export const defaultProducts: PickleProduct[] = [
     tag: null,
     available: true,
     featured: false,
-    displayOrder: 4,
+    displayOrder: 5,
     imagePath: "/products/chinthankaya-pickle.jpeg",
     weightOptions: [
       { id: "500g", label: "1/2 kg (500g)", priceINR: 500 },
@@ -90,7 +109,7 @@ export const defaultProducts: PickleProduct[] = [
     tag: null,
     available: true,
     featured: false,
-    displayOrder: 5,
+    displayOrder: 6,
     imagePath: "/products/usirikaya-pickle.jpg",
     weightOptions: [
       { id: "500g", label: "1/2 kg (500g)", priceINR: 480 },
@@ -109,7 +128,7 @@ export const defaultProducts: PickleProduct[] = [
     tag: null,
     available: true,
     featured: false,
-    displayOrder: 6,
+    displayOrder: 7,
     imagePath: "/products/nimmakaya-pickle.jpg",
     weightOptions: [
       { id: "500g", label: "1/2 kg (500g)", priceINR: 480 },
@@ -128,7 +147,7 @@ export const defaultProducts: PickleProduct[] = [
     tag: null,
     available: true,
     featured: false,
-    displayOrder: 7,
+    displayOrder: 8,
     imagePath: "/products/mamidikaya-pickle.jpg",
     weightOptions: [
       { id: "500g", label: "1/2 kg (500g)", priceINR: 480 },
@@ -147,7 +166,7 @@ export const defaultProducts: PickleProduct[] = [
     tag: null,
     available: true,
     featured: false,
-    displayOrder: 8,
+    displayOrder: 9,
     imagePath: "/products/mamidikaya-allam-pickle.jpg",
     weightOptions: [
       { id: "500g", label: "1/2 kg (500g)", priceINR: 480 },
@@ -166,7 +185,7 @@ export const defaultProducts: PickleProduct[] = [
     tag: null,
     available: true,
     featured: false,
-    displayOrder: 9,
+    displayOrder: 10,
     imagePath: "/products/tomato-pickle.jpg",
     weightOptions: [
       { id: "500g", label: "1/2 kg (500g)", priceINR: 380 },
@@ -185,7 +204,7 @@ export const defaultProducts: PickleProduct[] = [
     tag: null,
     available: true,
     featured: false,
-    displayOrder: 10,
+    displayOrder: 11,
     imagePath: "/products/kakarakaya-pickle.jpg",
     weightOptions: [
       { id: "500g", label: "1/2 kg (500g)", priceINR: 480 },
@@ -198,7 +217,6 @@ export const CANONICAL_PRODUCT_IDS = new Set(defaultProducts.map((p) => p.id));
 
 /** Legacy catalog ids/slugs from the old website brief — not on the client menu. */
 export const LEGACY_PRODUCT_IDS = new Set([
-  "prawn-pickle",
   "avakaya-pickle",
   "gongura-pickle",
   "royyala-pickle",
