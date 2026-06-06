@@ -25,7 +25,7 @@
         "priceINR": 1500
       }
     ],
-    "updatedAt": "2026-06-06T19:01:30.579Z",
+    "updatedAt": "2026-06-06T19:11:43.334Z",
     "imageDataUrl": null
   },
   {
@@ -54,36 +54,7 @@
         "priceINR": 950
       }
     ],
-    "updatedAt": "2026-06-06T19:01:30.580Z",
-    "imageDataUrl": null
-  },
-  {
-    "id": "prawn-pickle",
-    "slug": "prawn-pickle",
-    "name": "Prawn Pickle",
-    "nameTelugu": "రొయ్యల",
-    "subtitle": "1 kg · 1/2 kg",
-    "description": "",
-    "category": "non-veg",
-    "spiceLevel": 3,
-    "tag": null,
-    "available": true,
-    "featured": false,
-    "displayOrder": 3,
-    "imagePath": "/products/prawn-pickle.jpg",
-    "weightOptions": [
-      {
-        "id": "500g",
-        "label": "1/2 kg (500g)",
-        "priceINR": 500
-      },
-      {
-        "id": "1kg",
-        "label": "1 kg",
-        "priceINR": 950
-      }
-    ],
-    "updatedAt": "2026-06-06T19:01:30.580Z",
+    "updatedAt": "2026-06-06T19:11:43.334Z",
     "imageDataUrl": null
   },
   {
@@ -112,7 +83,7 @@
         "priceINR": 1200
       }
     ],
-    "updatedAt": "2026-06-06T19:01:30.580Z",
+    "updatedAt": "2026-06-06T19:11:43.334Z",
     "imageDataUrl": null
   },
   {
@@ -141,7 +112,7 @@
         "priceINR": 900
       }
     ],
-    "updatedAt": "2026-06-06T19:01:30.580Z",
+    "updatedAt": "2026-06-06T19:11:43.334Z",
     "imageDataUrl": null
   },
   {
@@ -170,7 +141,7 @@
         "priceINR": 800
       }
     ],
-    "updatedAt": "2026-06-06T19:01:30.580Z",
+    "updatedAt": "2026-06-06T19:11:43.334Z",
     "imageDataUrl": null
   },
   {
@@ -199,7 +170,7 @@
         "priceINR": 800
       }
     ],
-    "updatedAt": "2026-06-06T19:01:30.580Z",
+    "updatedAt": "2026-06-06T19:11:43.334Z",
     "imageDataUrl": null
   },
   {
@@ -228,7 +199,7 @@
         "priceINR": 800
       }
     ],
-    "updatedAt": "2026-06-06T19:01:30.580Z",
+    "updatedAt": "2026-06-06T19:11:43.334Z",
     "imageDataUrl": null
   },
   {
@@ -257,7 +228,7 @@
         "priceINR": 800
       }
     ],
-    "updatedAt": "2026-06-06T19:01:30.580Z",
+    "updatedAt": "2026-06-06T19:11:43.334Z",
     "imageDataUrl": null
   },
   {
@@ -286,7 +257,7 @@
         "priceINR": 600
       }
     ],
-    "updatedAt": "2026-06-06T19:01:30.580Z",
+    "updatedAt": "2026-06-06T19:11:43.334Z",
     "imageDataUrl": null
   },
   {
@@ -315,7 +286,7 @@
         "priceINR": 800
       }
     ],
-    "updatedAt": "2026-06-06T19:01:30.580Z",
+    "updatedAt": "2026-06-06T19:11:43.334Z",
     "imageDataUrl": null
   }
 ]

@@ -8,15 +8,6 @@ export const PRODUCT_QUERY_ALIASES: Record<string, string[]> = {
   nimmakaya: ["nimmakaya", "nimmakai", "lemon", "lime"],
   chicken: ["chicken", "chiken", "chickens"],
   chepala: ["chepala", "chepa", "chepalu", "fish", "fishes"],
-  royyala: [
-    "royyala",
-    "royyalu",
-    "royala",
-    "prawn",
-    "prawns",
-    "shrimp",
-    "shrimps",
-  ],
   tomato: ["tomato", "tamato", "tomatoes"],
   kakarakaya: ["kakarakaya", "kakarakai", "bitter gourd", "bitterguard", "bitter gourd pickle"],
 };

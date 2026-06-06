@@ -86,7 +86,9 @@ function dedupeProductsById(products: PickleProduct[]): PickleProduct[] {
 
 function mergeWithMenuSource(stored: PickleProduct[]): PickleProduct[] {
   const uniqueStored = dedupeProductsById(stored);
-  const custom = uniqueStored.filter((p) => !CANONICAL_PRODUCT_IDS.has(p.id));
+  const custom = uniqueStored.filter(
+    (p) => !CANONICAL_PRODUCT_IDS.has(p.id) && !LEGACY_PRODUCT_IDS.has(p.id),
+  );
   const merged = stampDefaults().map((def) => {
     const existing = stored.find((p) => p.id === def.id);
     if (!existing) return def;

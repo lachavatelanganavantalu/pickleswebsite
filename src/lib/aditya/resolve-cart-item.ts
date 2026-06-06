@@ -124,7 +124,6 @@ function scoreProduct(product: PickleProduct, query: string): number {
   const wantsAllam = /\ballam\b/.test(q);
   const wantsMamidikaya = /\b(mango|mamidikaya|mamidi)\b/.test(q);
   const wantsFish = /\b(fish|fishes|chepala|chepa|chepalu)\b/.test(q);
-  const wantsPrawn = /\b(prawn|prawns|shrimp|shrimps|royyala|royyalu|royala)\b/.test(q);
 
   if (slug.includes("allam")) {
     score += wantsAllam ? 20 : -45;
@@ -132,14 +131,8 @@ function scoreProduct(product: PickleProduct, query: string): number {
     score += 25;
   }
 
-  if (slug === "chepala-pickle") {
-    score += wantsFish && !wantsPrawn ? 25 : 0;
-    if (wantsPrawn && !wantsFish) score -= 50;
-  }
-
-  if (slug === "prawn-pickle") {
-    score += wantsPrawn && !wantsFish ? 25 : 0;
-    if (wantsFish && !wantsPrawn) score -= 50;
+  if (slug === "chepala-pickle" && wantsFish) {
+    score += 25;
   }
 
   return score;

@@ -5,6 +5,7 @@ import {
   buildWeightUnavailableMessage,
   resolveCartLine,
 } from "@/lib/aditya/resolve-cart-item";
+import { UNKNOWN_PICKLE_MESSAGE } from "@/lib/aditya/unknown-pickle-message";
 
 export type CartActionOutcome = {
   added?: string;
@@ -42,7 +43,7 @@ export function applyCartAction(
 
   if (!result.ok) {
     if (result.kind === "not_found") {
-      return { notice: `Could not find "${productQuery}" in the shop.` };
+      return { notice: UNKNOWN_PICKLE_MESSAGE };
     }
 
     return {

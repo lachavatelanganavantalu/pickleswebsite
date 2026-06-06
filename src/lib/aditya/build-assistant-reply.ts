@@ -49,6 +49,10 @@ export function buildAssistantReply(
     return parts.join(" ");
   }
 
+  if (response.workflow_id === "unknown_pickle" && response.assistant_reply) {
+    return response.assistant_reply;
+  }
+
   if (response.assistant_reply) {
     return response.assistant_reply;
   }

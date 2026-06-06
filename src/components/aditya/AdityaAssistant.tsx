@@ -120,7 +120,11 @@ export default function AdityaAssistant() {
 
       switch (action.kind) {
         case "navigate":
-          if (action.path) router.push(action.path);
+          if (action.path?.startsWith("https://")) {
+            window.open(action.path, "_blank", "noopener,noreferrer");
+          } else if (action.path) {
+            router.push(action.path);
+          }
           break;
         case "open_search":
           openSearch(action.query ?? "");

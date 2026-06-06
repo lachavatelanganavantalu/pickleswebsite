@@ -4,6 +4,7 @@ import { isBuyIntent, parseBuyOrder } from "./parse-buy-intent";
 import { matchSensitiveChatIntent } from "./match-sensitive-intent";
 import { matchPlaceOrderIntent } from "./match-place-order-intent";
 import { matchNavigateIntent } from "./match-navigate-intent";
+import { matchUnknownPickleIntent } from "./unknown-pickle-message";
 import type {
   AdityaIntentDictionary,
   AdityaIntentResponse,
@@ -138,6 +139,9 @@ export function resolveAgentIntent(intent: string): AdityaIntentResponse {
 
   const navMatch = matchNavigateIntent(intent, bootstrap);
   if (navMatch) return navMatch;
+
+  const unknownPickleMatch = matchUnknownPickleIntent(intent, bootstrap);
+  if (unknownPickleMatch) return unknownPickleMatch;
 
   if (isBuyIntent(intent)) {
     const order = parseBuyOrder(intent);

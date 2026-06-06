@@ -113,7 +113,7 @@ export default function ShopSearchOverlay({ open, initialQuery = "", onClose }: 
             <p className="py-8 text-center text-sm text-shop-muted">Loading products…</p>
           ) : query.trim() === "" ? (
             <p className="py-8 text-center text-sm text-shop-muted">
-              Try mango, chicken, prawn, combo…
+              Try mango, chicken, fish, combo…
             </p>
           ) : results.length === 0 ? (
             <p className="py-8 text-center text-sm text-shop-muted">

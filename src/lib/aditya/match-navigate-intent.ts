@@ -2,6 +2,10 @@ import { defaultProducts } from "@/data/default-products";
 import { SITE_NAV_DESTINATIONS, NAV_VERB_PREFIX } from "@/lib/aditya/site-navigation";
 import { findProductForQuery } from "@/lib/aditya/resolve-cart-item";
 import { isBuyIntent } from "@/lib/aditya/parse-buy-intent";
+import {
+  buildUnknownPickleIntentResponse,
+  isUnknownPickleQuery,
+} from "@/lib/aditya/unknown-pickle-message";
 import type { AdityaIntentResponse } from "@/lib/aditya/types";
 
 const normalize = (text: string) =>
@@ -127,6 +131,10 @@ function matchSearchIntent(
   }
 
   if (!query) return null;
+
+  if (isUnknownPickleQuery(query)) {
+    return buildUnknownPickleIntentResponse(intent, bootstrap, query);
+  }
 
   return {
     matched: true,
