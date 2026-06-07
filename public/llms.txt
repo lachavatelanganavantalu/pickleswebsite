@@ -1,0 +1,5 @@
+# Lachava Telangana Vantalu
+https://pickleswebsite-xi.vercel.app/
+
+# ADITYA
+aditya: https://pickleswebsite-xi.vercel.app/.well-known/aditya.json
