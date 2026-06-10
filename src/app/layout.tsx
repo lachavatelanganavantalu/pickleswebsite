@@ -36,10 +36,15 @@ export const viewport: Viewport = {
   themeColor: "#4a2c1a",
 };
 
+const siteUrl = getSiteUrl();
+
 export const metadata: Metadata = {
-  metadataBase: new URL(getSiteUrl()),
+  metadataBase: new URL(siteUrl),
   alternates: {
     canonical: "/",
+    types: {
+      "application/aditya+connector+json": `${siteUrl}/.well-known/aditya-connector.json`,
+    },
   },
   title: {
     default: "Lachava | Telangana Vantalu",

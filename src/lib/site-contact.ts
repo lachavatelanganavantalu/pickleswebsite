@@ -8,6 +8,9 @@ export const SITE_CONTACT = {
   whatsapp: "916302112848",
   email: "lachavatelanganavantalu@gmail.com",
   upiPhone: "63021 12848",
-  location: "Telangana, India",
+  location: "Siddipet, Telangana, India",
+  addressLocality: "Husnabad, Siddipet",
+  addressRegion: "Telangana",
+  addressCountry: "IN",
   refundClaimWindow: "1 hour",
 } as const;

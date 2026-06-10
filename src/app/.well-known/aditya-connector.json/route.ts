@@ -9,6 +9,7 @@ export async function GET() {
   return NextResponse.json(
     {
       connector: "aditya",
+      connector_type: "AdityaConnector",
       ...getAdityaWellKnown(),
       site_name: siteManifest.site_name,
       homepage_url: siteUrl,

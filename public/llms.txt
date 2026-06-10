@@ -28,6 +28,7 @@
 - Human confirmation required for payment and checkout.
 
 ## ADITYA (governed agent access)
+- Connector type: AdityaConnector
 - Signal: /.well-known/aditya.json
 - Connector: /.well-known/aditya-connector.json
 - Manifest: /.well-known/aditya-manifest.json

@@ -2,6 +2,7 @@ import type { ComboPack } from "@/data/combos";
 import { HOME_FAQ } from "@/data/faq";
 import { BRAND } from "@/data/brand";
 import { SOCIAL_LINKS } from "@/data/social-links";
+import { getProductDetails } from "@/data/product-details";
 import { productSummary } from "@/lib/product-copy";
 import { SITE_CONTACT } from "@/lib/site-contact";
 import { getSiteUrl } from "@/lib/site-url";
@@ -24,8 +25,9 @@ export function organizationJsonLd() {
     telephone: SITE_CONTACT.phoneTel,
     address: {
       "@type": "PostalAddress",
-      addressRegion: "Telangana",
-      addressCountry: "IN",
+      addressLocality: SITE_CONTACT.addressLocality,
+      addressRegion: SITE_CONTACT.addressRegion,
+      addressCountry: SITE_CONTACT.addressCountry,
     },
     sameAs: [SOCIAL_LINKS.youtube, SOCIAL_LINKS.instagram].filter(Boolean),
   };
@@ -41,11 +43,18 @@ export function storeJsonLd() {
     alternateName: SITE_CONTACT.businessNameTe,
     url,
     image: `${url}${BRAND.ogImage}`,
+    logo: `${url}${BRAND.logo}`,
     telephone: SITE_CONTACT.phoneTel,
     email: SITE_CONTACT.email,
     priceRange: "₹₹",
     currenciesAccepted: "INR",
     paymentAccepted: "UPI, Credit Card, Debit Card, Net Banking",
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: SITE_CONTACT.addressLocality,
+      addressRegion: SITE_CONTACT.addressRegion,
+      addressCountry: SITE_CONTACT.addressCountry,
+    },
     hasCredential: {
       "@type": "EducationalOccupationalCredential",
       credentialCategory: "FSSAI Food Business License",
@@ -105,6 +114,7 @@ export function productJsonLd(product: PickleProduct) {
   const productUrl = `${url}/products/${product.slug}`;
   const offers = product.weightOptions.map((w) => ({
     "@type": "Offer",
+    sku: `${product.slug}-${w.id}`,
     name: w.label,
     price: w.priceINR,
     priceCurrency: "INR",
@@ -113,12 +123,15 @@ export function productJsonLd(product: PickleProduct) {
     seller: { "@id": `${url}/#store` },
   }));
 
+  const primarySku = `${product.slug}-${product.weightOptions[0]?.id ?? "default"}`;
+
   return {
     "@context": "https://schema.org",
     "@type": "Product",
     "@id": `${productUrl}#product`,
     name: product.name,
-    description: productSummary(product),
+    sku: primarySku,
+    description: `${productSummary(product)} Ingredients: ${getProductDetails(product.id, product.name).ingredients}`,
     image: productImageUrl(product),
     url: productUrl,
     category: CATEGORY_LABELS[product.category],

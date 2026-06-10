@@ -1,3 +1,4 @@
+import { getProductDetails } from "@/data/product-details";
 import { CATEGORY_LABELS, PickleProduct } from "@/types/product";
 import { formatINRDecimal } from "@/lib/format-price";
 
@@ -13,5 +14,6 @@ export function productSummary(product: PickleProduct): string {
       ? formatINRDecimal(min)
       : `${formatINRDecimal(min)} – ${formatINRDecimal(max)}`;
 
-  return `${product.name} is a traditional Telangana ${CATEGORY_LABELS[product.category].toLowerCase()} pickle from Lachava Telangana Pickles, sold in ${product.subtitle} jars (${priceText}). Homemade-style recipe, packed fresh for delivery across India.`;
+  const details = getProductDetails(product.id, product.name);
+  return `${details.overview} Available in ${product.subtitle} jars (${priceText}).`;
 }

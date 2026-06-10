@@ -18,6 +18,9 @@ export default async function Home() {
   const [products, combos] = await Promise.all([getAllProducts(), getAllCombos()]);
   return (
     <>
+      <h1 className="sr-only">
+        Lachava Telangana Pickles — Authentic Telangana Vantalu &amp; Traditional Pickles
+      </h1>
       <JsonLd data={[storeJsonLd(), faqPageJsonLd()]} />
       <HomeHeroCarousel />
       <ShopGrid
