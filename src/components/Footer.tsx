@@ -4,12 +4,14 @@ import { SITE_CONTACT } from "@/lib/site-contact";
 
 const shopLinks = [
   { href: "/products", label: "Pickles" },
+  { href: "/pricing", label: "Pricing" },
   { href: "/combos", label: "Combo ₹999" },
   { href: "/track", label: "Track order" },
 ] as const;
 
 const infoLinks = [
   { href: "/about", label: "About" },
+  { href: "/faq", label: "FAQ" },
   { href: "/contact", label: "Contact" },
   { href: "/privacy-policy", label: "Privacy Policy" },
   { href: "/terms-and-conditions", label: "Terms & Conditions" },
@@ -29,6 +31,9 @@ export default function Footer() {
             </p>
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-surface/60">
               Official menu — 10 pickles (1 kg &amp; ½ kg). 5-pickle combo ₹999.
+            </p>
+            <p className="mt-2 text-xs text-surface/50">
+              FSSAI license {SITE_CONTACT.fssaiLicenseNumber}
             </p>
             <SocialLinks className="mt-5" variant="on-dark" />
           </div>

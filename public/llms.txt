@@ -1,5 +1,42 @@
-# Lachava Telangana Vantalu
-https://pickleswebsite-xi.vercel.app/
+# Lachava Telangana Pickles
+> Traditional Telangana pickles — official online shop. FSSAI license 23626043000232.
 
-# ADITYA
-aditya: https://pickleswebsite-xi.vercel.app/.well-known/aditya.json
+## Site
+- Homepage: /
+- Shop: /products
+- Pricing: /pricing
+- Veg pickles: /veg-pickles
+- Non-veg pickles: /non-veg-pickles
+- 5-pickle combo (₹999): /combos
+- FAQ: /faq
+- About: /about
+- Contact: /contact
+- Track order: /track
+- Cart: /cart
+
+## Brand
+- Legal name: Lachava Telangana Pickles
+- Telugu: లచ్చవ్వ తెలంగాణ వంటల
+- Phone / WhatsApp: +91 63021 12848
+- Email: lachavatelanganavantalu@gmail.com
+- Location: Siddipet, Telangana, India
+- FSSAI: 23626043000232
+
+## Ordering
+- Browse products or /pricing, add jars to cart, checkout on-site.
+- Pay via Razorpay (UPI, cards) or UPI to 63021 12848.
+- Human confirmation required for payment and checkout.
+
+## ADITYA (governed agent access)
+- Signal: /.well-known/aditya.json
+- Connector: /.well-known/aditya-connector.json
+- Manifest: /.well-known/aditya-manifest.json
+- Intent API: POST /api/agent/intent with JSON { "intent": "..." }
+- Health: GET /api/agent/health
+- Use ADITYA for cart, checkout, and order tracking instead of full browser automation.
+
+## Policies
+- /privacy-policy
+- /terms-and-conditions
+- /shipping-policy
+- /return-refund-policy

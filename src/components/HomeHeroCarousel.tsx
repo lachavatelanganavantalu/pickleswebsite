@@ -63,20 +63,24 @@ export default function HomeHeroCarousel() {
         <div className="home-hero-layout">
           <HeroBrandMark />
           <div className="home-hero-copy-stack">
-            {SLIDES.map((slide, index) => (
-              <div
-                key={`${slide.image}-copy`}
-                className={cn("home-hero-copy", index === active && "home-hero-copy-active")}
-                aria-hidden={index !== active}
-              >
-                <h1 className="home-hero-title font-hero-display">
-                  <HeartDotText text={slide.title} />
-                </h1>
-                <p className="home-hero-subtitle font-hero-display">
-                  <HeartDotText text={slide.subtitle} />
-                </p>
-              </div>
-            ))}
+            {SLIDES.map((slide, index) => {
+              const isActive = index === active;
+              const TitleTag = isActive ? "h1" : "p";
+              return (
+                <div
+                  key={`${slide.image}-copy`}
+                  className={cn("home-hero-copy", isActive && "home-hero-copy-active")}
+                  aria-hidden={!isActive}
+                >
+                  <TitleTag className="home-hero-title font-hero-display">
+                    <HeartDotText text={slide.title} />
+                  </TitleTag>
+                  <p className="home-hero-subtitle font-hero-display">
+                    <HeartDotText text={slide.subtitle} />
+                  </p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { FSSAI_CERTIFICATE } from "@/data/gallery";
+import { SITE_CONTACT } from "@/lib/site-contact";
 
 export default function FssaiHeroBadge() {
   const [open, setOpen] = useState(false);
@@ -27,10 +28,13 @@ export default function FssaiHeroBadge() {
         type="button"
         className="home-fssai-badge"
         onClick={() => setOpen(true)}
-        aria-label="View FSSAI certificate"
-        title="FSSAI certified — view certificate"
+        aria-label={`View FSSAI certificate — license ${SITE_CONTACT.fssaiLicenseNumber}`}
+        title={`FSSAI ${SITE_CONTACT.fssaiLicenseNumber} — view certificate`}
       >
-        <span className="home-fssai-badge-label">fssai</span>
+        <span className="home-fssai-badge-text">
+          <span className="home-fssai-badge-label">fssai</span>
+          <span className="home-fssai-badge-number">{SITE_CONTACT.fssaiLicenseNumber}</span>
+        </span>
       </button>
 
       {open && (
@@ -56,9 +60,12 @@ export default function FssaiHeroBadge() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={FSSAI_CERTIFICATE}
-              alt="FSSAI food business certificate"
+              alt={`FSSAI registration certificate — license ${SITE_CONTACT.fssaiLicenseNumber}`}
               className="home-fssai-certificate-img"
             />
+            <p className="home-fssai-modal-caption">
+              FSSAI license {SITE_CONTACT.fssaiLicenseNumber}
+            </p>
           </div>
         </div>
       )}

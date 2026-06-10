@@ -2,13 +2,13 @@
 
 /**
  * Renders Latin text with ♥ replacing dots on i / j (e.g. "Homemade" → H♥omemade style).
- * Words wrap as whole units — no breaks inside a word.
+ * Uses standard i/I/j/J in the DOM for crawlers; hearts are decorative (aria-hidden).
  */
 function HeartDotChar({ char, index }: { char: string; index: number }) {
   if (char === "i") {
     return (
-      <span key={`${index}-i`} className="heart-dot-letter">
-        ı<span className="heart-dot-mark" aria-hidden="true">♥</span>
+      <span key={`${index}-i`} className="heart-dot-letter heart-dot-letter-i">
+        i<span className="heart-dot-mark" aria-hidden="true">♥</span>
       </span>
     );
   }
@@ -22,7 +22,7 @@ function HeartDotChar({ char, index }: { char: string; index: number }) {
   if (char === "j") {
     return (
       <span key={`${index}-j`} className="heart-dot-letter heart-dot-letter-j">
-        ȷ<span className="heart-dot-mark heart-dot-mark-j" aria-hidden="true">♥</span>
+        j<span className="heart-dot-mark heart-dot-mark-j" aria-hidden="true">♥</span>
       </span>
     );
   }

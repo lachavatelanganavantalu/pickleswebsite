@@ -10,5 +10,5 @@ export function getSiteUrl(): string {
     return "https://pickleswebsite-xi.vercel.app";
   }
 
-  return "http://localhost:3000";
+  return "http://localhost:3001";
 }

@@ -1,15 +1,20 @@
+import JsonLd from "@/components/JsonLd";
+import ShopGrid from "@/components/ShopGrid";
 import { getAllCombos } from "@/lib/combos-db";
 import { getAllProducts } from "@/lib/products-db";
-import ShopGrid from "@/components/ShopGrid";
+import { itemListJsonLd } from "@/lib/structured-data";
 
 export const metadata = {
   title: "Pickles",
+  alternates: { canonical: "/products" },
 };
 
 export default async function ProductsPage() {
   const [products, combos] = await Promise.all([getAllProducts(), getAllCombos()]);
   return (
-    <ShopGrid
+    <>
+      <JsonLd data={itemListJsonLd(products, "/products", "Lachava pickle menu")} />
+      <ShopGrid
       initialProducts={products}
       initialCombos={combos}
       showCombo
@@ -17,5 +22,6 @@ export default async function ProductsPage() {
       title="Pickles"
       subtitle="1 kg & 1/2 kg — official prices"
     />
+    </>
   );
 }

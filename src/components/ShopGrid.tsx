@@ -15,6 +15,7 @@ interface Props {
   showFilters?: boolean;
   title?: string;
   subtitle?: string;
+  titleTag?: "h1" | "h2";
   initialProducts?: PickleProduct[];
   initialCombos?: ComboPack[];
 }
@@ -25,6 +26,7 @@ export default function ShopGrid({
   showFilters = false,
   title,
   subtitle,
+  titleTag = "h1",
   initialProducts,
   initialCombos = [],
 }: Props) {
@@ -63,7 +65,12 @@ export default function ShopGrid({
     <section className="shop-grid-section">
       {(title || subtitle) && (
         <div className="mb-3 px-0.5">
-          {title && <h1 className="shop-page-title">{title}</h1>}
+          {title &&
+            (titleTag === "h2" ? (
+              <h2 className="shop-page-title">{title}</h2>
+            ) : (
+              <h1 className="shop-page-title">{title}</h1>
+            ))}
           {subtitle && <p className="mt-0.5 text-xs text-shop-muted">{subtitle}</p>}
         </div>
       )}

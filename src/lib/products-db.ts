@@ -208,6 +208,11 @@ export async function getProductById(id: string): Promise<PickleProduct | null> 
   return products.find((p) => p.id === id) ?? null;
 }
 
+export async function getProductBySlug(slug: string): Promise<PickleProduct | null> {
+  const products = await getAllProducts();
+  return products.find((p) => p.slug === slug) ?? null;
+}
+
 export function invalidateProductsCache(): void {
   memoryCache = null;
 }

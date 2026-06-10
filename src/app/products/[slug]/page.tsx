@@ -11,6 +11,7 @@ import WishlistHeartButton from "@/components/WishlistHeartButton";
 import { useCart } from "@/context/CartContext";
 import { useCurrency } from "@/context/CurrencyContext";
 import { formatINRDecimal } from "@/lib/format-price";
+import { productSummary } from "@/lib/product-copy";
 import {
   getProductUnavailableCta,
   getProductUnavailableLabel,
@@ -127,6 +128,7 @@ export default function ProductDetailPage() {
         )}
         <h1 className="mt-1 text-xl font-bold text-brand">{product.name}</h1>
         <p className="text-sm text-muted">{product.subtitle}</p>
+        <p className="mt-3 text-sm leading-relaxed text-ink-muted">{productSummary(product)}</p>
         <p className="mt-2 text-sm font-bold text-brand">
           {unavailableLabel ? (
             <span className="text-gray-600">{unavailableLabel}</span>

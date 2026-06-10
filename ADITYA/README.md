@@ -12,6 +12,7 @@ into their existing UI.
 - `site-manifest.sample.json`: a second generic manifest example
 - `quickstart/`: React/Next integration scaffold
 - `docs/`: integration, onboarding, and release guidance
+- `docs/LACHAVA_WORKFLOWS.md`: all 14 manifest workflows + runtime flows on the live Lachava site
 - `CLIENT_SETUP.md`: what the client developer needs to provide
 - `generate-intent-dictionary.mjs`: builds the chat intent dictionary from the manifest
 - `intent-dictionary.json`: generated word, phrase, and sentence mapping for chat routing

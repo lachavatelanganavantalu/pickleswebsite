@@ -5,6 +5,8 @@ import Providers from "@/components/Providers";
 import AppChrome from "@/components/AppChrome";
 import PwaRegister from "@/components/PwaRegister";
 import { BRAND } from "@/data/brand";
+import JsonLd from "@/components/JsonLd";
+import { organizationJsonLd, webSiteJsonLd } from "@/lib/structured-data";
 import { getSiteUrl } from "@/lib/site-url";
 
 const instrument = Instrument_Serif({
@@ -36,6 +38,9 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
+  alternates: {
+    canonical: "/",
+  },
   title: {
     default: "Lachava | Telangana Vantalu",
     template: "%s | Lachava",
@@ -84,6 +89,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${instrument.variable} ${jakarta.variable} ${heroDisplay.variable}`}>
       <body className="antialiased bg-surface text-ink">
+        <JsonLd data={[organizationJsonLd(), webSiteJsonLd()]} />
         <Providers>
           <PwaRegister />
           <div className="app-shell">

@@ -4,6 +4,7 @@ import { SITE_CONTACT } from "@/lib/site-contact";
 
 export const metadata = {
   title: "Contact",
+  alternates: { canonical: "/contact" },
 };
 
 const policyLinks = [
@@ -82,6 +83,27 @@ export default function ContactPage() {
               Read full Return &amp; Refund Policy
             </Link>
           </p>
+        </div>
+
+        <div className="rounded-2xl border border-border bg-white p-6">
+          <h2 className="text-sm font-semibold text-brand">FSSAI registration</h2>
+          <p className="mt-3 text-sm text-ink-muted">
+            {SITE_CONTACT.businessName} is FSSAI registered. License number:{" "}
+            <strong className="text-ink">{SITE_CONTACT.fssaiLicenseNumber}</strong>.
+          </p>
+        </div>
+
+        <div className="rounded-2xl border border-border bg-white p-6">
+          <h2 className="text-sm font-semibold text-brand">How to order online</h2>
+          <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm leading-relaxed text-ink-muted">
+            <li>
+              Browse <Link href="/products" className="text-brand hover:underline">pickles</Link> or the{" "}
+              <Link href="/pricing" className="text-brand hover:underline">price list</Link>.
+            </li>
+            <li>Add jars to cart and open checkout.</li>
+            <li>Pay with Razorpay or UPI to {SITE_CONTACT.upiPhone}.</li>
+            <li>Track on <Link href="/track" className="text-brand hover:underline">Track order</Link>.</li>
+          </ol>
         </div>
 
         <div className="rounded-2xl border border-border bg-white p-6">

@@ -224,6 +224,30 @@ html {
   color: #ff6b8a;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
   pointer-events: none;
+  z-index: 1;
+}
+
+/* Mask native i/j tittles so the decorative heart reads like the old dotless style */
+.heart-dot-letter-i::after,
+.heart-dot-letter-j::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0.34em;
+  height: 0.22em;
+  background: #fff;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.heart-dot-letter-i::after {
+  top: 0.04em;
+}
+
+.heart-dot-letter-j::after {
+  top: auto;
+  bottom: -0.02em;
 }
 
 .heart-dot-letter-j .heart-dot-mark-j {
@@ -412,6 +436,14 @@ html {
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
+.home-fssai-badge-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  line-height: 1.1;
+}
+
 .home-fssai-badge-label {
   font-size: clamp(0.8rem, 2.8vw, 0.95rem);
   font-style: italic;
@@ -419,7 +451,15 @@ html {
   letter-spacing: 0.06em;
   text-transform: lowercase;
   color: var(--color-brand-dark, #3a2214);
-  line-height: 1;
+}
+
+.home-fssai-badge-number {
+  font-size: clamp(0.5rem, 1.8vw, 0.625rem);
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--color-brand-dark, #3a2214);
+  opacity: 0.85;
 }
 
 .home-fssai-modal {
@@ -465,6 +505,14 @@ html {
   display: block;
   width: 100%;
   height: auto;
+}
+
+.home-fssai-modal-caption {
+  margin-top: 0.75rem;
+  text-align: center;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-ink);
 }
 
 @media (max-width: 380px) {
