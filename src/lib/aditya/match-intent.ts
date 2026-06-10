@@ -1,4 +1,4 @@
-import siteManifest from "../../../ADITYA/site-manifest.json";
+import siteManifest from "@/lib/aditya/site-manifest";
 import intentDictionary from "../../../ADITYA/intent-dictionary.json";
 import { isBuyIntent, parseBuyOrder } from "./parse-buy-intent";
 import { matchSensitiveChatIntent } from "./match-sensitive-intent";

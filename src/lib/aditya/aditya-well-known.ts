@@ -1,4 +1,4 @@
-import siteManifest from "../../../ADITYA/site-manifest.json";
+import siteManifest from "@/lib/aditya/site-manifest";
 
 import { getSiteUrl } from "@/lib/site-url";
 

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import siteManifest from "../../../../../ADITYA/site-manifest.json";
+import siteManifest from "@/lib/aditya/site-manifest";
 import { getSiteUrl } from "@/lib/site-url";
 
 export async function GET() {
