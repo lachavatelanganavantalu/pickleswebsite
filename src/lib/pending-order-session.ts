@@ -5,7 +5,7 @@ export interface PendingOrderSession {
   amountINR: number;
 }
 
-const KEY = "orderSuccess";
+const KEY = "lachava_pending_order";
 
 export function readPendingOrderSession(): PendingOrderSession | null {
   if (typeof window === "undefined") return null;

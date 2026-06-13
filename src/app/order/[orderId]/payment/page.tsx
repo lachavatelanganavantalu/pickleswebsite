@@ -8,6 +8,7 @@ import EditableCartList from "@/components/EditableCartList";
 import RazorpayPayButton from "@/components/RazorpayPayButton";
 import { formatINRDecimal } from "@/lib/format-price";
 import { clearPendingOrderSession } from "@/lib/pending-order-session";
+import { startRazorpayOverlayWatch } from "@/lib/razorpay-cleanup";
 import { readJsonResponse } from "@/lib/read-json-response";
 import { useCart } from "@/context/CartContext";
 import type { TimelineStep } from "@/lib/order-timeline";
@@ -61,6 +62,8 @@ export default function OrderPaymentPage() {
     if (order?.paymentStatus !== "paid") return;
     clearCart();
     clearPendingOrderSession();
+    const stopWatch = startRazorpayOverlayWatch();
+    return stopWatch;
   }, [order?.paymentStatus, clearCart]);
 
   if (loading) {
@@ -151,12 +154,12 @@ export default function OrderPaymentPage() {
 
       <div className="mt-6 flex flex-col gap-3">
         {paid && (
-          <Link
+          <a
             href="/checkout/success"
             className="flex min-h-[44px] items-center justify-center rounded-full bg-brand px-6 text-sm font-bold uppercase tracking-wide text-white hover:bg-brand-dark"
           >
             View confirmation
-          </Link>
+          </a>
         )}
         <Link
           href={`/track?displayOrderId=${encodeURIComponent(order.displayOrderId)}&phone=${encodeURIComponent(order.customer.phone)}`}

@@ -4,7 +4,9 @@ import { useState } from "react";
 import { useOrder } from "@/context/OrderContext";
 import { readJsonResponse } from "@/lib/read-json-response";
 import { formatINRDecimal } from "@/lib/format-price";
-import { navigateAfterRazorpayPayment } from "@/lib/razorpay-cleanup";
+import { navigateAfterRazorpayPayment, cleanupRazorpayCheckout } from "@/lib/razorpay-cleanup";
+import { writePaidOrderSession } from "@/lib/paid-order-session";
+import { clearPendingOrderSession } from "@/lib/pending-order-session";
 
 declare global {
   interface Window {
@@ -95,53 +97,63 @@ export default function RazorpayPayButton({
           email: customer.email || "",
           contact: customer.phone,
         },
-        handler: async (response: {
+        handler: (response: {
           razorpay_order_id: string;
           razorpay_payment_id: string;
           razorpay_signature: string;
         }) => {
-          const verifyRes = await fetch("/api/verify-payment", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature,
-            }),
-          });
-          const data = await readJsonResponse<{
-            error?: string;
-            orderId: string;
-            displayOrderId: string;
-            paymentId: string;
-            amountINR: number;
-            paymentStatus: string;
-            items: { productName: string; variantLabel: string; quantity: number }[];
-            customer?: { phone?: string };
-          }>(verifyRes);
+          void (async () => {
+            try {
+              const verifyRes = await fetch("/api/verify-payment", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_signature: response.razorpay_signature,
+                }),
+              });
+              const data = await readJsonResponse<{
+                error?: string;
+                orderId: string;
+                displayOrderId: string;
+                paymentId: string;
+                amountINR: number;
+                paymentStatus: string;
+                items: { productName: string; variantLabel: string; quantity: number }[];
+                customer?: { phone?: string };
+              }>(verifyRes);
 
-          if (!verifyRes.ok) {
-            setError(data.error || "Payment verification failed");
-            return;
-          }
+              if (!verifyRes.ok) {
+                setError(data.error || "Payment verification failed");
+                setLoading(false);
+                return;
+              }
 
-          const confirmed = {
-            orderId: data.orderId,
-            displayOrderId: data.displayOrderId,
-            paymentId: data.paymentId,
-            amountINR: data.amountINR,
-            items: data.items,
-            paymentStatus: "paid",
-            customerPhone: data.customer?.phone ?? customer.phone,
-          };
+              const confirmed = {
+                orderId: data.orderId,
+                displayOrderId: data.displayOrderId,
+                paymentId: data.paymentId,
+                amountINR: data.amountINR,
+                items: data.items,
+                paymentStatus: "paid",
+                customerPhone: data.customer?.phone ?? customer.phone,
+              };
 
-          setLastOrder(confirmed);
-          sessionStorage.setItem("orderSuccess", JSON.stringify(confirmed));
-          navigateAfterRazorpayPayment("/checkout/success");
+              setLastOrder(confirmed);
+              writePaidOrderSession(confirmed);
+              clearPendingOrderSession();
+              navigateAfterRazorpayPayment("/checkout/success");
+            } catch (err) {
+              setError(err instanceof Error ? err.message : "Payment verification failed");
+              setLoading(false);
+            }
+          })();
         },
         modal: {
           ondismiss: () => {
             setLoading(false);
+            cleanupRazorpayCheckout();
           },
         },
         theme: { color: "#5c3317" },

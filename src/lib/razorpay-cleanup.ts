@@ -1,25 +1,21 @@
-/** Remove Razorpay modal/backdrop left in the DOM after SPA navigation. */
+/** Remove Razorpay modal/backdrop that blocks clicks after checkout. */
 export function cleanupRazorpayCheckout(): void {
   if (typeof document === "undefined") return;
 
   document.body.style.overflow = "";
   document.body.style.paddingRight = "";
   document.documentElement.style.overflow = "";
+  document.body.classList.remove("razorpay-prevent-scroll");
 
-  const removeNode = (node: Element | null | undefined) => {
-    if (!node) return;
-    node.remove();
+  const remove = (node: Element | null | undefined) => {
+    node?.remove();
   };
 
-  document.querySelectorAll(".razorpay-container").forEach((el) => {
-    removeNode(el);
-  });
-
-  document.querySelectorAll('[class*="razorpay"]').forEach((el) => {
-    if (el instanceof HTMLElement && el.classList.contains("razorpay-container")) {
-      removeNode(el);
-    }
-  });
+  document
+    .querySelectorAll(
+      ".razorpay-container, .razorpay-backdrop, .razorpay-checkout-frame, .razorpay-overlay, [class*='razorpay']"
+    )
+    .forEach((el) => remove(el));
 
   document.querySelectorAll("iframe").forEach((iframe) => {
     const src = iframe.getAttribute("src") ?? "";
@@ -29,23 +25,45 @@ export function cleanupRazorpayCheckout(): void {
       name.includes("razorpay") ||
       name === "checkout-frame"
     ) {
-      removeNode(iframe.closest(".razorpay-container") ?? iframe);
+      remove(iframe.closest(".razorpay-container") ?? iframe.parentElement ?? iframe);
     }
   });
 
-  document.querySelectorAll("div[style*='z-index']").forEach((el) => {
+  document.body.querySelectorAll(":scope > div").forEach((el) => {
     if (!(el instanceof HTMLElement)) return;
-    const z = Number.parseInt(el.style.zIndex || "0", 10);
-    if (z >= 100000 && el.querySelector("iframe")) {
-      removeNode(el);
+    if (el.id === "__next" || el.dataset.reactRoot !== undefined) return;
+    const style = getComputedStyle(el);
+    if (style.position !== "fixed") return;
+    const z = Number.parseInt(style.zIndex || "0", 10);
+    const fullScreen =
+      el.offsetWidth >= window.innerWidth * 0.9 &&
+      el.offsetHeight >= window.innerHeight * 0.9;
+    if (z >= 1000 || (fullScreen && el.querySelector("iframe"))) {
+      remove(el);
     }
   });
 }
 
 export function navigateAfterRazorpayPayment(url: string): void {
   cleanupRazorpayCheckout();
+
+  const target = typeof window !== "undefined" ? window.top ?? window : null;
+  if (!target) return;
+
   window.setTimeout(() => {
     cleanupRazorpayCheckout();
-    window.location.assign(url);
-  }, 50);
+    target.location.replace(url);
+  }, 250);
+}
+
+export function startRazorpayOverlayWatch(durationMs = 4000): () => void {
+  cleanupRazorpayCheckout();
+  const started = Date.now();
+  const id = window.setInterval(() => {
+    cleanupRazorpayCheckout();
+    if (Date.now() - started >= durationMs) {
+      window.clearInterval(id);
+    }
+  }, 150);
+  return () => window.clearInterval(id);
 }
