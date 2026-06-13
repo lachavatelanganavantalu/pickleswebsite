@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import TrackOrderPage from "./TrackOrderPageClient";
 
 export const metadata = {
@@ -5,5 +6,13 @@ export const metadata = {
 };
 
 export default function TrackPage() {
-  return <TrackOrderPage />;
+  return (
+    <Suspense
+      fallback={
+        <p className="app-content py-16 text-center text-muted">Loading track order…</p>
+      }
+    >
+      <TrackOrderPage />
+    </Suspense>
+  );
 }

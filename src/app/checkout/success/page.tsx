@@ -7,6 +7,7 @@ import { useCurrency } from "@/context/CurrencyContext";
 import { useCart } from "@/context/CartContext";
 import type { LastOrder } from "@/context/OrderContext";
 import { clearPendingOrderSession } from "@/lib/pending-order-session";
+import { cleanupRazorpayCheckout } from "@/lib/razorpay-cleanup";
 
 function readOrderFromSession(): LastOrder | null {
   if (typeof window === "undefined") return null;
@@ -19,12 +20,26 @@ function readOrderFromSession(): LastOrder | null {
   }
 }
 
+function trackOrderHref(order: LastOrder): string {
+  const params = new URLSearchParams({
+    displayOrderId: order.displayOrderId ?? order.orderId,
+  });
+  if (order.customerPhone?.trim()) {
+    params.set("phone", order.customerPhone.trim());
+  }
+  return `/track?${params.toString()}`;
+}
+
 export default function CheckoutSuccessPage() {
   const { lastOrder } = useOrder();
   const { format } = useCurrency();
   const { clearCart } = useCart();
   const [sessionOrder] = useState(readOrderFromSession);
   const order = lastOrder ?? sessionOrder;
+
+  useEffect(() => {
+    cleanupRazorpayCheckout();
+  }, []);
 
   useEffect(() => {
     if (!order) return;
@@ -45,7 +60,7 @@ export default function CheckoutSuccessPage() {
   }
 
   return (
-    <div className="app-content py-16 text-center max-w-lg mx-auto">
+    <div className="relative z-10 app-content py-16 text-center max-w-lg mx-auto">
       <p className="text-xs font-semibold uppercase tracking-widest text-forest">Payment successful</p>
       <h1 className="mt-2 font-display text-2xl text-brand">Thank you for your order</h1>
 
@@ -77,9 +92,9 @@ export default function CheckoutSuccessPage() {
         We are preparing your pickles. You can track delivery status anytime.
       </p>
 
-      <div className="mt-8 flex flex-col gap-3">
+      <div className="relative z-10 mt-8 flex flex-col gap-3">
         <Link
-          href={`/track?displayOrderId=${encodeURIComponent(order.displayOrderId ?? order.orderId)}`}
+          href={trackOrderHref(order)}
           className="inline-flex min-h-[48px] items-center justify-center rounded-full bg-brand px-6 text-sm font-bold uppercase tracking-wide text-white hover:bg-brand-dark"
         >
           Track order

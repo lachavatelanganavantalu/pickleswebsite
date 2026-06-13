@@ -1,14 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useOrder } from "@/context/OrderContext";
 import { readJsonResponse } from "@/lib/read-json-response";
 import { formatINRDecimal } from "@/lib/format-price";
+import { navigateAfterRazorpayPayment } from "@/lib/razorpay-cleanup";
 
 declare global {
   interface Window {
-    Razorpay: new (options: Record<string, unknown>) => { open: () => void };
+    Razorpay: new (options: Record<string, unknown>) => {
+      open: () => void;
+      on: (event: string, handler: () => void) => void;
+    };
   }
 }
 
@@ -47,7 +49,6 @@ export default function RazorpayPayButton({
   customer,
   disabled,
 }: Props) {
-  const router = useRouter();
   const { setLastOrder } = useOrder();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -115,6 +116,7 @@ export default function RazorpayPayButton({
             amountINR: number;
             paymentStatus: string;
             items: { productName: string; variantLabel: string; quantity: number }[];
+            customer?: { phone?: string };
           }>(verifyRes);
 
           if (!verifyRes.ok) {
@@ -129,11 +131,17 @@ export default function RazorpayPayButton({
             amountINR: data.amountINR,
             items: data.items,
             paymentStatus: "paid",
+            customerPhone: data.customer?.phone ?? customer.phone,
           };
 
           setLastOrder(confirmed);
           sessionStorage.setItem("orderSuccess", JSON.stringify(confirmed));
-          router.push("/checkout/success");
+          navigateAfterRazorpayPayment("/checkout/success");
+        },
+        modal: {
+          ondismiss: () => {
+            setLoading(false);
+          },
         },
         theme: { color: "#5c3317" },
       });

@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import OrderTimeline from "@/components/OrderTimeline";
 import PoweredByCallBadge from "@/components/PoweredByCallBadge";
 import { formatINRDecimal } from "@/lib/format-price";
 import type { TimelineStep } from "@/lib/order-timeline";
 
 export default function TrackOrderPageClient() {
+  const searchParams = useSearchParams();
   const [displayOrderId, setDisplayOrderId] = useState("");
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
@@ -19,6 +21,13 @@ export default function TrackOrderPageClient() {
     customer: { name: string; phone: string };
   } | null>(null);
   const [timeline, setTimeline] = useState<TimelineStep[]>([]);
+
+  useEffect(() => {
+    const id = searchParams.get("displayOrderId")?.trim();
+    const mobile = searchParams.get("phone")?.trim();
+    if (id) setDisplayOrderId(id);
+    if (mobile) setPhone(mobile);
+  }, [searchParams]);
 
   const inputClass =
     "mt-1 w-full rounded-xl border border-border bg-white px-3 py-2.5 text-sm focus:border-brand/50 focus:outline-none";
