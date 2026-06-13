@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { isAdminRequest } from "@/lib/admin-auth";
 import { getAllProducts, upsertProduct } from "@/lib/products-db";
 import { normalizeProduct, validateProduct } from "@/lib/product-admin";
+import { revalidateCatalog } from "@/lib/revalidate-catalog";
 import { PickleProduct } from "@/types/product";
 
 function unauthorized() {
@@ -25,6 +26,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: errors.join("; ") }, { status: 400 });
     }
     const saved = await upsertProduct(product);
+    revalidateCatalog(saved.slug);
     return NextResponse.json(saved, { status: 201 });
   } catch (err) {
     console.error("POST /api/admin/products:", err);

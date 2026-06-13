@@ -8,6 +8,8 @@ import { offerCatalogJsonLd } from "@/lib/structured-data";
 import { CATEGORY_LABELS } from "@/types/product";
 import { SITE_CONTACT } from "@/lib/site-contact";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Pricing",
   description:

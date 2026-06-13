@@ -4,6 +4,8 @@ import { getAllCombos } from "@/lib/combos-db";
 import { getAllProducts } from "@/lib/products-db";
 import { itemListJsonLd } from "@/lib/structured-data";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Pickles",
   alternates: { canonical: "/products" },

@@ -10,6 +10,7 @@ import { PickleProduct } from "@/types/product";
 import { applyDefaultImages } from "@/lib/product-images";
 import { resolveProductImagePath } from "@/lib/catalog-media";
 import { toPlainDocuments } from "@/lib/serialize-doc";
+import { isVercelRuntime, requirePersistentStorage, useInMemoryDbCache } from "@/lib/storage-env";
 
 const COLLECTION = "products";
 const FILE_STORE = path.join(process.cwd(), "data", "products-store.json");
@@ -117,14 +118,19 @@ async function persistProducts(products: PickleProduct[]): Promise<void> {
       if (memoryCache.length) await col.insertMany(memoryCache);
       return;
     } catch (err) {
-      console.error("MongoDB products save failed, using file store:", err);
+      console.error("MongoDB products save failed:", err);
+      if (isVercelRuntime()) throw err;
     }
   }
+
+  requirePersistentStorage("Saving products");
   await writeFileStore(memoryCache);
 }
 
 export async function getAllProducts(): Promise<PickleProduct[]> {
-  if (memoryCache?.length) return finalizeProducts(memoryCache);
+  if (useInMemoryDbCache() && memoryCache?.length) {
+    return finalizeProducts(memoryCache);
+  }
 
   if (process.env.MONGODB_URI) {
     try {

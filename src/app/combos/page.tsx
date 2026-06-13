@@ -8,6 +8,8 @@ import { formatINRDecimal } from "@/lib/format-price";
 import { comboProductJsonLd } from "@/lib/structured-data";
 import { SITE_CONTACT } from "@/lib/site-contact";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Combo offer",
   description:

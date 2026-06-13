@@ -35,12 +35,6 @@ export default function ShopGrid({
   const [filter, setFilter] = useState<Filter>(category ?? "all");
 
   useEffect(() => {
-    if (initialProducts) {
-      setProducts(initialProducts);
-      setLoading(false);
-      return;
-    }
-
     const query =
       category && !showFilters
         ? `?category=${category}`
@@ -50,11 +44,22 @@ export default function ShopGrid({
             ? `?category=${category}`
             : "";
 
+    let cancelled = false;
+    setLoading(true);
     fetch(`/api/products${query}`)
       .then((r) => r.json())
-      .then((data) => setProducts(Array.isArray(data) ? data : []))
-      .finally(() => setLoading(false));
-  }, [category, initialProducts, showFilters]);
+      .then((data) => {
+        if (cancelled) return;
+        setProducts(Array.isArray(data) ? data : []);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [category, showFilters]);
 
   const filtered =
     filter === "all" ? products : products.filter((p) => p.category === filter);

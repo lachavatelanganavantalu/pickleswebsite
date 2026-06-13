@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { isAdminRequest } from "@/lib/admin-auth";
 import { deleteProduct, getAllProducts, upsertProduct } from "@/lib/products-db";
 import { normalizeProduct, validateProduct } from "@/lib/product-admin";
+import { revalidateCatalog } from "@/lib/revalidate-catalog";
 import { PickleProduct } from "@/types/product";
 
 function unauthorized() {
@@ -27,6 +28,7 @@ export async function PATCH(
       return NextResponse.json({ error: errors.join("; ") }, { status: 400 });
     }
     const saved = await upsertProduct(product);
+    revalidateCatalog(saved.slug);
     return NextResponse.json(saved);
   } catch (err) {
     console.error("PATCH /api/admin/products/[id]:", err);
@@ -43,6 +45,7 @@ export async function DELETE(
     const { id } = await params;
     const ok = await deleteProduct(id);
     if (!ok) return NextResponse.json({ error: "Product not found" }, { status: 404 });
+    revalidateCatalog();
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error("DELETE /api/admin/products/[id]:", err);

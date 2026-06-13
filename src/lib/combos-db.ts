@@ -5,6 +5,7 @@ import { comboPacks as defaultCombos } from "@/data/combos";
 import type { ComboPack } from "@/data/combos";
 import { resolveComboImagePath } from "@/lib/catalog-media";
 import { toPlainDocuments } from "@/lib/serialize-doc";
+import { isVercelRuntime, useInMemoryDbCache } from "@/lib/storage-env";
 
 const COLLECTION = "combos";
 const FILE_STORE = path.join(process.cwd(), "data", "combos-store.json");
@@ -89,13 +90,14 @@ async function persistCombos(combos: ComboPack[]): Promise<void> {
       return;
     } catch (err) {
       console.error("MongoDB combos save failed:", err);
+      if (isVercelRuntime()) throw err;
     }
   }
   await writeFile(combos);
 }
 
 export async function getAllCombos(): Promise<ComboPack[]> {
-  if (cache?.length) return finalizeCombos(cache);
+  if (useInMemoryDbCache() && cache?.length) return finalizeCombos(cache);
 
   if (process.env.MONGODB_URI) {
     try {
