@@ -1,10 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getOrderById } from "@/lib/orders-db";
-import { getSiteSettings } from "@/lib/site-settings-db";
-import { defaultSiteSettings } from "@/data/default-site-settings";
 import { buildOrderTimeline } from "@/lib/order-timeline";
-import { publicPaymentSettings } from "@/lib/payment-qr";
-import { adminPaymentProofWhatsAppUrl } from "@/lib/payment-whatsapp";
 
 export const runtime = "nodejs";
 
@@ -19,11 +15,6 @@ export async function GET(
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
     }
 
-    const settings = await getSiteSettings();
-    const payment = publicPaymentSettings(settings);
-    const adminWhatsApp =
-      settings.contact?.whatsapp?.trim() || defaultSiteSettings.contact.whatsapp;
-
     return NextResponse.json({
       order: {
         orderId: order.orderId,
@@ -31,17 +22,16 @@ export async function GET(
         amountINR: order.amountINR,
         paymentStatus: order.paymentStatus,
         items: order.items,
-        customer: { name: order.customer.name, phone: order.customer.phone },
+        customer: {
+          name: order.customer.name,
+          email: order.customer.email,
+          phone: order.customer.phone,
+        },
         createdAt: order.createdAt,
         paymentConfirmedAt: order.paymentConfirmedAt,
         dtdcSentAt: order.dtdcSentAt,
       },
-      payment,
       timeline: buildOrderTimeline(order),
-      whatsappUrl:
-        order.paymentStatus === "pending"
-          ? adminPaymentProofWhatsAppUrl(order, adminWhatsApp)
-          : null,
     });
   } catch (err) {
     console.error("GET /api/orders/[orderId]:", err);

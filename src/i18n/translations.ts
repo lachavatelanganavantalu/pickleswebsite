@@ -41,12 +41,12 @@ export const messages: Messages = {
   "checkout.title": { en: "Checkout", te: "ఆర్డర్" },
   "checkout.placeOrder": { en: "Place order", te: "ఆర్డర్ పెట్టండి" },
   "checkout.demoNote": {
-    en: "After placing order, scan the payment QR or copy UPI ID on the next screen.",
-    te: "ఆర్డర్ తర్వాత QR స్కాన్ చేయండి లేదా UPI ID కాపీ చేయండి.",
+    en: "After placing your order, pay securely with Razorpay on the next screen.",
+    te: "ఆర్డర్ తర్వాత Razorpay తో సురక్షితంగా చెల్లించండి.",
   },
   "checkout.liveNote": {
-    en: "Scan QR or copy UPI ID in PhonePe / GPay, then send payment screenshot on WhatsApp.",
-    te: "QR స్కాన్ లేదా UPI ID కాపీ చేసి, WhatsApp లో screenshot పంపండి.",
+    en: "Pay with Razorpay (UPI, cards, net banking). Your order is confirmed instantly.",
+    te: "Razorpay తో చెల్లించండి (UPI, కార్డ్, నెట్ బ్యాంకింగ్). ఆర్డర్ వెంటనే confirm అవుతుంది.",
   },
 
   "success.title": { en: "Order confirmed", te: "ఆర్డర్ నిర్ధారించబడింది" },

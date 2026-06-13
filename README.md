@@ -37,12 +37,12 @@ Admin **will not work** on the live site until these environment variables are s
 
 Without `ADMIN_USERNAME` and `ADMIN_PASSWORD`, login shows: *Admin is not configured on the server*.
 
-## Demo payments
+## Checkout flow
 
-By default, **Pay** marks the order as **paid** immediately (no Razorpay popup). Orders are saved for admin (`/admin/orders`).
-
-- Enable: `DEMO_PAYMENTS=true` or leave Razorpay keys unset  
-- Disable for real payments: `DEMO_PAYMENTS=false` + Razorpay keys
+1. Customer adds products to cart and checks out  
+2. Pays via Razorpay (UPI, cards, net banking)  
+3. Order is marked **paid** automatically in `/admin/orders`  
+4. Admin sends to DTDC and notifies customer when dispatched  
 
 ## Brand assets
 

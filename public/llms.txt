@@ -24,8 +24,8 @@
 
 ## Ordering
 - Browse products or /pricing, add jars to cart, checkout on-site.
-- Pay via Razorpay (UPI, cards) or UPI to 63021 12848.
-- Human confirmation required for payment and checkout.
+- Pay via Razorpay (UPI, cards, net banking). Order ID and payment confirmation appear immediately.
+- Paid orders appear automatically in the admin dashboard.
 
 ## ADITYA (governed agent access)
 - Connector type: AdityaConnector

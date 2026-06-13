@@ -101,7 +101,7 @@ export default function ContactPage() {
               <Link href="/pricing" className="text-brand hover:underline">price list</Link>.
             </li>
             <li>Add jars to cart and open checkout.</li>
-            <li>Pay with Razorpay or UPI to {SITE_CONTACT.upiPhone}.</li>
+            <li>Pay with Razorpay at checkout.</li>
             <li>Track on <Link href="/track" className="text-brand hover:underline">Track order</Link>.</li>
           </ol>
         </div>

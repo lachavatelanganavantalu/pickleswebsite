@@ -28,6 +28,7 @@ export type PaymentStatus = "pending" | "paid";
 export interface Order {
   orderId: string;
   displayOrderId: string;
+  razorpayOrderId?: string;
   userId?: string;
   paymentId?: string;
   paymentStatus: PaymentStatus;
@@ -196,8 +197,42 @@ export async function getOrderByDisplayId(displayOrderId: string): Promise<Order
   return orders.find((o) => o.displayOrderId === displayOrderId) ?? null;
 }
 
-export async function getOrderByRazorpayId(orderId: string): Promise<Order | null> {
-  return getOrderById(orderId);
+export async function getOrderByRazorpayId(razorpayOrderId: string): Promise<Order | null> {
+  if (hasMongoDb()) {
+    try {
+      const db = await getDb();
+      const doc = await db.collection(COLLECTION).findOne({
+        $or: [{ orderId: razorpayOrderId }, { razorpayOrderId }],
+      });
+      if (!doc) return null;
+      return normalizeOrder(doc as Order & { _id?: unknown });
+    } catch (err) {
+      console.error("MongoDB getOrderByRazorpayId failed:", err);
+      if (isVercelRuntime()) throw err;
+    }
+  }
+
+  const orders = await getOrders();
+  return (
+    orders.find(
+      (o) => o.orderId === razorpayOrderId || o.razorpayOrderId === razorpayOrderId
+    ) ?? null
+  );
+}
+
+export async function setOrderRazorpayId(
+  orderId: string,
+  razorpayOrderId: string
+): Promise<void> {
+  const patch = { razorpayOrderId };
+  if (await patchOrderMongo(orderId, patch)) return;
+
+  const orders = await getOrders();
+  const idx = orders.findIndex((o) => o.orderId === orderId);
+  if (idx >= 0) {
+    orders[idx] = { ...orders[idx], ...patch };
+    await persistOrders(orders);
+  }
 }
 
 export async function saveOrderToDb(

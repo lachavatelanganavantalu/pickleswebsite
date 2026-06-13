@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Order, PaymentStatus } from "@/lib/orders-db";
-import ConfirmPaymentButton from "@/components/admin/ConfirmPaymentButton";
 import SendToDtdcButton from "@/components/admin/SendToDtdcButton";
 import NotifyCustomerDispatchButton from "@/components/admin/NotifyCustomerDispatchButton";
 import AdminOrderNotes from "@/components/admin/AdminOrderNotes";
@@ -24,14 +23,11 @@ function AdminOrderSteps({ order, onRefresh }: { order: Order; onRefresh: () => 
         <div className="flex items-start gap-3">
           <span className={stepDone(false)}>1</span>
           <div>
-            <p className="text-xs font-semibold text-ink">Confirm payment received</p>
+            <p className="text-xs font-semibold text-ink">Awaiting Razorpay payment</p>
             <p className="mt-0.5 text-xs text-muted">
-              After the customer pays via UPI/QR and sends the WhatsApp screenshot, mark payment
-              confirmed and notify them on WhatsApp.
+              Customer has not completed checkout yet. Once they pay online, this order moves to
+              paid automatically.
             </p>
-            <div className="mt-2">
-              <ConfirmPaymentButton order={order} onConfirmed={onRefresh} />
-            </div>
           </div>
         </div>
       </div>
@@ -43,7 +39,7 @@ function AdminOrderSteps({ order, onRefresh }: { order: Order; onRefresh: () => 
       <div className="flex items-start gap-3">
         <span className={stepDone(true)}>1</span>
         <div>
-          <p className="text-xs font-semibold text-forest">Payment confirmed</p>
+          <p className="text-xs font-semibold text-forest">Payment confirmed (Razorpay)</p>
           {order.paymentConfirmedAt && (
             <p className="text-xs text-muted">
               {new Date(order.paymentConfirmedAt).toLocaleString("en-IN", {
@@ -149,7 +145,7 @@ export default function AdminOrdersPanel() {
     <div className="p-4 sm:p-8 max-w-full overflow-x-hidden">
       <h1 className="font-display text-2xl text-ink">Orders</h1>
       <p className="text-sm text-muted mt-1">
-        1 Confirm payment → 2 Send to DTDC → 3 Notify customer dispatched
+        Paid orders appear automatically → Send to DTDC → Notify customer dispatched
       </p>
 
       <div className="mt-6 flex flex-wrap gap-2">

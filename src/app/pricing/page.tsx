@@ -33,7 +33,7 @@ export default async function PricingPage() {
         <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm leading-relaxed text-ink-muted">
           <li>Browse pickles below or on the <Link href="/products" className="text-brand hover:underline">shop page</Link>.</li>
           <li>Choose jar size (1 kg or ½ kg) and add to cart.</li>
-          <li>Checkout with Razorpay or UPI (PhonePe / GPay {SITE_CONTACT.upiPhone}).</li>
+          <li>Checkout and pay with Razorpay (UPI, cards, net banking).</li>
           <li>Track dispatch on <Link href="/track" className="text-brand hover:underline">Track order</Link> or WhatsApp.</li>
         </ol>
 

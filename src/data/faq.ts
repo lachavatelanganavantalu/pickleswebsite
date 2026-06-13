@@ -18,7 +18,7 @@ export const HOME_FAQ: FaqItem[] = [
   {
     question: "How much does the Lachava 5-pickle combo cost and how can I order?",
     answer:
-      "The 5-pickle combo is ₹999 for five 250g jars (Chicken, Chinthankaya, Mango, Usirikaya, and Lemon). Add it from the shop on this website, review your cart, and pay online via UPI/PhonePe/GPay or Razorpay at checkout.",
+      "The 5-pickle combo is ₹999 for five 250g jars (Chicken, Chinthankaya, Mango, Usirikaya, and Lemon). Add it from the shop on this website, review your cart, and pay online with Razorpay at checkout.",
   },
   {
     question: "What non-vegetarian pickles are available at Lachava?",
@@ -28,7 +28,7 @@ export const HOME_FAQ: FaqItem[] = [
   {
     question: "How do I pay for Lachava pickles?",
     answer:
-      "Pay at checkout using Razorpay (UPI, cards, net banking) or the UPI details shown on the site (PhonePe / GPay to 63021 12848). You receive order confirmation on WhatsApp after payment.",
+      "Pay at checkout using Razorpay (UPI, cards, net banking). You receive your order ID and payment confirmation on screen immediately after payment.",
   },
   {
     question: "Is Lachava FSSAI registered and how should I store pickles?",

@@ -7,20 +7,6 @@ export function formatCustomerWhatsAppPhone(phone: string): string {
   return digits;
 }
 
-export function buildPaymentConfirmedMessage(order: Order): string {
-  const lines = [
-    `Namaste ${order.customer.name}! 🙏`,
-    "",
-    `Your payment of ₹${order.amountINR} for order *${order.displayOrderId}* is confirmed.`,
-    "",
-    "We're preparing your Lachava pickles for dispatch. You'll get another WhatsApp once it's shipped.",
-    "",
-    "Thank you!",
-    "Lachava Telangana Vantalu",
-  ];
-  return lines.join("\n");
-}
-
 export function buildDispatchMessage(order: Order): string {
   const lines = [
     `Namaste ${order.customer.name}! 📦`,
@@ -33,11 +19,6 @@ export function buildDispatchMessage(order: Order): string {
     "Lachava Telangana Vantalu",
   ];
   return lines.join("\n");
-}
-
-export function customerPaymentWhatsAppUrl(order: Order): string {
-  const num = formatCustomerWhatsAppPhone(order.customer.phone);
-  return `https://wa.me/${num}?text=${encodeURIComponent(buildPaymentConfirmedMessage(order))}`;
 }
 
 export function customerDispatchWhatsAppUrl(order: Order): string {

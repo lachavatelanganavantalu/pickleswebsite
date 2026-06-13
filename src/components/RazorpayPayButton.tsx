@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useCart } from "@/context/CartContext";
 import { useOrder } from "@/context/OrderContext";
+import { readJsonResponse } from "@/lib/read-json-response";
+import { formatINRDecimal } from "@/lib/format-price";
 
 declare global {
   interface Window {
@@ -11,19 +12,17 @@ declare global {
   }
 }
 
-interface CustomerForm {
+interface CustomerInfo {
   name: string;
-  email: string;
+  email?: string;
   phone: string;
-  address: string;
-  city: string;
-  state: string;
-  zip: string;
-  country: string;
 }
 
 interface Props {
-  customer: CustomerForm;
+  orderId: string;
+  displayOrderId: string;
+  amountINR: number;
+  customer: CustomerInfo;
   disabled?: boolean;
 }
 
@@ -41,49 +40,57 @@ function loadRazorpay(): Promise<boolean> {
   });
 }
 
-export default function RazorpayCheckout({ customer, disabled }: Props) {
-  const { items, totalINR, clearCart } = useCart();
-  const { setLastOrder } = useOrder();
+export default function RazorpayPayButton({
+  orderId,
+  displayOrderId,
+  amountINR,
+  customer,
+  disabled,
+}: Props) {
   const router = useRouter();
+  const { setLastOrder } = useOrder();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const handlePay = async () => {
-    if (disabled || items.length === 0) return;
+    if (disabled) return;
     setLoading(true);
     setError("");
 
     try {
-      const res = await fetch("/api/create-order", {
+      const res = await fetch("/api/razorpay/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          amountINR: totalINR,
-          items: items.map((i) => ({
-            productName: i.productName,
-            variantLabel: i.variantLabel,
-            quantity: i.quantity,
-            priceINR: i.priceINR,
-          })),
-          customer,
-        }),
+        body: JSON.stringify({ orderId }),
       });
-      const order = await res.json();
-      if (!res.ok) throw new Error(order.error || "Could not create order");
+      const checkout = await readJsonResponse<{
+        error?: string;
+        orderId: string;
+        key?: string;
+        amount?: number;
+        currency?: string;
+      }>(res);
+
+      if (!res.ok) {
+        throw new Error(checkout.error || "Could not start payment");
+      }
+      if (!checkout.key || checkout.amount == null || !checkout.currency) {
+        throw new Error("Invalid payment session");
+      }
 
       const loaded = await loadRazorpay();
       if (!loaded) throw new Error("Payment gateway failed to load");
 
       const rzp = new window.Razorpay({
-        key: order.key,
-        amount: order.amount,
-        currency: order.currency,
+        key: checkout.key,
+        amount: checkout.amount,
+        currency: checkout.currency,
         name: "Lachava Telangana Vantalu",
-        description: `Order ${order.displayOrderId}`,
-        order_id: order.orderId,
+        description: `Order ${displayOrderId}`,
+        order_id: checkout.orderId,
         prefill: {
           name: customer.name,
-          email: customer.email,
+          email: customer.email || "",
           contact: customer.phone,
         },
         handler: async (response: {
@@ -100,31 +107,32 @@ export default function RazorpayCheckout({ customer, disabled }: Props) {
               razorpay_signature: response.razorpay_signature,
             }),
           });
-          const data = await verifyRes.json();
+          const data = await readJsonResponse<{
+            error?: string;
+            orderId: string;
+            displayOrderId: string;
+            paymentId: string;
+            amountINR: number;
+            paymentStatus: string;
+            items: { productName: string; variantLabel: string; quantity: number }[];
+          }>(verifyRes);
+
           if (!verifyRes.ok) {
             setError(data.error || "Payment verification failed");
             return;
           }
-          setLastOrder({
+
+          const confirmed = {
             orderId: data.orderId,
             displayOrderId: data.displayOrderId,
             paymentId: data.paymentId,
             amountINR: data.amountINR,
             items: data.items,
-            paymentStatus: data.paymentStatus || "paid",
-          });
-          sessionStorage.setItem(
-            "orderSuccess",
-            JSON.stringify({
-              orderId: data.orderId,
-              displayOrderId: data.displayOrderId,
-              paymentId: data.paymentId,
-              amountINR: data.amountINR,
-              items: data.items,
-              paymentStatus: data.paymentStatus || "paid",
-            })
-          );
-          clearCart();
+            paymentStatus: "paid",
+          };
+
+          setLastOrder(confirmed);
+          sessionStorage.setItem("orderSuccess", JSON.stringify(confirmed));
           router.push("/checkout/success");
         },
         theme: { color: "#5c3317" },
@@ -142,11 +150,11 @@ export default function RazorpayCheckout({ customer, disabled }: Props) {
       {error && <p className="mb-3 text-sm text-red-600">{error}</p>}
       <button
         type="button"
-        onClick={handlePay}
-        disabled={disabled || loading || items.length === 0}
-        className="w-full min-h-[48px] rounded-full bg-brand px-6 text-sm font-bold uppercase tracking-wide text-white hover:bg-brand-dark disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        onClick={() => void handlePay()}
+        disabled={disabled || loading}
+        className="flex min-h-[48px] w-full items-center justify-center rounded-full bg-brand px-6 text-sm font-bold uppercase tracking-wide text-white hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-50 transition-colors"
       >
-        {loading ? "Processing…" : "Pay with Razorpay"}
+        {loading ? "Opening Razorpay…" : `Pay ${formatINRDecimal(amountINR)} with Razorpay`}
       </button>
     </div>
   );

@@ -2,7 +2,6 @@ import type { Order } from "./orders-db";
 
 export type TimelineStepId =
   | "placed"
-  | "awaiting_payment"
   | "payment_confirmed"
   | "dtdc_sent"
   | "track_dtdc";
@@ -30,23 +29,13 @@ export function buildOrderTimeline(order: Order): TimelineStep[] {
       at: String(order.createdAt),
     },
     {
-      id: "awaiting_payment",
-      title: "Pay with QR / UPI",
-      description: paid
-        ? "Payment received — thank you."
-        : "Scan the payment QR in PhonePe / GPay, or copy the UPI ID. Then send your payment screenshot on WhatsApp.",
-      done: paid,
-      active: !paid,
-      at: paid ? String(order.paymentConfirmedAt ?? order.createdAt) : undefined,
-    },
-    {
       id: "payment_confirmed",
-      title: "Order confirmed",
+      title: paid ? "Payment confirmed" : "Awaiting payment",
       description: paid
-        ? "Admin verified your payment. We are preparing your pickles."
-        : "Waiting for admin to verify your payment screenshot.",
+        ? "Paid online via Razorpay. We are preparing your pickles."
+        : "Complete payment with Razorpay to confirm your order.",
       done: paid,
-      active: paid && !dtdcSent,
+      active: !paid || (!dtdcSent && paid),
       at: order.paymentConfirmedAt ? String(order.paymentConfirmedAt) : undefined,
     },
     {
@@ -54,7 +43,7 @@ export function buildOrderTimeline(order: Order): TimelineStep[] {
       title: "Sent to DTDC",
       description: dtdcSent
         ? "Your parcel is handed to DTDC for delivery."
-        : "Your order will be sent to DTDC after confirmation.",
+        : "Your order will be sent to DTDC after payment.",
       done: dtdcSent,
       active: paid && !dtdcSent,
       at: order.dtdcSentAt ? String(order.dtdcSentAt) : undefined,
