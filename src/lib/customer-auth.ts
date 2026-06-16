@@ -5,12 +5,19 @@ import type { PublicCustomerUser } from "@/types/customer-user";
 const COOKIE = "customer_session";
 const MAX_AGE = 30 * 24 * 60 * 60; // 30 days
 
+const DEV_CUSTOMER_SECRET = "lachava-dev-only-customer-session";
+
 function sessionSecret(): string {
-  return (
-    process.env.CUSTOMER_SESSION_SECRET ||
-    process.env.SESSION_SECRET ||
-    "lachava-customer-session-change-me"
-  );
+  const secret =
+    process.env.CUSTOMER_SESSION_SECRET?.trim() ||
+    process.env.SESSION_SECRET?.trim();
+  if (secret) return secret;
+  if (process.env.NODE_ENV === "production") {
+    throw new Error(
+      "CUSTOMER_SESSION_SECRET or SESSION_SECRET must be set in production."
+    );
+  }
+  return DEV_CUSTOMER_SECRET;
 }
 
 export function createCustomerToken(userId: string, phone: string): string {
@@ -33,7 +40,9 @@ export function verifyCustomerToken(token: string): { userId: string; phone: str
       .createHmac("sha256", sessionSecret())
       .update(payload)
       .digest("hex");
-    if (signature !== expected) return null;
+    const sigBuf = Buffer.from(signature, "utf8");
+    const expBuf = Buffer.from(expected, "utf8");
+    if (sigBuf.length !== expBuf.length || !crypto.timingSafeEqual(sigBuf, expBuf)) return null;
     if (Date.now() - parseInt(timestamp, 10) > MAX_AGE * 1000) return null;
     if (!userId || !phone) return null;
     return { userId, phone };

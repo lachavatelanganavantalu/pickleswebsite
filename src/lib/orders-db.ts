@@ -351,6 +351,18 @@ export async function getOrdersByUserId(userId: string): Promise<Order[]> {
     );
 }
 
+export async function assignOrderToUser(orderId: string, userId: string): Promise<void> {
+  const patch = { userId };
+  if (await patchOrderMongo(orderId, patch)) return;
+
+  const orders = await getOrders();
+  const idx = orders.findIndex((o) => o.orderId === orderId);
+  if (idx < 0) return;
+  if (orders[idx].userId && orders[idx].userId !== userId) return;
+  orders[idx] = { ...orders[idx], userId };
+  await persistOrders(orders);
+}
+
 export async function linkOrdersToUserByPhone(userId: string, phone: string): Promise<void> {
   const normalized = normalizePhone(phone);
   if (!normalized) return;

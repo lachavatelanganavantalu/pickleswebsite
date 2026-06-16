@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import crypto from "crypto";
 import { createAdminToken, isAdminRequest } from "@/lib/admin-auth";
 
 const COOKIE = "admin_session";
@@ -14,6 +15,13 @@ function sessionCookie(token: string) {
     path: "/",
     maxAge: MAX_AGE,
   };
+}
+
+function safeEqual(a: string, b: string): boolean {
+  const aBuf = Buffer.from(a);
+  const bBuf = Buffer.from(b);
+  if (aBuf.length !== bBuf.length) return false;
+  return crypto.timingSafeEqual(aBuf, bBuf);
 }
 
 export async function GET(req: NextRequest) {
@@ -33,7 +41,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (username !== adminUser || password !== adminPass) {
+    if (!safeEqual(username, adminUser) || !safeEqual(password, adminPass)) {
       return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
     }
 

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useOrder } from "@/context/OrderContext";
 import { readJsonResponse } from "@/lib/read-json-response";
 import { formatINRDecimal } from "@/lib/format-price";
+import { loginUrl } from "@/lib/customer-login-url";
 import { navigateAfterRazorpayPayment, cleanupRazorpayCheckout } from "@/lib/razorpay-cleanup";
 import { writePaidOrderSession } from "@/lib/paid-order-session";
 import { clearPendingOrderSession } from "@/lib/pending-order-session";
@@ -75,6 +76,11 @@ export default function RazorpayPayButton({
         currency?: string;
       }>(res);
 
+      if (res.status === 401) {
+        window.location.href = loginUrl(`/order/${orderId}/payment`);
+        return;
+      }
+
       if (!res.ok) {
         throw new Error(checkout.error || "Could not start payment");
       }
@@ -123,6 +129,11 @@ export default function RazorpayPayButton({
                 items: { productName: string; variantLabel: string; quantity: number }[];
                 customer?: { phone?: string };
               }>(verifyRes);
+
+              if (verifyRes.status === 401) {
+                window.location.href = loginUrl(`/order/${orderId}/payment`);
+                return;
+              }
 
               if (!verifyRes.ok) {
                 setError(data.error || "Payment verification failed");

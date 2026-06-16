@@ -1,59 +1,60 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
+import { assertOrderAccess } from "@/lib/order-access";
 import { getOrder } from "@/lib/order-store";
-import { getOrderByRazorpayId } from "@/lib/orders-db";
+import { getOrderById, getOrderByRazorpayId, type Order } from "@/lib/orders-db";
+
+export const runtime = "nodejs";
+
+async function resolveOrder(orderId: string): Promise<Order | null> {
+  const byInternalId = await getOrderById(orderId);
+  if (byInternalId) return byInternalId;
+
+  const byRazorpayId = await getOrderByRazorpayId(orderId);
+  if (byRazorpayId) return byRazorpayId;
+
+  const pending = getOrder(orderId);
+  if (!pending) return null;
+
+  return {
+    orderId,
+    displayOrderId: pending.displayOrderId,
+    amountINR: pending.amountINR,
+    items: pending.items,
+    customer: {
+      name: pending.customer.name,
+      email: pending.customer.email ?? "",
+      phone: pending.customer.phone,
+      address: pending.customer.address ?? "",
+      city: pending.customer.city ?? "",
+      state: pending.customer.state ?? "",
+      zip: pending.customer.zip ?? "",
+      country: pending.customer.country ?? "India",
+    },
+    paymentStatus: "pending",
+    createdAt: new Date().toISOString(),
+  };
+}
 
 export async function GET(req: NextRequest) {
-  const orderId = new URL(req.url).searchParams.get("orderId");
+  const orderId = new URL(req.url).searchParams.get("orderId")?.trim();
   const format = new URL(req.url).searchParams.get("format") ?? "json";
 
   if (!orderId) {
     return NextResponse.json({ error: "orderId required" }, { status: 400 });
   }
 
-  let displayOrderId: string | undefined;
-  let amountINR = 0;
-  let items: { productName: string; variantLabel: string; quantity: number; priceINR: number }[] =
-    [];
-  let customer:
-    | {
-        name: string;
-        phone: string;
-        email?: string;
-        address?: string;
-        city?: string;
-        state?: string;
-        zip?: string;
-      }
-    | undefined;
-
-  const pending = getOrder(orderId);
-  if (pending) {
-    displayOrderId = pending.displayOrderId;
-    amountINR = pending.amountINR;
-    items = pending.items;
-    customer = pending.customer;
-  } else {
-    const dbOrder = await getOrderByRazorpayId(orderId);
-    if (dbOrder) {
-      displayOrderId = dbOrder.displayOrderId;
-      amountINR = dbOrder.amountINR;
-      items = dbOrder.items;
-      customer = dbOrder.customer;
-    }
-  }
-
-  if (!displayOrderId && !items.length) {
-    return NextResponse.json({ error: "Order not found" }, { status: 404 });
-  }
+  const order = await resolveOrder(orderId);
+  const access = assertOrderAccess(req, order);
+  if (!access.ok) return access.response;
 
   const receipt = {
-    orderId,
-    displayOrderId: displayOrderId ?? orderId,
-    amountINR,
-    items,
-    customer,
+    orderId: order!.orderId,
+    displayOrderId: order!.displayOrderId,
+    amountINR: order!.amountINR,
+    items: order!.items,
+    customer: order!.customer,
   };
 
   if (format === "pdf") {
@@ -62,14 +63,14 @@ export async function GET(req: NextRequest) {
     doc.text("Lachava Telangana Vantalu", 14, 20);
     doc.setFontSize(11);
     doc.text(`Order ID: ${receipt.displayOrderId}`, 14, 30);
-    if (customer) {
-      doc.text(`Customer: ${customer.name}`, 14, 38);
-      doc.text(`Phone: ${customer.phone}`, 14, 44);
+    if (receipt.customer) {
+      doc.text(`Customer: ${receipt.customer.name}`, 14, 38);
+      doc.text(`Phone: ${receipt.customer.phone}`, 14, 44);
     }
     autoTable(doc, {
       startY: 52,
       head: [["Item", "Variant", "Qty", "Price"]],
-      body: items.map((i) => [
+      body: receipt.items.map((i) => [
         i.productName,
         i.variantLabel,
         String(i.quantity),
@@ -78,7 +79,7 @@ export async function GET(req: NextRequest) {
     });
     const finalY = (doc as jsPDF & { lastAutoTable?: { finalY: number } }).lastAutoTable
       ?.finalY ?? 80;
-    doc.text(`Total: ₹${amountINR}`, 14, finalY + 12);
+    doc.text(`Total: ₹${receipt.amountINR}`, 14, finalY + 12);
 
     const pdf = Buffer.from(doc.output("arraybuffer"));
     return new NextResponse(pdf, {

@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import OrderTimeline from "@/components/OrderTimeline";
 import EditableCartList from "@/components/EditableCartList";
 import RazorpayPayButton from "@/components/RazorpayPayButton";
 import { formatINRDecimal } from "@/lib/format-price";
+import { loginUrl } from "@/lib/customer-login-url";
 import { clearPendingOrderSession } from "@/lib/pending-order-session";
 import { startRazorpayOverlayWatch } from "@/lib/razorpay-cleanup";
 import { readJsonResponse } from "@/lib/read-json-response";
@@ -24,6 +25,7 @@ interface OrderView {
 
 export default function OrderPaymentPage() {
   const params = useParams();
+  const router = useRouter();
   const orderId = params.orderId as string;
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -34,6 +36,10 @@ export default function OrderPaymentPage() {
 
   const loadOrder = async () => {
     const res = await fetch(`/api/orders/${encodeURIComponent(orderId)}`);
+    if (res.status === 401) {
+      router.replace(loginUrl(`/order/${orderId}/payment`));
+      return;
+    }
     const data = await readJsonResponse<{
       error?: string;
       order: OrderView;

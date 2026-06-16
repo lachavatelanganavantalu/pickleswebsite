@@ -4,7 +4,11 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCustomerAuth } from "@/context/CustomerAuthContext";
-import { LOGIN_NEXT_PARAM, sanitizeLoginNext } from "@/lib/customer-login-url";
+import {
+  LOGIN_NEXT_PARAM,
+  loginPromptForNext,
+  sanitizeLoginNext,
+} from "@/lib/customer-login-url";
 import { formatPhoneDisplay } from "@/lib/phone";
 import { formatINR } from "@/lib/currency";
 
@@ -37,8 +41,10 @@ export default function AccountPageClient() {
     const mode = searchParams.get("tab");
     if (mode === "login" || mode === "register") {
       setTab(mode);
+    } else if (loginNext) {
+      setTab("login");
     }
-  }, [searchParams]);
+  }, [searchParams, loginNext]);
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -182,9 +188,9 @@ export default function AccountPageClient() {
   return (
     <div className="app-content py-[clamp(1.5rem,5vw,3rem)] max-w-md mx-auto">
       <h1 className="shop-page-title">My account</h1>
-      {loginNext === "/checkout" ? (
-        <p className="mt-2 rounded-lg bg-surface px-3 py-2 text-sm text-brand font-medium">
-          Log in or sign up to place your order.
+      {loginPromptForNext(loginNext) ? (
+        <p className="mt-2 rounded-lg bg-surface px-3 py-2 text-sm font-medium text-brand">
+          {loginPromptForNext(loginNext)}
         </p>
       ) : null}
       <p className="mt-1 text-sm text-muted">

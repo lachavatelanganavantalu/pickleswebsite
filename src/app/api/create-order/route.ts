@@ -3,6 +3,7 @@ import crypto from "crypto";
 import { getCustomerSession } from "@/lib/customer-auth";
 import { saveOrderToDb } from "@/lib/orders-db";
 import { generateDisplayOrderId } from "@/lib/order-id";
+import { normalizePhone } from "@/lib/phone";
 import { hasMongoDb, isVercelRuntime } from "@/lib/storage-env";
 
 export const runtime = "nodejs";
@@ -35,6 +36,15 @@ export async function POST(req: NextRequest) {
     }
     if (!items?.length || !customer?.name || !customer?.phone) {
       return NextResponse.json({ error: "Missing order details" }, { status: 400 });
+    }
+
+    const sessionPhone = normalizePhone(session.phone);
+    const customerPhone = normalizePhone(customer.phone);
+    if (!sessionPhone || !customerPhone || sessionPhone !== customerPhone) {
+      return NextResponse.json(
+        { error: "Mobile number must match your account." },
+        { status: 400 }
+      );
     }
 
     const displayOrderId = await generateDisplayOrderId();

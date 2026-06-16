@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCustomerSession } from "@/lib/customer-auth";
-import { getOrderById, setOrderRazorpayId } from "@/lib/orders-db";
+import { assignOrderToUser, getOrderById, setOrderRazorpayId } from "@/lib/orders-db";
+import { customerOwnsOrder } from "@/lib/order-access";
 import { getRazorpay } from "@/lib/razorpay";
 import { getRazorpayKeyId, isRazorpayConfigured } from "@/lib/razorpay-config";
 import { saveOrder } from "@/lib/order-store";
@@ -33,11 +34,15 @@ export async function POST(req: NextRequest) {
     if (!order) {
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
     }
-    if (order.userId && order.userId !== session.userId) {
-      return NextResponse.json({ error: "Not allowed" }, { status: 403 });
+    if (!customerOwnsOrder(session, order)) {
+      return NextResponse.json({ error: "Order not found" }, { status: 404 });
     }
     if (order.paymentStatus === "paid") {
       return NextResponse.json({ error: "Order is already paid" }, { status: 400 });
+    }
+
+    if (!order.userId) {
+      await assignOrderToUser(order.orderId, session.userId);
     }
 
     const razorpay = getRazorpay();
