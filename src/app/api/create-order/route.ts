@@ -9,7 +9,10 @@ import {
   setOrderPaymentAccessCookie,
 } from "@/lib/order-payment-token";
 import { normalizePhone } from "@/lib/phone";
-import { assertProductionSecretsConfigured } from "@/lib/production-secrets";
+import {
+  assertOrderCheckoutSecretsConfigured,
+  getOrderCheckoutSecretIssues,
+} from "@/lib/production-secrets";
 import { hasMongoDb, isVercelRuntime } from "@/lib/storage-env";
 import { validateCartLineItems, type CartLineInput } from "@/lib/validate-order-items";
 
@@ -18,7 +21,7 @@ export const runtime = "nodejs";
 export async function POST(req: NextRequest) {
   try {
     if (process.env.NODE_ENV === "production") {
-      assertProductionSecretsConfigured();
+      assertOrderCheckoutSecretsConfigured();
     }
 
     if (isVercelRuntime() && !hasMongoDb()) {
@@ -115,12 +118,25 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     console.error("POST /api/create-order:", err);
     const message = err instanceof Error ? err.message : "Failed to create order";
+
+    const secretIssues = getOrderCheckoutSecretIssues();
+    if (secretIssues.length > 0) {
+      return NextResponse.json(
+        {
+          error: `Checkout is unavailable: ${secretIssues.join(" ")}`,
+          code: "SERVER_CONFIG",
+        },
+        { status: 503 }
+      );
+    }
+
+    if (/MONGODB|Mongo/i.test(message) || message.includes("Could not generate order number")) {
+      return NextResponse.json({ error: message }, { status: 503 });
+    }
+
     return NextResponse.json(
       {
-        error:
-          message.includes("MONGODB") || message.includes("Mongo")
-            ? message
-            : "Failed to create order. Please try again or contact us on WhatsApp.",
+        error: "Failed to create order. Please try again or contact us on WhatsApp.",
       },
       { status: 500 }
     );

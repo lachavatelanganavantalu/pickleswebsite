@@ -160,7 +160,11 @@ export async function getNextDailyOrderSequence(dateKey: string): Promise<number
       { $inc: { seq: 1 }, $setOnInsert: { dateKey } },
       { upsert: true, returnDocument: "after" }
     );
-    if (result && typeof result.seq === "number") return result.seq;
+    const seq = result?.seq;
+    if (seq != null) {
+      const n = typeof seq === "number" ? seq : Number(seq);
+      if (Number.isFinite(n) && n > 0) return n;
+    }
     throw new Error("Could not generate order number");
   }
 
