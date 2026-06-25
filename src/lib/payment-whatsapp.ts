@@ -1,5 +1,7 @@
 import type { Order } from "./orders-db";
 
+const WHATSAPP_TEAM_GREETING = "Hi Lachavapickles team";
+
 export function formatWhatsAppNumber(raw: string): string {
   let digits = raw.replace(/\D/g, "");
   if (digits.length === 10) digits = `91${digits}`;
@@ -9,7 +11,7 @@ export function formatWhatsAppNumber(raw: string): string {
 
 export function buildPaymentProofMessage(order: Order): string {
   return [
-    "Hi Assal team 👋",
+    WHATSAPP_TEAM_GREETING,
     "",
     `I have paid for my order *${order.displayOrderId}*.`,
     `Amount: ₹${order.amountINR}`,
@@ -31,7 +33,7 @@ export function buildRazorpayFailureDirectPayMessage(order: Order): string {
   const c = order.customer;
   const addressLine = [c.address, c.city, c.state, c.zip].filter(Boolean).join(", ");
   return [
-    "Hi Assal team 👋",
+    WHATSAPP_TEAM_GREETING,
     "",
     "Online payment failed via Razorpay. I want to pay you directly.",
     "",
