@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     template: "%s | Assal Heritage Pickles",
   },
   description:
-    "అస్సల్ హెరిటేజ్ పచ్చళ్ళు — 10 pickles (1 kg & 1/2 kg). 5-pickle combo ₹999. PhonePe / GPay 95050 09699.",
+    "అస్సల్ హెరిటేజ్ పచ్చళ్ళు — 10 pickles (1 kg & 1/2 kg). 5-pickle combo ₹999. PhonePe / GPay 63021 12848.",
   icons: {
     icon: [
       { url: BRAND.favicon, sizes: "512x512", type: "image/png" },

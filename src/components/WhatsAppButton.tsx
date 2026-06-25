@@ -1,9 +1,10 @@
 "use client";
 
 import WhatsAppIcon from "@/components/WhatsAppIcon";
+import { SITE_CONTACT } from "@/lib/site-contact";
 
 const WHATSAPP =
-  process.env.NEXT_PUBLIC_WHATSAPP_NUMBER?.replace(/\D/g, "") || "919505009699";
+  process.env.NEXT_PUBLIC_WHATSAPP_NUMBER?.replace(/\D/g, "") || SITE_CONTACT.whatsapp;
 
 export default function WhatsAppButton() {
   return (

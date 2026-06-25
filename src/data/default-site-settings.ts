@@ -8,8 +8,8 @@ export const defaultSiteSettings: SiteSettings = {
       te: "పచ్చళ్ళు — అధికారిక మెనూ",
     },
     subtitle: {
-      en: "10 pickles (1 kg & 1/2 kg). 5-pickle combo ₹999. PhonePe / GPay 95050 09699.",
-      te: "10 రకాల పచ్చళ్ళు (1 kg & 1/2 kg). 5 పికిల్స్ కాంబో ₹999. PhonePe / GPay 95050 09699.",
+      en: "10 pickles (1 kg & 1/2 kg). 5-pickle combo ₹999. PhonePe / GPay 63021 12848.",
+      te: "10 రకాల పచ్చళ్ళు (1 kg & 1/2 kg). 5 పికిల్స్ కాంబో ₹999. PhonePe / GPay 63021 12848.",
     },
     ctaVeg: { en: "Shop pickles", te: "పచ్చళ్ళు కొనండి" },
     ctaNonVeg: { en: "Combo ₹999", te: "కాంబో ₹999" },
@@ -22,13 +22,13 @@ export const defaultSiteSettings: SiteSettings = {
       te: "జార్‌లో పచ్చళ్ళు ఆర్డర్ చేయండి — ధరలు జాబితా ప్రకారం. కాంబో: 5 జార్లు (250g) ₹999.",
     },
     body2: {
-      en: "PhonePe / GPay: 95050 09699",
-      te: "PhonePe / GPay: 95050 09699",
+      en: "PhonePe / GPay: 63021 12848",
+      te: "PhonePe / GPay: 63021 12848",
     },
   },
   contact: {
-    phone: "+91 95050 09699",
-    whatsapp: "919505009699",
+    phone: "+91 63021 12848",
+    whatsapp: "916302112848",
     email: "",
     address: {
       en: "Telangana",
@@ -47,7 +47,7 @@ export const defaultSiteSettings: SiteSettings = {
   },
   payment: {
     upiId: "",
-    upiPhone: "9505009699",
+    upiPhone: "63021 12848",
     qrImagePath: "/api/payment-qr",
     payeeName: "Assal Heritage Pickles",
     showQrPayment: true,
