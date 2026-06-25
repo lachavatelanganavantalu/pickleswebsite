@@ -17,7 +17,7 @@ export default function BrandLogo({
   size = "md",
   href = "/",
 }: Props) {
-  const [src, setSrc] = useState<string>(BRAND.logo);
+  const [src, setSrc] = useState<string>(BRAND.logo || BRAND.logoFallback);
   const h = heights[size];
 
   const mark =
@@ -37,7 +37,8 @@ export default function BrandLogo({
         className="h-auto w-auto max-h-[var(--logo-h)] object-contain"
         style={{ "--logo-h": `${h}px` } as React.CSSProperties}
         onError={() => {
-          if (src === BRAND.logo) setSrc(BRAND.logoFallback);
+          const primary = BRAND.logo || BRAND.logoFallback;
+          if (src === primary) setSrc(BRAND.logoFallback);
           else setSrc("none");
         }}
       />

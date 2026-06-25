@@ -39,7 +39,7 @@ export default function ComboProductCard({ combo }: Props) {
       {
         productId: combo.id,
         productName: combo.nameTelugu ?? combo.name,
-        variantId: "combo-pack",
+        variantId: "combo",
         variantLabel: "5 jars · 250g each",
         priceINR: combo.priceINR,
       },

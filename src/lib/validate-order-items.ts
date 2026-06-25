@@ -1,4 +1,5 @@
 import { getComboById } from "@/lib/combos-db";
+import { normalizeComboVariantId, normalizeProductVariantId } from "@/lib/cart-line-normalize";
 import { getProductById } from "@/lib/products-db";
 import type { OrderItem } from "@/lib/orders-db";
 
@@ -25,7 +26,7 @@ export async function validateCartLineItems(
 
   for (const line of lines) {
     const productId = String(line.productId || "").trim();
-    const variantId = String(line.variantId || "").trim();
+    let variantId = String(line.variantId || "").trim();
     const quantity = Math.min(Math.max(Math.floor(Number(line.quantity) || 0), 1), 99);
 
     if (!productId || !variantId) {
@@ -34,6 +35,7 @@ export async function validateCartLineItems(
 
     const combo = await getComboById(productId);
     if (combo) {
+      variantId = normalizeComboVariantId(variantId);
       if (variantId !== COMBO_VARIANT_ID) {
         return { ok: false, error: `Invalid option for ${combo.name}.` };
       }
@@ -57,7 +59,9 @@ export async function validateCartLineItems(
       return { ok: false, error: `${product.name} is out of stock.` };
     }
 
-    const variant = product.weightOptions.find((w) => w.id === variantId);
+    const variant = product.weightOptions.find(
+      (w) => w.id === normalizeProductVariantId(variantId, product.weightOptions.map((w) => w.id))
+    );
     if (!variant) {
       return { ok: false, error: `Please re-select a size for ${product.name}.` };
     }

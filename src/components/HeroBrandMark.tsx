@@ -4,7 +4,7 @@ import { useState } from "react";
 import { BRAND } from "@/data/brand";
 
 export default function HeroBrandMark() {
-  const [src, setSrc] = useState<string | "none">(BRAND.logo);
+  const [src, setSrc] = useState<string | "none">(BRAND.logo || BRAND.logoFallback);
 
   return (
     <div className="home-hero-logo-wrap">
@@ -20,7 +20,8 @@ export default function HeroBrandMark() {
             alt="Lachava Telangana Vantalu"
             className="home-hero-logo-img"
             onError={() => {
-              if (src === BRAND.logo) setSrc(BRAND.logoFallback);
+              const primary = BRAND.logo || BRAND.logoFallback;
+              if (src === primary) setSrc(BRAND.logoFallback);
               else setSrc("none");
             }}
           />

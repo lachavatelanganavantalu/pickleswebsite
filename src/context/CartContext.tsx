@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { normalizeStoredCartItems } from "@/lib/cart-line-normalize";
 
 export interface CartItem {
   productId: string;
@@ -28,7 +29,8 @@ function readCartFromStorage(): CartItem[] {
   if (typeof window === "undefined") return [];
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as CartItem[]) : [];
+    const parsed = raw ? (JSON.parse(raw) as CartItem[]) : [];
+    return normalizeStoredCartItems(parsed);
   } catch {
     return [];
   }

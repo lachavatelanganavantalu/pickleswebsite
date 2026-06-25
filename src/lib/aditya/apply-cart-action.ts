@@ -62,7 +62,7 @@ export function applyCartAction(
       {
         productId: result.line.combo.id,
         productName: result.line.combo.nameTelugu ?? result.line.combo.name,
-        variantId: "combo-pack",
+        variantId: "combo",
         variantLabel: "5 jars · 250g each",
         priceINR: result.line.combo.priceINR,
       },
