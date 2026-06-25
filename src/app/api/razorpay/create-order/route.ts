@@ -4,6 +4,7 @@ import { assignOrderToUser, getOrderById, setRazorpayOrderId } from "@/lib/order
 import { customerOwnsOrder, isGuestPaymentOrder } from "@/lib/order-access";
 import { getRazorpay } from "@/lib/razorpay";
 import { getRazorpayKeyId, isRazorpayConfigured } from "@/lib/razorpay-config";
+import { orderPaymentAccessGranted } from "@/lib/order-payment-token";
 import { saveOrder } from "@/lib/order-store";
 
 export const runtime = "nodejs";
@@ -33,7 +34,11 @@ export async function POST(req: NextRequest) {
     const session = getCustomerSession(req);
     const guestPayment = isGuestPaymentOrder(order);
 
-    if (!guestPayment) {
+    if (guestPayment) {
+      if (!orderPaymentAccessGranted(req, order.orderId, order.paymentAccessTokenHash)) {
+        return NextResponse.json({ error: "Order not found" }, { status: 404 });
+      }
+    } else {
       if (!session) {
         return NextResponse.json({ error: "Please log in to pay." }, { status: 401 });
       }

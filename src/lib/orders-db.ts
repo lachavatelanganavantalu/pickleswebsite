@@ -33,6 +33,8 @@ export interface Order {
   isGuestCheckout?: boolean;
   /** Razorpay `order_…` id when online checkout was started. */
   razorpayOrderId?: string;
+  /** HMAC hash of the one-time guest payment access token. */
+  paymentAccessTokenHash?: string;
   paymentId?: string;
   paymentStatus: PaymentStatus;
   amountINR: number;
@@ -247,7 +249,7 @@ export async function saveOrderToDb(
   items: OrderItem[],
   totalINR: number,
   customer: OrderCustomer,
-  opts?: { userId?: string; isGuestCheckout?: boolean }
+  opts?: { userId?: string; isGuestCheckout?: boolean; paymentAccessTokenHash?: string }
 ): Promise<void> {
   const userId = opts?.userId;
   await insertOrder({
@@ -255,6 +257,7 @@ export async function saveOrderToDb(
     displayOrderId,
     userId,
     isGuestCheckout: opts?.isGuestCheckout ?? !userId,
+    paymentAccessTokenHash: opts?.paymentAccessTokenHash,
     paymentStatus: "pending",
     amountINR: totalINR,
     items,

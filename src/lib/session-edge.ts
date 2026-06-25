@@ -3,22 +3,35 @@
  * Mirrors server cookie formats in customer-auth.ts and admin-auth.ts.
  */
 
+import {
+  ORDER_ACCESS_COOKIE,
+  hasOrderPaymentAccessCookie,
+} from "@/lib/order-payment-access-cookie";
+
 const CUSTOMER_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000;
 const ADMIN_MAX_AGE_MS = 24 * 60 * 60 * 1000;
 
 const DEV_CUSTOMER_SECRET = "lachava-dev-only-customer-session";
 const DEV_ADMIN_SECRET = "lachava-dev-only-admin-session";
 
+function isProduction(): boolean {
+  return process.env.NODE_ENV === "production";
+}
+
 function customerSessionSecret(): string {
-  return (
-    process.env.CUSTOMER_SESSION_SECRET ||
-    process.env.SESSION_SECRET ||
-    DEV_CUSTOMER_SECRET
-  );
+  const secret =
+    process.env.CUSTOMER_SESSION_SECRET?.trim() ||
+    process.env.SESSION_SECRET?.trim();
+  if (secret) return secret;
+  if (isProduction()) return "";
+  return DEV_CUSTOMER_SECRET;
 }
 
 function adminSessionSecret(): string {
-  return process.env.SESSION_SECRET || DEV_ADMIN_SECRET;
+  const secret = process.env.SESSION_SECRET?.trim();
+  if (secret) return secret;
+  if (isProduction()) return "";
+  return DEV_ADMIN_SECRET;
 }
 
 function adminUsername(): string {
@@ -53,6 +66,9 @@ export async function verifyCustomerSessionToken(
   token: string | undefined
 ): Promise<boolean> {
   if (!token) return false;
+  const secret = customerSessionSecret();
+  if (!secret) return false;
+
   const parts = token.split(".");
   if (parts.length !== 4) return false;
   const [timestamp, userId, phone, signature] = parts;
@@ -60,7 +76,7 @@ export async function verifyCustomerSessionToken(
   if (Date.now() - Number(timestamp) > CUSTOMER_MAX_AGE_MS) return false;
 
   const payload = `${timestamp}.${userId}.${phone}`;
-  const expected = await hmacSha256Hex(customerSessionSecret(), payload);
+  const expected = await hmacSha256Hex(secret, payload);
   return timingSafeEqual(signature, expected);
 }
 
@@ -69,7 +85,8 @@ export async function verifyAdminSessionToken(
 ): Promise<boolean> {
   if (!token) return false;
   const username = adminUsername();
-  if (!username) return false;
+  const secret = adminSessionSecret();
+  if (!username || !secret) return false;
 
   const parts = token.split(".");
   if (parts.length !== 2) return false;
@@ -77,6 +94,8 @@ export async function verifyAdminSessionToken(
   if (!timestamp || !signature) return false;
   if (Date.now() - Number(timestamp) > ADMIN_MAX_AGE_MS) return false;
 
-  const expected = await hmacSha256Hex(adminSessionSecret(), timestamp + username);
+  const expected = await hmacSha256Hex(secret, timestamp + username);
   return timingSafeEqual(signature, expected);
 }
+
+export { ORDER_ACCESS_COOKIE, hasOrderPaymentAccessCookie };

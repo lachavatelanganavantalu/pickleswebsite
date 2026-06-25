@@ -102,8 +102,8 @@ export default function CheckoutPage() {
           {checkoutMode === "guest" && (
             <p className="mt-3 rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-950">
               <strong>Guest checkout:</strong> you can place an order without creating an account.{" "}
-              <strong>Your orders will not appear in My account</strong> — save your order ID and use
-              Track order with your mobile number, or{" "}
+              <strong>Your orders will not appear in My account</strong> — complete payment on this
+              device (a secure browser pass is set automatically). Save your order ID for tracking, or{" "}
               <Link href="/account?returnTo=/checkout" className="font-semibold underline">
                 create an account
               </Link>{" "}

@@ -3,13 +3,24 @@ import crypto from "crypto";
 import { getCustomerSession } from "@/lib/customer-auth";
 import { saveOrderToDb } from "@/lib/orders-db";
 import { generateDisplayOrderId } from "@/lib/order-id";
+import {
+  generatePaymentAccessToken,
+  hashPaymentAccessToken,
+  setOrderPaymentAccessCookie,
+} from "@/lib/order-payment-token";
 import { normalizePhone } from "@/lib/phone";
+import { assertProductionSecretsConfigured } from "@/lib/production-secrets";
 import { hasMongoDb, isVercelRuntime } from "@/lib/storage-env";
+import { validateCartLineItems, type CartLineInput } from "@/lib/validate-order-items";
 
 export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
   try {
+    if (process.env.NODE_ENV === "production") {
+      assertProductionSecretsConfigured();
+    }
+
     if (isVercelRuntime() && !hasMongoDb()) {
       return NextResponse.json(
         {
@@ -45,32 +56,21 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Please log in to place an order." }, { status: 401 });
     }
 
-    const orderItems = items.map(
-      (i: {
-        productName: string;
-        variantLabel: string;
-        quantity: number;
-        priceINR: number;
-      }) => {
-        const quantity = Math.min(Math.max(Math.floor(Number(i.quantity) || 0), 1), 99);
-        const priceINR = Math.max(0, Math.round(Number(i.priceINR) || 0));
-        return {
-          productName: String(i.productName || "").slice(0, 120),
-          variantLabel: String(i.variantLabel || "").slice(0, 80),
-          quantity,
-          priceINR,
-        };
-      }
+    const cartLines: CartLineInput[] = items.map(
+      (i: { productId?: string; variantId?: string; quantity?: number }) => ({
+        productId: String(i.productId || ""),
+        variantId: String(i.variantId || ""),
+        quantity: Number(i.quantity) || 1,
+      })
     );
 
-    const amountINR = orderItems.reduce(
-      (sum: number, item: { priceINR: number; quantity: number }) =>
-        sum + item.priceINR * item.quantity,
-      0
-    );
-    if (amountINR <= 0) {
-      return NextResponse.json({ error: "Invalid amount" }, { status: 400 });
+    const priced = await validateCartLineItems(cartLines);
+    if (!priced.ok) {
+      return NextResponse.json({ error: priced.error }, { status: 400 });
     }
+
+    const { items: orderItems, amountINR } = priced;
+    const isGuest = !userId && guestCheckout !== false;
 
     const displayOrderId = await generateDisplayOrderId();
     const orderId = `lach_${crypto.randomUUID()}`;
@@ -86,19 +86,32 @@ export async function POST(req: NextRequest) {
       country: String(customer.country || "India").trim().slice(0, 80),
     };
 
+    const paymentAccessToken = isGuest ? generatePaymentAccessToken() : undefined;
+    const paymentAccessTokenHash = paymentAccessToken
+      ? hashPaymentAccessToken(paymentAccessToken)
+      : undefined;
+
     await saveOrderToDb(orderId, displayOrderId, orderItems, amountINR, customerData, {
       userId,
       isGuestCheckout: userId ? false : guestCheckout !== false,
+      paymentAccessTokenHash,
     });
 
-    return NextResponse.json({
+    const res = NextResponse.json({
       orderId,
       displayOrderId,
       amountINR,
       paymentStatus: "pending",
       items: orderItems,
       customer: customerData,
+      guestCheckout: isGuest,
     });
+
+    if (paymentAccessToken) {
+      setOrderPaymentAccessCookie(res, orderId, paymentAccessToken);
+    }
+
+    return res;
   } catch (err) {
     console.error("POST /api/create-order:", err);
     const message = err instanceof Error ? err.message : "Failed to create order";

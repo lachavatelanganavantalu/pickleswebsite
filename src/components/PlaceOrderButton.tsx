@@ -42,12 +42,10 @@ export default function PlaceOrderButton({ customer, disabled, guestCheckout }: 
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          amountINR: totalINR,
           items: items.map((i) => ({
-            productName: i.productName,
-            variantLabel: i.variantLabel,
+            productId: i.productId,
+            variantId: i.variantId,
             quantity: i.quantity,
-            priceINR: i.priceINR,
           })),
           customer,
           guestCheckout: guestCheckout ?? true,
@@ -81,7 +79,7 @@ export default function PlaceOrderButton({ customer, disabled, guestCheckout }: 
         displayOrderId: data.displayOrderId,
         paymentId: "",
         amountINR: data.amountINR,
-        items: orderItems,
+        items: data.items.length ? data.items : orderItems,
         paymentStatus: data.paymentStatus || "pending",
       };
 
@@ -95,7 +93,7 @@ export default function PlaceOrderButton({ customer, disabled, guestCheckout }: 
           displayOrderId: data.displayOrderId,
           amountINR: data.amountINR,
           paymentStatus: data.paymentStatus || "pending",
-          items: orderItems,
+          items: data.items.length ? data.items : orderItems,
           customer: data.customer ?? customer,
           orderedAt: new Date().toISOString(),
         });

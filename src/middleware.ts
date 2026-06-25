@@ -1,4 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
+import {
+  ORDER_ACCESS_COOKIE,
+  hasOrderPaymentAccessCookie,
+  parseOrderPaymentAccessCookie,
+} from "@/lib/order-payment-access-cookie";
 import { verifyAdminSessionToken, verifyCustomerSessionToken } from "@/lib/session-edge";
 
 const ADMIN_PANEL_PREFIXES = [
@@ -8,6 +13,7 @@ const ADMIN_PANEL_PREFIXES = [
   "/admin/products",
   "/admin/combos",
   "/admin/settings",
+  "/admin/customers",
 ];
 
 function isAdminPanelPath(pathname: string): boolean {
@@ -38,23 +44,29 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  if (pathname === "/checkout") {
-    const customerToken = req.cookies.get("customer_session")?.value;
-    const ok = await verifyCustomerSessionToken(customerToken);
-    if (!ok) {
-      return loginRedirect(req, "/checkout");
-    }
-    return NextResponse.next();
-  }
-
   const orderPaymentMatch = pathname.match(/^\/order\/([^/]+)\/payment$/);
   if (orderPaymentMatch) {
+    const orderId = orderPaymentMatch[1];
     const customerToken = req.cookies.get("customer_session")?.value;
-    const ok = await verifyCustomerSessionToken(customerToken);
-    if (!ok) {
-      return loginRedirect(req, pathname);
+    const customerOk = await verifyCustomerSessionToken(customerToken);
+    if (customerOk) {
+      return NextResponse.next();
     }
-    return NextResponse.next();
+
+    const oppCookie = req.cookies.get(ORDER_ACCESS_COOKIE)?.value;
+    if (hasOrderPaymentAccessCookie(oppCookie, orderId)) {
+      return NextResponse.next();
+    }
+
+    const accessQuery = req.nextUrl.searchParams.get("access")?.trim();
+    const fromQuery = parseOrderPaymentAccessCookie(
+      accessQuery ? `${orderId}.${accessQuery}` : undefined
+    );
+    if (fromQuery?.orderId === orderId) {
+      return NextResponse.next();
+    }
+
+    return loginRedirect(req, pathname);
   }
 
   return NextResponse.next();
@@ -68,7 +80,7 @@ export const config = {
     "/admin/products/:path*",
     "/admin/combos/:path*",
     "/admin/settings/:path*",
-    "/checkout",
+    "/admin/customers/:path*",
     "/order/:orderId/payment",
   ],
 };

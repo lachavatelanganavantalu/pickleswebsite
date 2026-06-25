@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { isAdminRequest } from "@/lib/admin-auth";
 import { getCustomerSession } from "@/lib/customer-auth";
 import type { Order } from "@/lib/orders-db";
+import { orderPaymentAccessGranted } from "@/lib/order-payment-token";
 import { normalizePhone } from "@/lib/phone";
 
 export type CustomerSession = { userId: string; phone: string };
@@ -62,6 +63,12 @@ export function assertOrderAccess(
   }
 
   if (isGuestPaymentOrder(order)) {
+    if (!order.paymentAccessTokenHash) {
+      return { ok: false, response: orderAccessDeniedResponse("forbidden") };
+    }
+    if (!orderPaymentAccessGranted(req, order.orderId, order.paymentAccessTokenHash)) {
+      return { ok: false, response: orderAccessDeniedResponse("forbidden") };
+    }
     return { ok: true, ctx: { kind: "guest_payment" } };
   }
 

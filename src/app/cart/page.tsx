@@ -53,18 +53,22 @@ export default function CartPage() {
       </div>
 
       <div className="mt-6 flex flex-col gap-3">
-        {!authLoading && !user && (
-          <p className="text-center text-xs text-muted">
-            Log in or sign up to place your order.
-          </p>
-        )}
         <Link
-          href={user ? "/checkout" : loginUrl("/checkout")}
+          href="/checkout"
           className="flex w-full min-h-[48px] items-center justify-center rounded-full bg-brand text-sm font-bold uppercase tracking-wide text-white hover:bg-brand-dark"
           data-ai-target="proceed-to-checkout"
         >
-          {user ? "Proceed to checkout" : "Log in to checkout"}
+          Proceed to checkout
         </Link>
+        {!authLoading && !user && (
+          <p className="text-center text-xs text-muted">
+            Guest checkout available — or{" "}
+            <Link href={loginUrl("/checkout")} className="font-semibold text-brand hover:underline">
+              sign in
+            </Link>{" "}
+            to save orders to your account.
+          </p>
+        )}
         <Link
           href="/products"
           className="text-center text-sm font-semibold text-muted hover:text-brand"

@@ -2,8 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
-import { useCustomerAuth } from "@/context/CustomerAuthContext";
-import { loginUrl } from "@/lib/customer-login-url";
 import type { ComboPack } from "@/data/combos";
 
 interface Props {
@@ -12,7 +10,6 @@ interface Props {
 
 export default function ComboOrderButton({ combo }: Props) {
   const { addItem } = useCart();
-  const { user } = useCustomerAuth();
   const router = useRouter();
 
   const handleAdd = () => {
@@ -23,7 +20,7 @@ export default function ComboOrderButton({ combo }: Props) {
       variantLabel: "5 jars · 250g each",
       priceINR: combo.priceINR,
     });
-    router.push(user ? "/checkout" : loginUrl("/checkout"));
+    router.push("/checkout");
   };
 
   return (
