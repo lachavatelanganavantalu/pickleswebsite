@@ -198,6 +198,14 @@ export default function AdminOrdersPanel() {
                     >
                       {o.paymentStatus}
                     </span>
+                    {" · "}
+                    {o.userId ? (
+                      <span className="text-forest font-semibold">Registered account</span>
+                    ) : o.isGuestCheckout !== false ? (
+                      <span className="text-amber-700 font-semibold">Guest checkout</span>
+                    ) : (
+                      <span className="text-muted">No account linked</span>
+                    )}
                   </p>
                   <p className="mt-2 text-sm font-medium text-ink">
                     {o.customer.name} · {o.customer.phone}

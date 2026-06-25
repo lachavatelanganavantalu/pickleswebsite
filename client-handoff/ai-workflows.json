@@ -1,0 +1,1220 @@
+{
+  "generatedAt": "2026-06-01T13:52:20.106Z",
+  "workflows": [
+    {
+      "id": "go_to_route_account",
+      "name": "Go To Route /account",
+      "description": "Auto-generated workflow for route '/account'",
+      "intentExamples": [
+        "open /account",
+        "go to /account",
+        "navigate to /account"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./account.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_account_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_account_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/account"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_admin",
+      "name": "Go To Route /admin",
+      "description": "Auto-generated workflow for route '/admin'",
+      "intentExamples": [
+        "open /admin",
+        "go to /admin",
+        "navigate to /admin"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./admin.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_admin_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_admin_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/admin"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_admin_analytics",
+      "name": "Go To Route /admin/analytics",
+      "description": "Auto-generated workflow for route '/admin/analytics'",
+      "intentExamples": [
+        "open /admin/analytics",
+        "go to /admin/analytics",
+        "navigate to /admin/analytics"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./admin/analytics.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_admin_analytics_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_admin_analytics_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/admin/analytics"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_admin_combos",
+      "name": "Go To Route /admin/combos",
+      "description": "Auto-generated workflow for route '/admin/combos'",
+      "intentExamples": [
+        "open /admin/combos",
+        "go to /admin/combos",
+        "navigate to /admin/combos"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./admin/combos.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_admin_combos_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_admin_combos_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/admin/combos"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_admin_dashboard",
+      "name": "Go To Route /admin/dashboard",
+      "description": "Auto-generated workflow for route '/admin/dashboard'",
+      "intentExamples": [
+        "open /admin/dashboard",
+        "go to /admin/dashboard",
+        "navigate to /admin/dashboard"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./admin/dashboard.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_admin_dashboard_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_admin_dashboard_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/admin/dashboard"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_admin_login",
+      "name": "Go To Route /admin/login",
+      "description": "Auto-generated workflow for route '/admin/login'",
+      "intentExamples": [
+        "open /admin/login",
+        "go to /admin/login",
+        "navigate to /admin/login"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./admin/login.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_admin_login_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_admin_login_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/admin/login"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_admin_orders",
+      "name": "Go To Route /admin/orders",
+      "description": "Auto-generated workflow for route '/admin/orders'",
+      "intentExamples": [
+        "open /admin/orders",
+        "go to /admin/orders",
+        "navigate to /admin/orders"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./admin/orders.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_admin_orders_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_admin_orders_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/admin/orders"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_admin_products",
+      "name": "Go To Route /admin/products",
+      "description": "Auto-generated workflow for route '/admin/products'",
+      "intentExamples": [
+        "open /admin/products",
+        "go to /admin/products",
+        "navigate to /admin/products"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./admin/products.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_admin_products_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_admin_products_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/admin/products"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_admin_settings",
+      "name": "Go To Route /admin/settings",
+      "description": "Auto-generated workflow for route '/admin/settings'",
+      "intentExamples": [
+        "open /admin/settings",
+        "go to /admin/settings",
+        "navigate to /admin/settings"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./admin/settings.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_admin_settings_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_admin_settings_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/admin/settings"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_api_admin_analytics",
+      "name": "Go To Route /api/admin/analytics",
+      "description": "Auto-generated workflow for route '/api/admin/analytics'",
+      "intentExamples": [
+        "open /api/admin/analytics",
+        "go to /api/admin/analytics",
+        "navigate to /api/admin/analytics"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./api/admin/analytics.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_api_admin_analytics_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_api_admin_analytics_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/api/admin/analytics"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_api_admin_combos",
+      "name": "Go To Route /api/admin/combos",
+      "description": "Auto-generated workflow for route '/api/admin/combos'",
+      "intentExamples": [
+        "open /api/admin/combos",
+        "go to /api/admin/combos",
+        "navigate to /api/admin/combos"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./api/admin/combos.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_api_admin_combos_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_api_admin_combos_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/api/admin/combos"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_api_admin_login",
+      "name": "Go To Route /api/admin/login",
+      "description": "Auto-generated workflow for route '/api/admin/login'",
+      "intentExamples": [
+        "open /api/admin/login",
+        "go to /api/admin/login",
+        "navigate to /api/admin/login"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./api/admin/login.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_api_admin_login_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_api_admin_login_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/api/admin/login"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_api_admin_logout",
+      "name": "Go To Route /api/admin/logout",
+      "description": "Auto-generated workflow for route '/api/admin/logout'",
+      "intentExamples": [
+        "open /api/admin/logout",
+        "go to /api/admin/logout",
+        "navigate to /api/admin/logout"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./api/admin/logout.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_api_admin_logout_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_api_admin_logout_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/api/admin/logout"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_api_admin_orders",
+      "name": "Go To Route /api/admin/orders",
+      "description": "Auto-generated workflow for route '/api/admin/orders'",
+      "intentExamples": [
+        "open /api/admin/orders",
+        "go to /api/admin/orders",
+        "navigate to /api/admin/orders"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./api/admin/orders.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_api_admin_orders_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_api_admin_orders_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/api/admin/orders"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_api_admin_orders_confirm_payment",
+      "name": "Go To Route /api/admin/orders/confirm-payment",
+      "description": "Auto-generated workflow for route '/api/admin/orders/confirm-payment'",
+      "intentExamples": [
+        "open /api/admin/orders/confirm-payment",
+        "go to /api/admin/orders/confirm-payment",
+        "navigate to /api/admin/orders/confirm-payment"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./api/admin/orders/confirm-payment.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_api_admin_orders_confirm_payment_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_api_admin_orders_confirm_payment_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/api/admin/orders/confirm-payment"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_api_admin_orders_dispatch_notified",
+      "name": "Go To Route /api/admin/orders/dispatch-notified",
+      "description": "Auto-generated workflow for route '/api/admin/orders/dispatch-notified'",
+      "intentExamples": [
+        "open /api/admin/orders/dispatch-notified",
+        "go to /api/admin/orders/dispatch-notified",
+        "navigate to /api/admin/orders/dispatch-notified"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./api/admin/orders/dispatch-notified.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_api_admin_orders_dispatch_notified_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_api_admin_orders_dispatch_notified_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/api/admin/orders/dispatch-notified"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_api_admin_orders_dtdc_sent",
+      "name": "Go To Route /api/admin/orders/dtdc-sent",
+      "description": "Auto-generated workflow for route '/api/admin/orders/dtdc-sent'",
+      "intentExamples": [
+        "open /api/admin/orders/dtdc-sent",
+        "go to /api/admin/orders/dtdc-sent",
+        "navigate to /api/admin/orders/dtdc-sent"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./api/admin/orders/dtdc-sent.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_api_admin_orders_dtdc_sent_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_api_admin_orders_dtdc_sent_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/api/admin/orders/dtdc-sent"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_api_admin_payment_qr",
+      "name": "Go To Route /api/admin/payment-qr",
+      "description": "Auto-generated workflow for route '/api/admin/payment-qr'",
+      "intentExamples": [
+        "open /api/admin/payment-qr",
+        "go to /api/admin/payment-qr",
+        "navigate to /api/admin/payment-qr"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./api/admin/payment-qr.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_api_admin_payment_qr_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_api_admin_payment_qr_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/api/admin/payment-qr"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_api_admin_products",
+      "name": "Go To Route /api/admin/products",
+      "description": "Auto-generated workflow for route '/api/admin/products'",
+      "intentExamples": [
+        "open /api/admin/products",
+        "go to /api/admin/products",
+        "navigate to /api/admin/products"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./api/admin/products.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_api_admin_products_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_api_admin_products_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/api/admin/products"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_api_admin_settings",
+      "name": "Go To Route /api/admin/settings",
+      "description": "Auto-generated workflow for route '/api/admin/settings'",
+      "intentExamples": [
+        "open /api/admin/settings",
+        "go to /api/admin/settings",
+        "navigate to /api/admin/settings"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./api/admin/settings.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_api_admin_settings_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_api_admin_settings_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/api/admin/settings"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_api_admin_status",
+      "name": "Go To Route /api/admin/status",
+      "description": "Auto-generated workflow for route '/api/admin/status'",
+      "intentExamples": [
+        "open /api/admin/status",
+        "go to /api/admin/status",
+        "navigate to /api/admin/status"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./api/admin/status.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_api_admin_status_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_api_admin_status_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/api/admin/status"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_api_admin_upload",
+      "name": "Go To Route /api/admin/upload",
+      "description": "Auto-generated workflow for route '/api/admin/upload'",
+      "intentExamples": [
+        "open /api/admin/upload",
+        "go to /api/admin/upload",
+        "navigate to /api/admin/upload"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./api/admin/upload.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_api_admin_upload_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_api_admin_upload_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/api/admin/upload"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_api_agent_intent",
+      "name": "Go To Route /api/agent/intent",
+      "description": "Auto-generated workflow for route '/api/agent/intent'",
+      "intentExamples": [
+        "open /api/agent/intent",
+        "go to /api/agent/intent",
+        "navigate to /api/agent/intent"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./api/agent/intent.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_api_agent_intent_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_api_agent_intent_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/api/agent/intent"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_api_auth_change_password",
+      "name": "Go To Route /api/auth/change-password",
+      "description": "Auto-generated workflow for route '/api/auth/change-password'",
+      "intentExamples": [
+        "open /api/auth/change-password",
+        "go to /api/auth/change-password",
+        "navigate to /api/auth/change-password"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./api/auth/change-password.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_api_auth_change_password_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_api_auth_change_password_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/api/auth/change-password"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_api_auth_login",
+      "name": "Go To Route /api/auth/login",
+      "description": "Auto-generated workflow for route '/api/auth/login'",
+      "intentExamples": [
+        "open /api/auth/login",
+        "go to /api/auth/login",
+        "navigate to /api/auth/login"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./api/auth/login.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_api_auth_login_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_api_auth_login_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/api/auth/login"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_api_auth_logout",
+      "name": "Go To Route /api/auth/logout",
+      "description": "Auto-generated workflow for route '/api/auth/logout'",
+      "intentExamples": [
+        "open /api/auth/logout",
+        "go to /api/auth/logout",
+        "navigate to /api/auth/logout"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./api/auth/logout.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_api_auth_logout_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_api_auth_logout_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/api/auth/logout"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_api_auth_me",
+      "name": "Go To Route /api/auth/me",
+      "description": "Auto-generated workflow for route '/api/auth/me'",
+      "intentExamples": [
+        "open /api/auth/me",
+        "go to /api/auth/me",
+        "navigate to /api/auth/me"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./api/auth/me.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_api_auth_me_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_api_auth_me_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/api/auth/me"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_api_auth_register",
+      "name": "Go To Route /api/auth/register",
+      "description": "Auto-generated workflow for route '/api/auth/register'",
+      "intentExamples": [
+        "open /api/auth/register",
+        "go to /api/auth/register",
+        "navigate to /api/auth/register"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./api/auth/register.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_api_auth_register_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_api_auth_register_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/api/auth/register"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_api_combos",
+      "name": "Go To Route /api/combos",
+      "description": "Auto-generated workflow for route '/api/combos'",
+      "intentExamples": [
+        "open /api/combos",
+        "go to /api/combos",
+        "navigate to /api/combos"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./api/combos.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_api_combos_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_api_combos_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/api/combos"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_api_create_order",
+      "name": "Go To Route /api/create-order",
+      "description": "Auto-generated workflow for route '/api/create-order'",
+      "intentExamples": [
+        "open /api/create-order",
+        "go to /api/create-order",
+        "navigate to /api/create-order"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./api/create-order.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_api_create_order_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_api_create_order_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/api/create-order"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_api_payment_qr",
+      "name": "Go To Route /api/payment-qr",
+      "description": "Auto-generated workflow for route '/api/payment-qr'",
+      "intentExamples": [
+        "open /api/payment-qr",
+        "go to /api/payment-qr",
+        "navigate to /api/payment-qr"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./api/payment-qr.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_api_payment_qr_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_api_payment_qr_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/api/payment-qr"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_api_products",
+      "name": "Go To Route /api/products",
+      "description": "Auto-generated workflow for route '/api/products'",
+      "intentExamples": [
+        "open /api/products",
+        "go to /api/products",
+        "navigate to /api/products"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./api/products.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_api_products_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_api_products_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/api/products"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_api_verify_payment",
+      "name": "Go To Route /api/verify-payment",
+      "description": "Auto-generated workflow for route '/api/verify-payment'",
+      "intentExamples": [
+        "open /api/verify-payment",
+        "go to /api/verify-payment",
+        "navigate to /api/verify-payment"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./api/verify-payment.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_api_verify_payment_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_api_verify_payment_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/api/verify-payment"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_cart",
+      "name": "Go To Route /cart",
+      "description": "Auto-generated workflow for route '/cart'",
+      "intentExamples": [
+        "open /cart",
+        "go to /cart",
+        "navigate to /cart"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./cart.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_cart_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_cart_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/cart"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_checkout",
+      "name": "Go To Route /checkout",
+      "description": "Auto-generated workflow for route '/checkout'",
+      "intentExamples": [
+        "open /checkout",
+        "go to /checkout",
+        "navigate to /checkout"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./checkout.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_checkout_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_checkout_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/checkout"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_checkout_success",
+      "name": "Go To Route /checkout/success",
+      "description": "Auto-generated workflow for route '/checkout/success'",
+      "intentExamples": [
+        "open /checkout/success",
+        "go to /checkout/success",
+        "navigate to /checkout/success"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./checkout/success.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_checkout_success_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_checkout_success_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/checkout/success"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_combos",
+      "name": "Go To Route /combos",
+      "description": "Auto-generated workflow for route '/combos'",
+      "intentExamples": [
+        "open /combos",
+        "go to /combos",
+        "navigate to /combos"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./combos.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_combos_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_combos_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/combos"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_contact",
+      "name": "Go To Route /contact",
+      "description": "Auto-generated workflow for route '/contact'",
+      "intentExamples": [
+        "open /contact",
+        "go to /contact",
+        "navigate to /contact"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./contact.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_contact_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_contact_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/contact"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_flights",
+      "name": "Go To Route /flights",
+      "description": "Auto-generated workflow for route '/flights'",
+      "intentExamples": [
+        "open /flights",
+        "go to /flights",
+        "navigate to /flights"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./flights.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_flights_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_flights_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/flights"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_health",
+      "name": "Go To Route /health",
+      "description": "Auto-generated workflow for route '/health'",
+      "intentExamples": [
+        "open /health",
+        "go to /health",
+        "navigate to /health"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./health.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_health_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_health_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/health"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_order",
+      "name": "Go To Route /order/",
+      "description": "Auto-generated workflow for route '/order/'",
+      "intentExamples": [
+        "open /order/",
+        "go to /order/",
+        "navigate to /order/"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./order/.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_order_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_order_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/order/"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_products",
+      "name": "Go To Route /products",
+      "description": "Auto-generated workflow for route '/products'",
+      "intentExamples": [
+        "open /products",
+        "go to /products",
+        "navigate to /products"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./products.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_products_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_products_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/products"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_publish",
+      "name": "Go To Route /publish",
+      "description": "Auto-generated workflow for route '/publish'",
+      "intentExamples": [
+        "open /publish",
+        "go to /publish",
+        "navigate to /publish"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./publish.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_publish_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_publish_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/publish"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_track",
+      "name": "Go To Route /track",
+      "description": "Auto-generated workflow for route '/track'",
+      "intentExamples": [
+        "open /track",
+        "go to /track",
+        "navigate to /track"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./track.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_track_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_track_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/track"
+        }
+      ]
+    },
+    {
+      "id": "go_to_route_wishlist",
+      "name": "Go To Route /wishlist",
+      "description": "Auto-generated workflow for route '/wishlist'",
+      "intentExamples": [
+        "open /wishlist",
+        "go to /wishlist",
+        "navigate to /wishlist"
+      ],
+      "requiredParams": [],
+      "completionStateKey": "route./wishlist.visible",
+      "completionExpectedValue": "true",
+      "steps": [
+        {
+          "id": "go_to_route_wishlist_s1",
+          "kind": "open_route",
+          "label": "Open start route",
+          "route": "/"
+        },
+        {
+          "id": "go_to_route_wishlist_s2",
+          "kind": "open_route",
+          "label": "Open target route",
+          "route": "/wishlist"
+        }
+      ]
+    }
+  ]
+}

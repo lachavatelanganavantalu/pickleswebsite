@@ -48,6 +48,7 @@ export default function EditableCartList({ showSubtotal = false, compact = false
                 type="button"
                 onClick={() => removeItem(item.productId, item.variantId)}
                 className="shrink-0 text-xs text-muted hover:text-red-600"
+                data-ai-target="remove-item"
               >
                 Remove
               </button>
@@ -58,6 +59,7 @@ export default function EditableCartList({ showSubtotal = false, compact = false
                 onClick={() => updateQuantity(item.productId, item.variantId, item.quantity - 1)}
                 className="min-h-[36px] min-w-[36px] rounded-l-full hover:bg-surface"
                 aria-label="Decrease quantity"
+                data-ai-target="cart-minus"
               >
                 −
               </button>
@@ -67,6 +69,7 @@ export default function EditableCartList({ showSubtotal = false, compact = false
                 onClick={() => updateQuantity(item.productId, item.variantId, item.quantity + 1)}
                 className="min-h-[36px] min-w-[36px] rounded-r-full hover:bg-surface"
                 aria-label="Increase quantity"
+                data-ai-target="cart-plus"
               >
                 +
               </button>

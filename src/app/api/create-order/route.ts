@@ -21,34 +21,29 @@ export async function POST(req: NextRequest) {
     }
 
     const session = getCustomerSession(req);
-    if (!session) {
-      return NextResponse.json(
-        { error: "Please log in to place an order." },
-        { status: 401 }
-      );
-    }
-    const userId = session.userId;
+    const userId = session?.userId;
     const body = await req.json();
-    const { amountINR, items, customer } = body;
+    const { items, customer, guestCheckout } = body;
 
-    if (!amountINR || amountINR <= 0) {
-      return NextResponse.json({ error: "Invalid amount" }, { status: 400 });
-    }
     if (!items?.length || !customer?.name || !customer?.phone) {
       return NextResponse.json({ error: "Missing order details" }, { status: 400 });
     }
-
-    const sessionPhone = normalizePhone(session.phone);
-    const customerPhone = normalizePhone(customer.phone);
-    if (!sessionPhone || !customerPhone || sessionPhone !== customerPhone) {
-      return NextResponse.json(
-        { error: "Mobile number must match your account." },
-        { status: 400 }
-      );
+    if (!normalizePhone(customer.phone)) {
+      return NextResponse.json({ error: "Invalid phone number" }, { status: 400 });
     }
 
-    const displayOrderId = await generateDisplayOrderId();
-    const orderId = `lach_${crypto.randomUUID()}`;
+    if (session) {
+      const sessionPhone = normalizePhone(session.phone);
+      const customerPhone = normalizePhone(customer.phone);
+      if (!sessionPhone || !customerPhone || sessionPhone !== customerPhone) {
+        return NextResponse.json(
+          { error: "Mobile number must match your account." },
+          { status: 400 }
+        );
+      }
+    } else if (guestCheckout === false) {
+      return NextResponse.json({ error: "Please log in to place an order." }, { status: 401 });
+    }
 
     const orderItems = items.map(
       (i: {
@@ -56,26 +51,45 @@ export async function POST(req: NextRequest) {
         variantLabel: string;
         quantity: number;
         priceINR: number;
-      }) => ({
-        productName: i.productName,
-        variantLabel: i.variantLabel,
-        quantity: i.quantity,
-        priceINR: i.priceINR,
-      })
+      }) => {
+        const quantity = Math.min(Math.max(Math.floor(Number(i.quantity) || 0), 1), 99);
+        const priceINR = Math.max(0, Math.round(Number(i.priceINR) || 0));
+        return {
+          productName: String(i.productName || "").slice(0, 120),
+          variantLabel: String(i.variantLabel || "").slice(0, 80),
+          quantity,
+          priceINR,
+        };
+      }
     );
 
+    const amountINR = orderItems.reduce(
+      (sum: number, item: { priceINR: number; quantity: number }) =>
+        sum + item.priceINR * item.quantity,
+      0
+    );
+    if (amountINR <= 0) {
+      return NextResponse.json({ error: "Invalid amount" }, { status: 400 });
+    }
+
+    const displayOrderId = await generateDisplayOrderId();
+    const orderId = `lach_${crypto.randomUUID()}`;
+
     const customerData = {
-      name: customer.name,
-      email: customer.email || "",
+      name: String(customer.name).trim().slice(0, 120),
+      email: String(customer.email || "").trim().slice(0, 120),
       phone: customer.phone,
-      address: customer.address || "",
-      city: customer.city || "",
-      state: customer.state || "",
-      zip: customer.zip || "",
-      country: customer.country || "India",
+      address: String(customer.address || "").trim().slice(0, 300),
+      city: String(customer.city || "").trim().slice(0, 80),
+      state: String(customer.state || "").trim().slice(0, 80),
+      zip: String(customer.zip || "").trim().slice(0, 12),
+      country: String(customer.country || "India").trim().slice(0, 80),
     };
 
-    await saveOrderToDb(orderId, displayOrderId, orderItems, amountINR, customerData, userId);
+    await saveOrderToDb(orderId, displayOrderId, orderItems, amountINR, customerData, {
+      userId,
+      isGuestCheckout: userId ? false : guestCheckout !== false,
+    });
 
     return NextResponse.json({
       orderId,

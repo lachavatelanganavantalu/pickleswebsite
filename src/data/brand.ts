@@ -1,5 +1,5 @@
 export const BRAND = {
-  logo: "/lachava-logo.jpeg",
+  logo: "",
   logoFallback: "/logo.svg",
   favicon: "/lachava-favicon.png",
   appleTouchIcon: "/apple-touch-icon.png",

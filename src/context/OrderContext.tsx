@@ -8,8 +8,7 @@ export interface LastOrder {
   paymentId: string;
   amountINR: number;
   paymentStatus: string;
-  customerPhone?: string;
-  items: { productName: string; variantLabel: string; quantity: number }[];
+  items: { productName: string; variantLabel: string; quantity: number; priceINR?: number }[];
 }
 
 interface OrderContextValue {

@@ -8,7 +8,12 @@ export type CustomerSession = { userId: string; phone: string };
 
 export type OrderAccessContext =
   | { kind: "admin" }
-  | { kind: "customer"; session: CustomerSession };
+  | { kind: "customer"; session: CustomerSession }
+  | { kind: "guest_payment" };
+
+export function isGuestPaymentOrder(order: Order): boolean {
+  return Boolean(order.isGuestCheckout !== false && !order.userId);
+}
 
 export function customerOwnsOrder(session: CustomerSession, order: Order): boolean {
   if (order.userId) {
@@ -44,16 +49,23 @@ export function assertOrderAccess(
   }
 
   const ctx = getOrderAccessContext(req);
-  if (!ctx) {
-    return { ok: false, response: orderAccessDeniedResponse("unauthenticated") };
+  if (ctx) {
+    if (ctx.kind === "admin") {
+      return { ok: true, ctx };
+    }
+    if (ctx.kind === "customer") {
+      if (!customerOwnsOrder(ctx.session, order)) {
+        return { ok: false, response: orderAccessDeniedResponse("forbidden") };
+      }
+      return { ok: true, ctx };
+    }
   }
-  if (ctx.kind === "admin") {
-    return { ok: true, ctx };
+
+  if (isGuestPaymentOrder(order)) {
+    return { ok: true, ctx: { kind: "guest_payment" } };
   }
-  if (!customerOwnsOrder(ctx.session, order)) {
-    return { ok: false, response: orderAccessDeniedResponse("forbidden") };
-  }
-  return { ok: true, ctx };
+
+  return { ok: false, response: orderAccessDeniedResponse("unauthenticated") };
 }
 
 export function assertCustomerSession(

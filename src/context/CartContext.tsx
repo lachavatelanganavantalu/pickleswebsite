@@ -22,7 +22,7 @@ interface CartContextValue {
 }
 
 const CartContext = createContext<CartContextValue | null>(null);
-const STORAGE_KEY = "lachava-cart";
+const STORAGE_KEY = "assal-cart";
 
 function readCartFromStorage(): CartItem[] {
   if (typeof window === "undefined") return [];

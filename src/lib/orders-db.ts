@@ -28,8 +28,11 @@ export type PaymentStatus = "pending" | "paid";
 export interface Order {
   orderId: string;
   displayOrderId: string;
-  razorpayOrderId?: string;
   userId?: string;
+  /** True when customer chose guest checkout (no account). */
+  isGuestCheckout?: boolean;
+  /** Razorpay `order_…` id when online checkout was started. */
+  razorpayOrderId?: string;
   paymentId?: string;
   paymentStatus: PaymentStatus;
   amountINR: number;
@@ -220,7 +223,7 @@ export async function getOrderByRazorpayId(razorpayOrderId: string): Promise<Ord
   );
 }
 
-export async function setOrderRazorpayId(
+export async function setRazorpayOrderId(
   orderId: string,
   razorpayOrderId: string
 ): Promise<void> {
@@ -235,18 +238,23 @@ export async function setOrderRazorpayId(
   }
 }
 
+/** @deprecated Use setRazorpayOrderId */
+export const setOrderRazorpayId = setRazorpayOrderId;
+
 export async function saveOrderToDb(
   orderId: string,
   displayOrderId: string,
   items: OrderItem[],
   totalINR: number,
   customer: OrderCustomer,
-  userId?: string
+  opts?: { userId?: string; isGuestCheckout?: boolean }
 ): Promise<void> {
+  const userId = opts?.userId;
   await insertOrder({
     orderId,
     displayOrderId,
     userId,
+    isGuestCheckout: opts?.isGuestCheckout ?? !userId,
     paymentStatus: "pending",
     amountINR: totalINR,
     items,
@@ -262,12 +270,14 @@ export async function createPaidOrder(
   items: OrderItem[],
   totalINR: number,
   customer: OrderCustomer,
-  userId?: string
+  opts?: { userId?: string; isGuestCheckout?: boolean }
 ): Promise<Order> {
+  const userId = opts?.userId;
   const order: Order = {
     orderId,
     displayOrderId,
     userId,
+    isGuestCheckout: opts?.isGuestCheckout ?? !userId,
     paymentId,
     paymentStatus: "paid",
     amountINR: totalINR,

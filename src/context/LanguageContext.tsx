@@ -11,7 +11,7 @@ import {
 } from "react";
 import { type Locale, t as translate } from "@/i18n/translations";
 
-const STORAGE_KEY = "lachava-locale";
+const STORAGE_KEY = "assal-locale";
 
 interface LanguageContextValue {
   locale: Locale;

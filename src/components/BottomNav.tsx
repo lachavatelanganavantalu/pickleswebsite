@@ -65,6 +65,7 @@ export default function BottomNav() {
               className="bottom-nav-link"
               data-active={active}
               aria-current={active ? "page" : undefined}
+              data-ai-target={`bottom-nav-${id}`}
             >
               <Icon strokeWidth={active ? 2.25 : 1.75} />
               <span className="bottom-nav-label bottom-nav-label-full">{label}</span>

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { getCustomerSession } from "@/lib/customer-auth";
-import { customerOwnsOrder } from "@/lib/order-access";
+import { customerOwnsOrder, isGuestPaymentOrder } from "@/lib/order-access";
 import { getOrder, deleteOrder } from "@/lib/order-store";
 import { assignOrderToUser, getOrderByRazorpayId, markOrderPaid } from "@/lib/orders-db";
 import { getRazorpayKeySecret } from "@/lib/razorpay-config";
@@ -10,11 +10,6 @@ export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
   try {
-    const session = getCustomerSession(req);
-    if (!session) {
-      return NextResponse.json({ error: "Please log in to complete payment." }, { status: 401 });
-    }
-
     const {
       razorpay_order_id: razorpayOrderId,
       razorpay_payment_id: paymentId,
@@ -45,9 +40,19 @@ export async function POST(req: NextRequest) {
     if (!dbOrder) {
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
     }
-    if (!customerOwnsOrder(session, dbOrder)) {
-      return NextResponse.json({ error: "Order not found" }, { status: 404 });
+
+    const session = getCustomerSession(req);
+    const guestPayment = isGuestPaymentOrder(dbOrder);
+
+    if (!guestPayment) {
+      if (!session) {
+        return NextResponse.json({ error: "Please log in to complete payment." }, { status: 401 });
+      }
+      if (!customerOwnsOrder(session, dbOrder)) {
+        return NextResponse.json({ error: "Order not found" }, { status: 404 });
+      }
     }
+
     if (dbOrder.paymentStatus === "paid") {
       if (dbOrder.paymentId === paymentId) {
         return NextResponse.json({
@@ -63,7 +68,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Order is already paid" }, { status: 400 });
     }
 
-    if (!dbOrder.userId) {
+    if (session && !dbOrder.userId && dbOrder.isGuestCheckout === false) {
       await assignOrderToUser(dbOrder.orderId, session.userId);
     }
 

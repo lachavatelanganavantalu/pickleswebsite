@@ -47,11 +47,11 @@ export const metadata: Metadata = {
     },
   },
   title: {
-    default: "Lachava | Telangana Vantalu",
-    template: "%s | Lachava",
+    default: "Assal Heritage Pickles | Telangana Vantalu",
+    template: "%s | Assal Heritage Pickles",
   },
   description:
-    "లచ్చవ్వ తెలంగాణ వంటల — 10 pickles (1 kg & 1/2 kg). 5-pickle combo ₹999. PhonePe / GPay 63021 12848.",
+    "అస్సల్ హెరిటేజ్ పచ్చళ్ళు — 10 pickles (1 kg & 1/2 kg). 5-pickle combo ₹999. PhonePe / GPay 95050 09699.",
   icons: {
     icon: [
       { url: BRAND.favicon, sizes: "512x512", type: "image/png" },
@@ -63,25 +63,25 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Lachava",
+    title: "Assal Heritage Pickles",
   },
   openGraph: {
-    title: "Lachava Telangana Vantalu",
-    description: "లచ్చవ్వ తెలంగాణ వంటల — official pickle menu",
+    title: "Assal Heritage Pickles | Telangana Vantalu",
+    description: "అస్సల్ హెరిటేజ్ పచ్చళ్ళు — official pickle menu",
     type: "website",
     images: [
       {
         url: BRAND.ogImage,
         width: 1200,
         height: 630,
-        alt: "Lachava Pickles",
+        alt: "Assal Heritage Pickles",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Lachava Telangana Vantalu",
-    description: "లచ్చవ్వ తెలంగాణ వంటల — official pickle menu",
+    title: "Assal Heritage Pickles | Telangana Vantalu",
+    description: "అస్సల్ హెరిటేజ్ పచ్చళ్ళు — official pickle menu",
     images: [BRAND.ogImage],
   },
 };

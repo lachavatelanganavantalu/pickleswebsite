@@ -1,0 +1,11 @@
+<div id="ai"></div>
+
+<script type="module">
+  import { createAssistanceInterface } from "./reptile-ai/index.js";
+
+  createAssistanceInterface({
+    mount: "#ai",
+    workflowBundle: "/ai-workflows.json",
+    title: "ai"
+  });
+</script>

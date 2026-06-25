@@ -61,6 +61,7 @@ export default function CartPage() {
         <Link
           href={user ? "/checkout" : loginUrl("/checkout")}
           className="flex w-full min-h-[48px] items-center justify-center rounded-full bg-brand text-sm font-bold uppercase tracking-wide text-white hover:bg-brand-dark"
+          data-ai-target="proceed-to-checkout"
         >
           {user ? "Proceed to checkout" : "Log in to checkout"}
         </Link>

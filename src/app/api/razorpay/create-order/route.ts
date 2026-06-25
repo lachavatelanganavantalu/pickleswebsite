@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCustomerSession } from "@/lib/customer-auth";
-import { assignOrderToUser, getOrderById, setOrderRazorpayId } from "@/lib/orders-db";
-import { customerOwnsOrder } from "@/lib/order-access";
+import { assignOrderToUser, getOrderById, setRazorpayOrderId } from "@/lib/orders-db";
+import { customerOwnsOrder, isGuestPaymentOrder } from "@/lib/order-access";
 import { getRazorpay } from "@/lib/razorpay";
 import { getRazorpayKeyId, isRazorpayConfigured } from "@/lib/razorpay-config";
 import { saveOrder } from "@/lib/order-store";
@@ -20,11 +20,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const session = getCustomerSession(req);
-    if (!session) {
-      return NextResponse.json({ error: "Please log in to pay." }, { status: 401 });
-    }
-
     const { orderId } = await req.json();
     if (!orderId || typeof orderId !== "string") {
       return NextResponse.json({ error: "Missing order ID" }, { status: 400 });
@@ -34,14 +29,24 @@ export async function POST(req: NextRequest) {
     if (!order) {
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
     }
-    if (!customerOwnsOrder(session, order)) {
-      return NextResponse.json({ error: "Order not found" }, { status: 404 });
+
+    const session = getCustomerSession(req);
+    const guestPayment = isGuestPaymentOrder(order);
+
+    if (!guestPayment) {
+      if (!session) {
+        return NextResponse.json({ error: "Please log in to pay." }, { status: 401 });
+      }
+      if (!customerOwnsOrder(session, order)) {
+        return NextResponse.json({ error: "Order not found" }, { status: 404 });
+      }
     }
+
     if (order.paymentStatus === "paid") {
       return NextResponse.json({ error: "Order is already paid" }, { status: 400 });
     }
 
-    if (!order.userId) {
+    if (session && !order.userId && order.isGuestCheckout === false) {
       await assignOrderToUser(order.orderId, session.userId);
     }
 
@@ -53,7 +58,7 @@ export async function POST(req: NextRequest) {
       notes: { lachava_order_id: order.orderId },
     });
 
-    await setOrderRazorpayId(order.orderId, rzpOrder.id);
+    await setRazorpayOrderId(order.orderId, rzpOrder.id);
 
     saveOrder({
       orderId: rzpOrder.id,

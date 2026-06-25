@@ -60,7 +60,7 @@ export async function GET(req: NextRequest) {
   if (format === "pdf") {
     const doc = new jsPDF();
     doc.setFontSize(18);
-    doc.text("Lachava Telangana Vantalu", 14, 20);
+    doc.text("Assal Heritage Pickles", 14, 20);
     doc.setFontSize(11);
     doc.text(`Order ID: ${receipt.displayOrderId}`, 14, 30);
     if (receipt.customer) {

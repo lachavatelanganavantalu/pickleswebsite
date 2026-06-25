@@ -9,15 +9,6 @@ import { navigateAfterRazorpayPayment, cleanupRazorpayCheckout } from "@/lib/raz
 import { writePaidOrderSession } from "@/lib/paid-order-session";
 import { clearPendingOrderSession } from "@/lib/pending-order-session";
 
-declare global {
-  interface Window {
-    Razorpay: new (options: Record<string, unknown>) => {
-      open: () => void;
-      on: (event: string, handler: () => void) => void;
-    };
-  }
-}
-
 interface CustomerInfo {
   name: string;
   email?: string;

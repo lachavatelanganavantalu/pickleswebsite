@@ -43,7 +43,7 @@ export default function AdminLoginPage() {
         onSubmit={handleSubmit}
         className="w-full max-w-sm rounded-2xl border border-border bg-surface-elevated p-8 shadow-sm"
       >
-        <h1 className="font-display text-2xl text-ink text-center">Lachava Admin</h1>
+        <h1 className="font-display text-2xl text-ink text-center">Assal Admin</h1>
         <p className="text-center text-sm text-muted mt-1 mb-6">Products & orders</p>
         {error && (
           <p className="mb-4 text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2">{error}</p>

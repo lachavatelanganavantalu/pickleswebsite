@@ -25,6 +25,9 @@
     "paths": {
       "@/*": [
         "./src/*"
+      ],
+      "@reptile/ai": [
+        "./src/lib/reptile-ai/index.ts"
       ]
     }
   },

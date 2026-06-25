@@ -3,7 +3,7 @@
 import WhatsAppIcon from "@/components/WhatsAppIcon";
 
 const WHATSAPP =
-  process.env.NEXT_PUBLIC_WHATSAPP_NUMBER?.replace(/\D/g, "") || "916302112848";
+  process.env.NEXT_PUBLIC_WHATSAPP_NUMBER?.replace(/\D/g, "") || "919505009699";
 
 export default function WhatsAppButton() {
   return (

@@ -126,3 +126,10 @@ export async function changeUserPassword(
 export function invalidateUsersCache(): void {
   cache = null;
 }
+
+export async function listAllUsers(): Promise<PublicCustomerUser[]> {
+  const users = await getAll();
+  return users
+    .map((u) => ({ id: u.id, phone: u.phone, createdAt: u.createdAt }))
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+}

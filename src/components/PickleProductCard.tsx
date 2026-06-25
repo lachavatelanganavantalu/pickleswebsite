@@ -80,7 +80,7 @@ export default function PickleProductCard({ product }: Props) {
   };
 
   return (
-    <article className={cn("shop-product-card flex flex-col", outOfStock && "opacity-60")}>
+    <article className={cn("shop-product-card flex flex-col", outOfStock && "opacity-60")} data-ai-target="product-card">
       <div className="relative">
         <ProductVisual
           product={product}
@@ -95,6 +95,7 @@ export default function PickleProductCard({ product }: Props) {
               type="button"
               className="shop-card-close-btn"
               onClick={() => setOptionsOpen(false)}
+              data-ai-target="close-options-btn"
             >
               ✕ Close
             </button>
@@ -118,6 +119,7 @@ export default function PickleProductCard({ product }: Props) {
                         "shop-card-variant-pill",
                         isSelected && "shop-card-variant-pill-active"
                       )}
+                      data-ai-target="variant-size-pill"
                     >
                       {opt.label}
                     </button>
@@ -144,7 +146,7 @@ export default function PickleProductCard({ product }: Props) {
             OPEN CART
           </Link>
         ) : (
-          <button type="button" className="shop-add-cart-btn" onClick={handleAddToCart}>
+          <button type="button" className="shop-add-cart-btn" onClick={handleAddToCart} data-ai-target="add-to-cart">
             ADD TO CART
           </button>
         ))}
@@ -167,6 +169,7 @@ export default function PickleProductCard({ product }: Props) {
             optionsOpen && "shop-select-btn-open"
           )}
           aria-expanded={optionsOpen}
+          data-ai-target="select-options-btn"
         >
           {outOfStock ? getProductUnavailableCta(product) : "SELECT OPTIONS"}
         </button>

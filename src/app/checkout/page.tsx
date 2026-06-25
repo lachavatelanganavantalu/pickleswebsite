@@ -2,21 +2,20 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import { useCurrency } from "@/context/CurrencyContext";
 import { useCustomerAuth } from "@/context/CustomerAuthContext";
-import { loginUrl } from "@/lib/customer-login-url";
-import { loadCheckoutDraft, hasCheckoutDraftFields } from "@/lib/checkout-draft";
 import PlaceOrderButton from "@/components/PlaceOrderButton";
 import EditableCartList from "@/components/EditableCartList";
 import PendingOrderBanner from "@/components/PendingOrderBanner";
 
+type CheckoutMode = "guest" | "account";
+
 export default function CheckoutPage() {
-  const router = useRouter();
   const { items, totalINR } = useCart();
   const { format } = useCurrency();
-  const { user, loading: authLoading } = useCustomerAuth();
+  const { user } = useCustomerAuth();
+  const [checkoutMode, setCheckoutMode] = useState<CheckoutMode>("guest");
   const [customer, setCustomer] = useState({
     name: "",
     email: "",
@@ -29,32 +28,9 @@ export default function CheckoutPage() {
   });
 
   useEffect(() => {
-    if (authLoading) return;
-    if (!user) {
-      router.replace(loginUrl("/checkout"));
-    }
-  }, [authLoading, user, router]);
-
-  useEffect(() => {
     if (user?.phone) {
       setCustomer((c) => (c.phone ? c : { ...c, phone: user.phone }));
     }
-  }, [user?.phone]);
-
-  useEffect(() => {
-    const draft = loadCheckoutDraft();
-    if (!draft || !hasCheckoutDraftFields(draft)) return;
-
-    setCustomer((current) => ({
-      name: draft.name || current.name,
-      email: draft.email || current.email,
-      phone: draft.phone || current.phone || user?.phone || "",
-      address: draft.address || current.address,
-      city: draft.city || current.city,
-      state: draft.state || current.state,
-      zip: draft.zip || current.zip,
-      country: draft.country || current.country,
-    }));
   }, [user?.phone]);
 
   const update = (field: keyof typeof customer, value: string) => {
@@ -68,14 +44,6 @@ export default function CheckoutPage() {
     customer.city.trim() &&
     customer.state.trim() &&
     customer.zip.trim();
-
-  if (authLoading || !user) {
-    return (
-      <div className="app-content py-20 text-center text-sm text-muted">
-        {authLoading ? "Checking login…" : "Redirecting to log in…"}
-      </div>
-    );
-  }
 
   if (items.length === 0) {
     return (
@@ -94,20 +62,64 @@ export default function CheckoutPage() {
   return (
     <div className="app-content py-[clamp(1.5rem,5vw,3rem)]">
       <h1 className="text-xl font-bold text-brand">Checkout</h1>
-      <p className="mt-1 text-sm text-muted">
-        After placing your order, pay securely online with Razorpay (UPI, cards, net banking). You
-        will receive your order ID and payment confirmation immediately.
-      </p>
+      <p className="mt-1 text-sm text-muted">After placing your order, scan the payment QR or copy UPI ID in PhonePe / GPay.</p>
 
       <div className="mt-4">
         <PendingOrderBanner />
       </div>
-      <p className="mt-2 text-xs text-forest">
-        Logged in as {user.phone} — order will appear in{" "}
-        <Link href="/account" className="font-semibold underline">
-          My account
-        </Link>
-      </p>
+      {user ? (
+        <p className="mt-2 text-xs text-forest">
+          Logged in — this order will appear in{" "}
+          <Link href="/account" className="font-semibold underline">
+            My account
+          </Link>
+        </p>
+      ) : (
+        <section className="mt-4 rounded-xl border border-border bg-white p-4">
+          <p className="text-xs font-bold uppercase tracking-wide text-brand">How would you like to checkout?</p>
+          <div className="mt-3 flex rounded-full border border-border bg-surface/50 p-1">
+            <button
+              type="button"
+              onClick={() => setCheckoutMode("guest")}
+              className={`flex-1 rounded-full py-2 text-xs font-bold uppercase tracking-wide transition-colors ${
+                checkoutMode === "guest" ? "bg-brand text-white" : "text-brand"
+              }`}
+              data-ai-target="checkout-guest"
+            >
+              Guest checkout
+            </button>
+            <Link
+              href="/account?returnTo=/checkout"
+              className={`flex flex-1 items-center justify-center rounded-full py-2 text-xs font-bold uppercase tracking-wide transition-colors ${
+                checkoutMode === "account" ? "bg-brand text-white" : "text-brand"
+              }`}
+              data-ai-target="checkout-account"
+              onClick={() => setCheckoutMode("account")}
+            >
+              Sign in / Sign up
+            </Link>
+          </div>
+          {checkoutMode === "guest" && (
+            <p className="mt-3 rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-950">
+              <strong>Guest checkout:</strong> you can place an order without creating an account.{" "}
+              <strong>Your orders will not appear in My account</strong> — save your order ID and use
+              Track order with your mobile number, or{" "}
+              <Link href="/account?returnTo=/checkout" className="font-semibold underline">
+                create an account
+              </Link>{" "}
+              to see order history.
+            </p>
+          )}
+          {checkoutMode === "account" && (
+            <p className="mt-3 text-xs text-muted">
+              <Link href="/account?returnTo=/checkout" className="font-semibold text-brand hover:underline">
+                Log in or sign up
+              </Link>{" "}
+              to link orders to your account and view order history.
+            </p>
+          )}
+        </section>
+      )}
 
       <div className="mt-8 space-y-8">
         <form className="space-y-4 rounded-xl bg-white p-5 border border-border" onSubmit={(e) => e.preventDefault()}>
@@ -118,6 +130,7 @@ export default function CheckoutPage() {
               value={customer.name}
               onChange={(e) => update("name", e.target.value)}
               className={inputClass}
+              data-ai-target="shipping-full-name"
             />
           </label>
           <label className="block">
@@ -128,6 +141,7 @@ export default function CheckoutPage() {
               value={customer.phone}
               onChange={(e) => update("phone", e.target.value)}
               className={inputClass}
+              data-ai-target="shipping-phone"
             />
           </label>
           <label className="block">
@@ -137,6 +151,7 @@ export default function CheckoutPage() {
               value={customer.email}
               onChange={(e) => update("email", e.target.value)}
               className={inputClass}
+              data-ai-target="shipping-email"
             />
           </label>
           <label className="block">
@@ -147,6 +162,7 @@ export default function CheckoutPage() {
               value={customer.address}
               onChange={(e) => update("address", e.target.value)}
               className={inputClass}
+              data-ai-target="shipping-address"
             />
           </label>
           <div className="grid sm:grid-cols-3 gap-4">
@@ -157,6 +173,7 @@ export default function CheckoutPage() {
                 value={customer.city}
                 onChange={(e) => update("city", e.target.value)}
                 className={inputClass}
+                data-ai-target="shipping-city"
               />
             </label>
             <label className="block">
@@ -166,6 +183,7 @@ export default function CheckoutPage() {
                 value={customer.state}
                 onChange={(e) => update("state", e.target.value)}
                 className={inputClass}
+                data-ai-target="shipping-state"
               />
             </label>
             <label className="block">
@@ -175,6 +193,7 @@ export default function CheckoutPage() {
                 value={customer.zip}
                 onChange={(e) => update("zip", e.target.value)}
                 className={inputClass}
+                data-ai-target="shipping-pin"
               />
             </label>
           </div>
@@ -196,7 +215,11 @@ export default function CheckoutPage() {
           </div>
         </div>
 
-        <PlaceOrderButton customer={customer} disabled={!valid} />
+        <PlaceOrderButton
+          customer={customer}
+          disabled={!valid}
+          guestCheckout={!user && checkoutMode === "guest"}
+        />
       </div>
     </div>
   );

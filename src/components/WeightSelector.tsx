@@ -35,6 +35,7 @@ export default function WeightSelector({
                   : "border-border bg-white text-brand hover:border-brand/40",
                 disabled && "cursor-not-allowed opacity-50"
               )}
+              data-ai-target="variant-size-pill"
             >
               <span>{opt.label}</span>
               <span className={cn(active ? "text-white/90" : "text-muted")}>

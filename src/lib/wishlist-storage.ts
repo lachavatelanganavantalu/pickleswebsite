@@ -1,4 +1,4 @@
-const STORAGE_KEY = "lachava_wishlist";
+const STORAGE_KEY = "assal_wishlist";
 
 export function getWishlistIds(): string[] {
   if (typeof window === "undefined") return [];

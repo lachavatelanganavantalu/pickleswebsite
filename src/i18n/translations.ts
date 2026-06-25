@@ -14,14 +14,14 @@ export const messages: Messages = {
   "nav.shop": { en: "Shop", te: "కొనండి" },
   "nav.cart": { en: "Cart", te: "బస్కెట్" },
 
-  "hero.badge": { en: "Lachava Telangana Pickles", te: "లచ్చవ్వ తెలంగాణ వంటల" },
+  "hero.badge": { en: "Assal Heritage Pickles", te: "అస్సల్ హెరిటేజ్ పచ్చళ్ళు" },
   "hero.title": {
     en: "Pickles — official menu",
     te: "పచ్చళ్ళు — అధికారిక మెనూ",
   },
   "hero.subtitle": {
-    en: "10 pickles (1 kg & 1/2 kg). 5-pickle combo ₹999. PhonePe / GPay 63021 12848.",
-    te: "10 రకాల పచ్చళ్ళు. 5 పికిల్స్ కాంబో ₹999. PhonePe / GPay 63021 12848.",
+    en: "10 pickles (1 kg & 1/2 kg). 5-pickle combo ₹999. PhonePe / GPay 95050 09699.",
+    te: "10 రకాల పచ్చళ్ళు. 5 పికిల్స్ కాంబో ₹999. PhonePe / GPay 95050 09699.",
   },
   "hero.ctaShop": { en: "Shop pickles", te: "పచ్చళ్ళు కొనండి" },
   "hero.ctaCombo": { en: "Combo ₹999", te: "కాంబో ₹999" },

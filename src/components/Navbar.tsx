@@ -10,10 +10,10 @@ import PwaInstallButton from "@/components/PwaInstallButton";
 import ShippingFlagsMarquee from "@/components/ShippingFlagsMarquee";
 
 const links = [
-  { href: "/", label: "Home" },
-  { href: "/products", label: "Pickles" },
-  { href: "/combos", label: "Combo ₹999" },
-  { href: "/contact", label: "Contact" },
+  { href: "/", label: "Home", id: "home" },
+  { href: "/products", label: "Pickles", id: "pickles" },
+  { href: "/combos", label: "Combo ₹999", id: "combos" },
+  { href: "/contact", label: "Contact", id: "contact" },
 ];
 
 export default function Navbar() {
@@ -45,6 +45,7 @@ export default function Navbar() {
             onClick={() => setOpen(!open)}
             className="flex min-h-[44px] min-w-[4.5rem] items-center gap-2 pl-1 text-white"
             aria-label="Menu"
+            data-ai-target="mobile-menu"
           >
             {open ? (
               <X className="h-[clamp(1.25rem,4vw,1.375rem)] w-[clamp(1.25rem,4vw,1.375rem)]" strokeWidth={2} />
@@ -68,6 +69,7 @@ export default function Navbar() {
             }}
             className="flex h-10 w-10 items-center justify-center text-white sm:h-11 sm:w-11"
             aria-label="Search shop"
+            data-ai-target="nav-search"
           >
             <Search className="h-[clamp(1.25rem,4vw,1.375rem)] w-[clamp(1.25rem,4vw,1.375rem)]" strokeWidth={2} />
           </button>
@@ -75,6 +77,7 @@ export default function Navbar() {
             href="/cart"
             className="relative flex h-10 w-10 items-center justify-center text-white sm:h-11 sm:w-11"
             aria-label="Cart"
+            data-ai-target="cart-button"
           >
             <ShoppingBag className="h-[clamp(1.25rem,4vw,1.375rem)] w-[clamp(1.25rem,4vw,1.375rem)]" strokeWidth={2} />
             <span
@@ -99,6 +102,7 @@ export default function Navbar() {
                   href={l.href}
                   onClick={() => setOpen(false)}
                   className="block rounded-lg px-3 py-2.5 text-sm font-medium text-white/90 hover:bg-white/10"
+                  data-ai-target={`nav-${l.id}`}
                 >
                   {l.label}
                 </Link>

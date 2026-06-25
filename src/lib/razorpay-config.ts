@@ -15,3 +15,7 @@ export function getRazorpayKeySecret(): string | undefined {
 export function isRazorpayConfigured(): boolean {
   return Boolean(getRazorpayKeyId() && getRazorpayKeySecret());
 }
+
+export function publicRazorpayKeyId(): string | null {
+  return getRazorpayKeyId() ?? null;
+}

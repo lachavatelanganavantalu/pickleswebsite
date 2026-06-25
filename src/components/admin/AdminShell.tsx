@@ -13,6 +13,7 @@ import {
   BarChart3,
   Menu,
   X,
+  Users,
 } from "lucide-react";
 import { cn } from "@/lib/cn";
 import PwaInstallButton from "@/components/PwaInstallButton";
@@ -21,6 +22,7 @@ const nav = [
   { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/admin/orders", label: "Orders", icon: ShoppingBag },
+  { href: "/admin/customers", label: "Customers", icon: Users },
   { href: "/admin/products", label: "Products", icon: Package },
   { href: "/admin/combos", label: "Combos", icon: Layers },
   { href: "/admin/settings", label: "Site settings", icon: Settings },
@@ -68,7 +70,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
       >
         <div className="flex items-center justify-between gap-2 border-b border-surface/10 p-4 md:p-5">
           <div className="min-w-0">
-            <p className="font-display text-lg md:text-xl truncate">Lachava</p>
+            <p className="font-display text-lg md:text-xl truncate font-instrument italic">Assal</p>
             <p className="text-xs text-surface/50 uppercase tracking-widest mt-0.5">Admin</p>
           </div>
           <button

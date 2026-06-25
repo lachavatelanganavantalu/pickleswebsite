@@ -1,25 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCustomerAuth } from "@/context/CustomerAuthContext";
-import {
-  LOGIN_NEXT_PARAM,
-  loginPromptForNext,
-  sanitizeLoginNext,
-} from "@/lib/customer-login-url";
 import { formatPhoneDisplay } from "@/lib/phone";
 import { formatINR } from "@/lib/currency";
+import { isSafeReturnPath } from "@/lib/safe-return-path";
 
 type Tab = "login" | "register";
 
 export default function AccountPageClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const loginNext = sanitizeLoginNext(searchParams.get(LOGIN_NEXT_PARAM));
+  const returnTo = searchParams.get("returnTo");
   const { user, orders, loading, login, register, logout, changePassword } = useCustomerAuth();
-  const [tab, setTab] = useState<Tab>("register");
+  const [tab, setTab] = useState<Tab>("login");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
@@ -30,21 +26,6 @@ export default function AccountPageClient() {
 
   const inputClass =
     "mt-1 w-full rounded-xl border border-border bg-white px-3 py-2.5 text-sm focus:border-brand/50 focus:outline-none";
-
-  useEffect(() => {
-    if (!loading && user && loginNext) {
-      router.replace(loginNext);
-    }
-  }, [loading, user, loginNext, router]);
-
-  useEffect(() => {
-    const mode = searchParams.get("tab");
-    if (mode === "login" || mode === "register") {
-      setTab(mode);
-    } else if (loginNext) {
-      setTab("login");
-    }
-  }, [searchParams, loginNext]);
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,7 +39,11 @@ export default function AccountPageClient() {
       return;
     }
     setPassword("");
-    router.replace(loginNext ?? "/account");
+    if (returnTo && isSafeReturnPath(returnTo)) {
+      router.push(returnTo);
+    } else {
+      router.refresh();
+    }
   };
 
   const handleChangePassword = async (e: React.FormEvent) => {
@@ -89,7 +74,7 @@ export default function AccountPageClient() {
           Logged in as <strong className="text-brand">{formatPhoneDisplay(user.phone)}</strong>
         </p>
 
-        <section className="mt-8">
+        <section className="mt-8" data-ai-target="orders-history">
           <h2 className="text-sm font-bold uppercase tracking-wide text-brand">My orders</h2>
           {orders.length === 0 ? (
             <p className="mt-3 text-sm text-muted">No orders linked to this account yet.</p>
@@ -152,6 +137,7 @@ export default function AccountPageClient() {
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 className={inputClass}
                 autoComplete="current-password"
+                data-ai-target="current-password"
               />
             </label>
             <label className="block">
@@ -162,12 +148,14 @@ export default function AccountPageClient() {
                 onChange={(e) => setNewPassword(e.target.value)}
                 className={inputClass}
                 autoComplete="new-password"
+                data-ai-target="new-password"
               />
             </label>
             <button
               type="submit"
               disabled={submitting}
               className="shop-select-btn disabled:opacity-50"
+              data-ai-target="update-password-submit"
             >
               {submitting ? "Saving…" : "Update password"}
             </button>
@@ -178,6 +166,7 @@ export default function AccountPageClient() {
           type="button"
           onClick={() => void logout()}
           className="mt-8 w-full rounded-xl border border-border py-3 text-sm font-semibold text-muted hover:text-brand"
+          data-ai-target="logout-button"
         >
           Log out
         </button>
@@ -188,13 +177,18 @@ export default function AccountPageClient() {
   return (
     <div className="app-content py-[clamp(1.5rem,5vw,3rem)] max-w-md mx-auto">
       <h1 className="shop-page-title">My account</h1>
-      {loginPromptForNext(loginNext) ? (
-        <p className="mt-2 rounded-lg bg-surface px-3 py-2 text-sm font-medium text-brand">
-          {loginPromptForNext(loginNext)}
-        </p>
-      ) : null}
       <p className="mt-1 text-sm text-muted">
         Create an account with your mobile number and a password you choose. No email required.
+        {returnTo && isSafeReturnPath(returnTo) && (
+          <>
+            {" "}
+            After signing in you will return to{" "}
+            <Link href={returnTo} className="font-semibold text-brand hover:underline">
+              checkout
+            </Link>
+            .
+          </>
+        )}
       </p>
 
       <div className="mt-6 flex rounded-full border border-border bg-white p-1">
@@ -207,6 +201,7 @@ export default function AccountPageClient() {
           className={`flex-1 rounded-full py-2 text-xs font-bold uppercase tracking-wide ${
             tab === "login" ? "bg-brand text-white" : "text-brand"
           }`}
+          data-ai-target="tab-login"
         >
           Log in
         </button>
@@ -219,6 +214,7 @@ export default function AccountPageClient() {
           className={`flex-1 rounded-full py-2 text-xs font-bold uppercase tracking-wide ${
             tab === "register" ? "bg-brand text-white" : "text-brand"
           }`}
+          data-ai-target="tab-register"
         >
           Sign up
         </button>
@@ -238,6 +234,7 @@ export default function AccountPageClient() {
             onChange={(e) => setPhone(e.target.value)}
             className={inputClass}
             autoComplete="tel"
+            data-ai-target="login-phone"
           />
         </label>
         <label className="block">
@@ -248,10 +245,11 @@ export default function AccountPageClient() {
             onChange={(e) => setPassword(e.target.value)}
             className={inputClass}
             autoComplete={tab === "login" ? "current-password" : "new-password"}
+            data-ai-target="login-password"
           />
           <p className="mt-1 text-xs text-muted">At least 6 characters</p>
         </label>
-        <button type="submit" disabled={submitting} className="shop-select-btn disabled:opacity-50">
+        <button type="submit" disabled={submitting} className="shop-select-btn disabled:opacity-50" data-ai-target="login-submit">
           {submitting ? "Please wait…" : tab === "login" ? "Log in" : "Create account"}
         </button>
       </form>

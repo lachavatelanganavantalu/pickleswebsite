@@ -1,0 +1,450 @@
+{
+  "site_id": "assal-pickles",
+  "site_name": "Assal Heritage Pickles",
+  "version": "1.0.0",
+  "homepage_url": "http://localhost:3001",
+  "stack_hint": "next.js",
+  "routes": [
+    {
+      "route_id": "home",
+      "path": "/",
+      "label": "Home",
+      "entry_texts": ["Assal Heritage Pickles", "Our Pickles", "Pickles"],
+      "success_hints": ["Pickles", "Our Pickles"]
+    },
+    {
+      "route_id": "veg_pickles",
+      "path": "/veg-pickles",
+      "label": "Veg pickles",
+      "entry_texts": ["Veg", "Veg pickles"],
+      "success_hints": ["Product", "Add to cart"]
+    },
+    {
+      "route_id": "non_veg_pickles",
+      "path": "/non-veg-pickles",
+      "label": "Non-veg pickles",
+      "entry_texts": ["Non-Veg", "Non-veg range"],
+      "success_hints": ["Product", "Add to cart"]
+    },
+    {
+      "route_id": "product_detail",
+      "path": "/products/[slug]",
+      "label": "Product detail",
+      "entry_texts": ["Select size", "Add to cart"],
+      "success_hints": ["Add to cart"]
+    },
+    {
+      "route_id": "cart",
+      "path": "/cart",
+      "label": "Cart",
+      "entry_texts": ["Your cart", "Cart"],
+      "success_hints": ["Subtotal", "Proceed to checkout"]
+    },
+    {
+      "route_id": "checkout",
+      "path": "/checkout",
+      "label": "Checkout",
+      "entry_texts": ["Checkout", "Full name"],
+      "success_hints": ["Place order"]
+    },
+    {
+      "route_id": "order_payment",
+      "path": "/order/[orderId]/payment",
+      "label": "Order Payment",
+      "entry_texts": ["Pay for order", "WhatsApp payment screenshot"],
+      "success_hints": ["Payment confirmed", "WhatsApp"]
+    },
+    {
+      "route_id": "checkout_success",
+      "path": "/checkout/success",
+      "label": "Order confirmed",
+      "entry_texts": ["Order confirmed", "Thank you"],
+      "success_hints": ["Order confirmed", "Track order"]
+    },
+    {
+      "route_id": "combos",
+      "path": "/combos",
+      "label": "Combos",
+      "entry_texts": ["Order this combo", "Combos"],
+      "success_hints": ["Contact"]
+    },
+    {
+      "route_id": "contact",
+      "path": "/contact",
+      "label": "Contact",
+      "entry_texts": ["Get in touch", "Phone", "Email"],
+      "success_hints": ["phone", "email", "WhatsApp"]
+    }
+  ],
+  "elements": [
+    {
+      "element_id": "nav_home",
+      "role": "navigation",
+      "label": "Home Link",
+      "text_hints": ["Home"],
+      "selector_hint": "[data-ai-target='nav-home']",
+      "route_hint": "/"
+    },
+    {
+      "element_id": "nav_shop",
+      "role": "navigation",
+      "label": "Shop Link",
+      "text_hints": ["Pickles", "Shop"],
+      "selector_hint": "[data-ai-target='nav-pickles']",
+      "route_hint": "/"
+    },
+    {
+      "element_id": "nav_combos",
+      "role": "navigation",
+      "label": "Combos Link",
+      "text_hints": ["Combos"],
+      "selector_hint": "[data-ai-target='nav-combos']",
+      "route_hint": "/"
+    },
+    {
+      "element_id": "nav_contact",
+      "role": "navigation",
+      "label": "Contact Link",
+      "text_hints": ["Contact"],
+      "selector_hint": "[data-ai-target='nav-contact']",
+      "route_hint": "/"
+    },
+    {
+      "element_id": "cart_button",
+      "role": "navigation",
+      "label": "Cart Icon",
+      "text_hints": ["Cart"],
+      "selector_hint": "[data-ai-target='cart-button']",
+      "route_hint": "/"
+    },
+    {
+      "element_id": "mobile_menu",
+      "role": "navigation",
+      "label": "Menu Icon",
+      "text_hints": ["Menu"],
+      "selector_hint": "[data-ai-target='mobile-menu']",
+      "route_hint": "/"
+    },
+    {
+      "element_id": "product_card",
+      "role": "content",
+      "label": "Product card",
+      "text_hints": ["INR", "USD", "Add to cart"],
+      "selector_hint": "[data-ai-target='product-card']",
+      "route_hint": "/products"
+    },
+    {
+      "element_id": "size_select",
+      "role": "select",
+      "label": "Select variant size",
+      "text_hints": ["Select size", "Size"],
+      "selector_hint": "[data-ai-target='variant-size-pill']",
+      "route_hint": "/products/[slug]"
+    },
+    {
+      "element_id": "quantity_minus",
+      "role": "button",
+      "label": "Decrease quantity",
+      "text_hints": ["−"],
+      "selector_hint": "[data-ai-target='quantity-minus']",
+      "route_hint": "/products/[slug]"
+    },
+    {
+      "element_id": "quantity_plus",
+      "role": "button",
+      "label": "Increase quantity",
+      "text_hints": ["+"],
+      "selector_hint": "[data-ai-target='quantity-plus']",
+      "route_hint": "/products/[slug]"
+    },
+    {
+      "element_id": "add_to_cart",
+      "role": "submit",
+      "label": "Add to cart",
+      "text_hints": ["Add to cart"],
+      "selector_hint": "[data-ai-target='add-to-cart']",
+      "route_hint": "/products/[slug]"
+    },
+    {
+      "element_id": "cart_minus",
+      "role": "button",
+      "label": "Decrease cart quantity",
+      "text_hints": ["−"],
+      "selector_hint": "[data-ai-target='cart-minus']",
+      "route_hint": "/cart"
+    },
+    {
+      "element_id": "cart_plus",
+      "role": "button",
+      "label": "Increase cart quantity",
+      "text_hints": ["+"],
+      "selector_hint": "[data-ai-target='cart-plus']",
+      "route_hint": "/cart"
+    },
+    {
+      "element_id": "remove_item",
+      "role": "danger",
+      "label": "Remove from cart",
+      "text_hints": ["Remove"],
+      "selector_hint": "[data-ai-target='remove-item']",
+      "route_hint": "/cart"
+    },
+    {
+      "element_id": "proceed_to_checkout",
+      "role": "submit",
+      "label": "Proceed to checkout",
+      "text_hints": ["Proceed to checkout"],
+      "selector_hint": "[data-ai-target='proceed-to-checkout']",
+      "route_hint": "/cart"
+    },
+    {
+      "element_id": "shipping_full_name",
+      "role": "input",
+      "label": "Full name",
+      "text_hints": ["Full name"],
+      "selector_hint": "[data-ai-target='shipping-full-name']",
+      "route_hint": "/checkout",
+      "allow_autofill": true
+    },
+    {
+      "element_id": "shipping_phone",
+      "role": "input",
+      "label": "Phone",
+      "text_hints": ["Phone"],
+      "selector_hint": "[data-ai-target='shipping-phone']",
+      "route_hint": "/checkout",
+      "allow_autofill": true
+    },
+    {
+      "element_id": "shipping_email",
+      "role": "input",
+      "label": "Email",
+      "text_hints": ["Email"],
+      "selector_hint": "[data-ai-target='shipping-email']",
+      "route_hint": "/checkout",
+      "allow_autofill": true
+    },
+    {
+      "element_id": "shipping_address",
+      "role": "input",
+      "label": "Address",
+      "text_hints": ["Address"],
+      "selector_hint": "[data-ai-target='shipping-address']",
+      "route_hint": "/checkout",
+      "allow_autofill": true
+    },
+    {
+      "element_id": "shipping_city",
+      "role": "input",
+      "label": "City",
+      "text_hints": ["City"],
+      "selector_hint": "[data-ai-target='shipping-city']",
+      "route_hint": "/checkout",
+      "allow_autofill": true
+    },
+    {
+      "element_id": "shipping_state",
+      "role": "input",
+      "label": "State",
+      "text_hints": ["State"],
+      "selector_hint": "[data-ai-target='shipping-state']",
+      "route_hint": "/checkout",
+      "allow_autofill": true
+    },
+    {
+      "element_id": "shipping_pin",
+      "role": "input",
+      "label": "PIN",
+      "text_hints": ["PIN"],
+      "selector_hint": "[data-ai-target='shipping-pin']",
+      "route_hint": "/checkout",
+      "allow_autofill": true
+    },
+    {
+      "element_id": "place_order",
+      "role": "submit",
+      "label": "Place order",
+      "text_hints": ["Place order"],
+      "selector_hint": "[data-ai-target='place-order']",
+      "route_hint": "/checkout"
+    },
+    {
+      "element_id": "payment_qr",
+      "role": "content",
+      "label": "Payment QR Code",
+      "text_hints": ["Payment QR"],
+      "selector_hint": "[data-ai-target='payment-qr']",
+      "route_hint": "/order/[orderId]/payment"
+    },
+    {
+      "element_id": "download_qr",
+      "role": "action",
+      "label": "Download QR",
+      "text_hints": ["Download QR code"],
+      "selector_hint": "[data-ai-target='download-qr']",
+      "route_hint": "/order/[orderId]/payment"
+    },
+    {
+      "element_id": "copy_upi_phone",
+      "role": "action",
+      "label": "Copy UPI Phone Number",
+      "text_hints": ["Copy number"],
+      "selector_hint": "[data-ai-target='copy-upi-phone']",
+      "route_hint": "/order/[orderId]/payment"
+    },
+    {
+      "element_id": "whatsapp_screenshot",
+      "role": "payment",
+      "label": "WhatsApp screenshot",
+      "text_hints": ["WhatsApp payment screenshot"],
+      "selector_hint": "[data-ai-target='whatsapp-screenshot']",
+      "route_hint": "/order/[orderId]/payment",
+      "requires_human": true,
+      "sensitive": true
+    },
+    {
+      "element_id": "track_order",
+      "role": "navigation",
+      "label": "Track order button",
+      "text_hints": ["Track order", "Track this order"],
+      "selector_hint": "[data-ai-target='track-order']",
+      "route_hint": "/checkout/success"
+    }
+  ],
+  "workflows": [
+    {
+      "workflow_id": "browse_and_add_to_cart",
+      "name": "Browse pickles and add items to cart",
+      "intent_hints": ["browse pickles", "add to cart", "shop pickles", "buy pickle", "pickles"],
+      "routes": ["home", "product_detail"],
+      "steps": [
+        {
+          "step_id": "open_product",
+          "description": "Open a product detail page",
+          "actions": [
+            {
+              "action_id": "click_product_card",
+              "kind": "click",
+              "label": "Open product card",
+              "target_texts": ["Mutton", "Fish", "Chicken", "Pickle", "Tomato", "Usirikaya", "Mamidi"],
+              "route_id": "home",
+              "element_id": "product_card",
+              "wait_after_ms": 250
+            }
+          ]
+        },
+        {
+          "step_id": "select_size",
+          "description": "Choose a variant size",
+          "actions": [
+            {
+              "action_id": "choose_size",
+              "kind": "click",
+              "label": "Select size",
+              "target_texts": ["1/2 kg", "1 kg", "500g", "250g"],
+              "element_id": "size_select",
+              "route_id": "product_detail",
+              "wait_after_ms": 200
+            }
+          ]
+        },
+        {
+          "step_id": "add_to_cart",
+          "description": "Add item to cart",
+          "actions": [
+            {
+              "action_id": "click_add_to_cart",
+              "kind": "click",
+              "label": "Add to cart",
+              "target_texts": ["Add to cart", "ADD TO CART"],
+              "element_id": "add_to_cart",
+              "route_id": "product_detail",
+              "wait_after_ms": 300
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "workflow_id": "review_cart_and_checkout",
+      "name": "Review cart and go to checkout",
+      "intent_hints": ["review cart", "checkout", "proceed to checkout", "cart"],
+      "routes": ["cart", "checkout"],
+      "steps": [
+        {
+          "step_id": "open_cart",
+          "description": "Open the cart",
+          "actions": [
+            {
+              "action_id": "open_cart_page",
+              "kind": "click",
+              "label": "Cart icon",
+              "target_texts": ["Cart", "CART", "Items"],
+              "element_id": "cart_button",
+              "route_id": "cart",
+              "wait_after_ms": 200
+            }
+          ]
+        },
+        {
+          "step_id": "proceed_checkout",
+          "description": "Proceed to checkout",
+          "actions": [
+            {
+              "action_id": "click_proceed_to_checkout",
+              "kind": "click",
+              "label": "Proceed to checkout",
+              "target_texts": ["Proceed to checkout", "PROCEED TO CHECKOUT"],
+              "element_id": "proceed_to_checkout",
+              "route_id": "cart",
+              "wait_after_ms": 350
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "workflow_id": "checkout_and_payment",
+      "name": "Checkout and place order",
+      "intent_hints": ["fill shipping details", "place order", "checkout"],
+      "routes": ["checkout", "order_payment"],
+      "steps": [
+        {
+          "step_id": "place_order",
+          "description": "Submit checkout form and place order",
+          "actions": [
+            {
+              "action_id": "click_place_order",
+              "kind": "click",
+              "label": "Place order button",
+              "target_texts": ["Place order", "PLACE ORDER"],
+              "element_id": "place_order",
+              "route_id": "checkout",
+              "wait_after_ms": 500
+            }
+          ]
+        },
+        {
+          "step_id": "pause_for_payment",
+          "description": "Pause for QR/UPI payment and WhatsApp screenshot verification",
+          "requires_human": true,
+          "actions": [
+            {
+              "action_id": "confirm_payment_on_whatsapp",
+              "kind": "pause",
+              "label": "WhatsApp screenshot",
+              "element_id": "whatsapp_screenshot",
+              "route_id": "order_payment",
+              "requires_human": true,
+              "human_handoff_message": "Please scan the QR code or copy the Phone number, complete the payment in your UPI app, and send the screenshot via WhatsApp to confirm the order.",
+              "wait_after_ms": 0
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "sensitive_keywords": ["payment", "confirm", "screenshot", "qr"],
+  "restricted_actions": ["whatsapp_screenshot"],
+  "notes": "Assal Heritage Pickles client manifest."
+}
