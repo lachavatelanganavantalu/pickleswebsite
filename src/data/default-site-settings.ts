@@ -1,8 +1,9 @@
 import { SiteSettings } from "@/types/site-settings";
+import { BRAND } from "@/data/brand";
 
 export const defaultSiteSettings: SiteSettings = {
   hero: {
-    badge: { en: "Assal Heritage Pickles", te: "అస్సల్ హెరిటేజ్ పచ్చళ్ళు" },
+    badge: { en: BRAND.nameFull, te: BRAND.nameTe },
     title: {
       en: "Pickles — official menu",
       te: "పచ్చళ్ళు — అధికారిక మెనూ",
@@ -15,7 +16,7 @@ export const defaultSiteSettings: SiteSettings = {
     ctaNonVeg: { en: "Combo ₹999", te: "కాంబో ₹999" },
   },
   story: {
-    title: { en: "అస్సల్ హెరిటేజ్ పచ్చళ్ళు", te: "అస్సల్ హెరిటేజ్ పచ్చళ్ళు" },
+    title: { en: BRAND.nameTe, te: BRAND.nameTe },
     subtitle: { en: "Thank you for visiting our page", te: "మా పేజీని సందర్శించినందుకు ధన్యవాదాలు" },
     body1: {
       en: "Order pickles by the jar — prices as listed. Combo: 5 jars (250g each) for ₹999.",
@@ -49,7 +50,7 @@ export const defaultSiteSettings: SiteSettings = {
     upiId: "",
     upiPhone: "63021 12848",
     qrImagePath: "/api/payment-qr",
-    payeeName: "Assal Heritage Pickles",
+    payeeName: BRAND.payeeName,
     showQrPayment: true,
   },
 };

@@ -10,8 +10,10 @@ import {
   type ReactNode,
 } from "react";
 import { type Locale, t as translate } from "@/i18n/translations";
+import { getLocalStorageItem } from "@/lib/local-storage-migrate";
 
-const STORAGE_KEY = "assal-locale";
+const STORAGE_KEY = "lachava-locale";
+const LEGACY_STORAGE_KEY = "assal-locale";
 
 interface LanguageContextValue {
   locale: Locale;
@@ -23,7 +25,7 @@ const LanguageContext = createContext<LanguageContextValue | null>(null);
 
 function readLocale(): Locale {
   if (typeof window === "undefined") return "en";
-  const stored = localStorage.getItem(STORAGE_KEY);
+  const stored = getLocalStorageItem(STORAGE_KEY, LEGACY_STORAGE_KEY);
   return stored === "te" ? "te" : "en";
 }
 

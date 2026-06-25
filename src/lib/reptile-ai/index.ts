@@ -3,6 +3,10 @@
  * Luxury web widget & first-party workflow execution runner
  */
 
+import { BRAND } from "@/data/brand";
+
+const AI_SITE_INTRO = `Tell me what you want to do on ${BRAND.nameFull}. I will execute the corresponding workflow.`;
+
 export interface AssistanceInterfaceOptions {
   mount: string;
   workflowBundle: string;
@@ -281,7 +285,7 @@ export async function createAssistanceInterface(options: AssistanceInterfaceOpti
     <section class="ai-panel hidden" aria-label="AI assistant panel">
       <div class="ai-header">
         <div>
-          <div class="ai-header-subtitle">Assal Heritage</div>
+          <div class="ai-header-subtitle">${BRAND.nameShort}</div>
           <h2 class="ai-header-title">AI Assistant</h2>
         </div>
         <button type="button" class="ai-close-btn" aria-label="Close assistant">×</button>
@@ -311,7 +315,7 @@ export async function createAssistanceInterface(options: AssistanceInterfaceOpti
   let messages: Array<{ role: "system" | "user" | "agent"; text: string }> = [
     {
       role: "system",
-      text: "Tell me what you want to do on Assal Heritage Pickles. I will execute the corresponding workflow.",
+      text: AI_SITE_INTRO,
     },
   ];
 
@@ -369,7 +373,7 @@ export async function createAssistanceInterface(options: AssistanceInterfaceOpti
     messages = [
       {
         role: "system",
-        text: "Tell me what you want to do on Assal Heritage Pickles. I will execute the corresponding workflow.",
+        text: AI_SITE_INTRO,
       },
     ];
     renderMessages();

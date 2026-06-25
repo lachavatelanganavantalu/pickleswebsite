@@ -16,6 +16,7 @@ import {
   Users,
 } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { BRAND } from "@/data/brand";
 import PwaInstallButton from "@/components/PwaInstallButton";
 
 const nav = [
@@ -70,7 +71,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
       >
         <div className="flex items-center justify-between gap-2 border-b border-surface/10 p-4 md:p-5">
           <div className="min-w-0">
-            <p className="font-display text-lg md:text-xl truncate font-instrument italic">Assal</p>
+            <p className="font-display text-lg md:text-xl truncate font-instrument italic">{BRAND.nameShort}</p>
             <p className="text-xs text-surface/50 uppercase tracking-widest mt-0.5">Admin</p>
           </div>
           <button

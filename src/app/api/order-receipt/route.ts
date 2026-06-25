@@ -4,6 +4,7 @@ import autoTable from "jspdf-autotable";
 import { assertOrderAccess } from "@/lib/order-access";
 import { getOrder } from "@/lib/order-store";
 import { getOrderById, getOrderByRazorpayId, type Order } from "@/lib/orders-db";
+import { BRAND } from "@/data/brand";
 
 export const runtime = "nodejs";
 
@@ -60,7 +61,7 @@ export async function GET(req: NextRequest) {
   if (format === "pdf") {
     const doc = new jsPDF();
     doc.setFontSize(18);
-    doc.text("Assal Heritage Pickles", 14, 20);
+    doc.text(BRAND.nameFull, 14, 20);
     doc.setFontSize(11);
     doc.text(`Order ID: ${receipt.displayOrderId}`, 14, 30);
     if (receipt.customer) {

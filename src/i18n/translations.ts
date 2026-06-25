@@ -1,3 +1,5 @@
+import { BRAND } from "@/data/brand";
+
 export type Locale = "en" | "te";
 
 export const LOCALE_LABELS: Record<Locale, string> = {
@@ -14,7 +16,7 @@ export const messages: Messages = {
   "nav.shop": { en: "Shop", te: "కొనండి" },
   "nav.cart": { en: "Cart", te: "బస్కెట్" },
 
-  "hero.badge": { en: "Assal Heritage Pickles", te: "అస్సల్ హెరిటేజ్ పచ్చళ్ళు" },
+  "hero.badge": { en: BRAND.nameFull, te: BRAND.nameTe },
   "hero.title": {
     en: "Pickles — official menu",
     te: "పచ్చళ్ళు — అధికారిక మెనూ",

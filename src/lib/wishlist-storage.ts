@@ -1,9 +1,12 @@
-const STORAGE_KEY = "assal_wishlist";
+import { getLocalStorageItem } from "@/lib/local-storage-migrate";
+
+const STORAGE_KEY = "lachava_wishlist";
+const LEGACY_STORAGE_KEY = "assal_wishlist";
 
 export function getWishlistIds(): string[] {
   if (typeof window === "undefined") return [];
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = getLocalStorageItem(STORAGE_KEY, LEGACY_STORAGE_KEY);
     return raw ? (JSON.parse(raw) as string[]) : [];
   } catch {
     return [];

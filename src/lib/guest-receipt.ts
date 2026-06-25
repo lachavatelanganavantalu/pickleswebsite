@@ -1,3 +1,5 @@
+import { BRAND } from "@/data/brand";
+
 export interface GuestReceiptItem {
   productName: string;
   variantLabel: string;
@@ -28,7 +30,7 @@ export interface GuestReceiptData {
   paidAt?: string;
 }
 
-const BRAND_NAME = "Assal Heritage Pickles";
+const BRAND_NAME = BRAND.nameFull;
 const TZ = "Asia/Kolkata";
 
 export function formatReceiptDateTime(iso?: string): string {
@@ -173,7 +175,7 @@ function escapeHtml(value: string): string {
 function receiptFilename(receipt: GuestReceiptData, ext: string): string {
   const safeId = receipt.displayOrderId.replace(/[^\w-]+/g, "-");
   const stamp = (receipt.paidAt ?? receipt.orderedAt ?? new Date().toISOString()).slice(0, 10);
-  return `assal-order-${safeId}-${stamp}.${ext}`;
+  return `lachava-order-${safeId}-${stamp}.${ext}`;
 }
 
 function triggerBlobDownload(blob: Blob, filename: string): void {

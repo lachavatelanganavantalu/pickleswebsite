@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { normalizeStoredCartItems } from "@/lib/cart-line-normalize";
+import { getLocalStorageItem } from "@/lib/local-storage-migrate";
 
 export interface CartItem {
   productId: string;
@@ -23,12 +24,13 @@ interface CartContextValue {
 }
 
 const CartContext = createContext<CartContextValue | null>(null);
-const STORAGE_KEY = "assal-cart";
+const STORAGE_KEY = "lachava-cart";
+const LEGACY_STORAGE_KEY = "assal-cart";
 
 function readCartFromStorage(): CartItem[] {
   if (typeof window === "undefined") return [];
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = getLocalStorageItem(STORAGE_KEY, LEGACY_STORAGE_KEY);
     const parsed = raw ? (JSON.parse(raw) as CartItem[]) : [];
     return normalizeStoredCartItems(parsed);
   } catch {

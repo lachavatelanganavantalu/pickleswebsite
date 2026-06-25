@@ -8,6 +8,7 @@ import { clearPendingOrderSession } from "@/lib/pending-order-session";
 import { updateGuestOrderSessionPaid } from "@/lib/guest-order-session";
 import { useCart } from "@/context/CartContext";
 import { useOrder } from "@/context/OrderContext";
+import { BRAND } from "@/data/brand";
 
 interface CustomerInfo {
   name: string;
@@ -83,7 +84,7 @@ export default function RazorpayOrderPayment({
         key: data.key,
         amount: data.amount,
         currency: data.currency,
-        name: "Assal Heritage Pickles",
+        name: BRAND.payeeName,
         description: `Order ${displayOrderId}`,
         order_id: data.razorpayOrderId,
         prefill: {

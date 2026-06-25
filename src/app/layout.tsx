@@ -4,7 +4,12 @@ import "./globals.css";
 import Providers from "@/components/Providers";
 import AppChrome from "@/components/AppChrome";
 import PwaRegister from "@/components/PwaRegister";
-import { BRAND } from "@/data/brand";
+import {
+  BRAND,
+  BRAND_MENU_DESCRIPTION_EN,
+  BRAND_MENU_DESCRIPTION_SHORT,
+  BRAND_PAGE_TITLE,
+} from "@/data/brand";
 import JsonLd from "@/components/JsonLd";
 import { organizationJsonLd, webSiteJsonLd } from "@/lib/structured-data";
 import { getSiteUrl } from "@/lib/site-url";
@@ -47,11 +52,10 @@ export const metadata: Metadata = {
     },
   },
   title: {
-    default: "Assal Heritage Pickles | Telangana Vantalu",
-    template: "%s | Assal Heritage Pickles",
+    default: BRAND_PAGE_TITLE,
+    template: `%s | ${BRAND.name}`,
   },
-  description:
-    "అస్సల్ హెరిటేజ్ పచ్చళ్ళు — 10 pickles (1 kg & 1/2 kg). 5-pickle combo ₹999. PhonePe / GPay 63021 12848.",
+  description: BRAND_MENU_DESCRIPTION_EN,
   icons: {
     icon: [
       { url: BRAND.favicon, sizes: "512x512", type: "image/png" },
@@ -63,25 +67,25 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Assal Heritage Pickles",
+    title: BRAND.name,
   },
   openGraph: {
-    title: "Assal Heritage Pickles | Telangana Vantalu",
-    description: "అస్సల్ హెరిటేజ్ పచ్చళ్ళు — official pickle menu",
+    title: BRAND_PAGE_TITLE,
+    description: BRAND_MENU_DESCRIPTION_SHORT,
     type: "website",
     images: [
       {
         url: BRAND.ogImage,
         width: 1200,
         height: 630,
-        alt: "Assal Heritage Pickles",
+        alt: BRAND.nameFull,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Assal Heritage Pickles | Telangana Vantalu",
-    description: "అస్సల్ హెరిటేజ్ పచ్చళ్ళు — official pickle menu",
+    title: BRAND_PAGE_TITLE,
+    description: BRAND_MENU_DESCRIPTION_SHORT,
     images: [BRAND.ogImage],
   },
 };
