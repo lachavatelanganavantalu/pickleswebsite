@@ -5,6 +5,7 @@ import { Plus, Loader2, Trash2 } from "lucide-react";
 import type { ComboPack } from "@/data/combos";
 import AdminImageUpload from "@/components/admin/AdminImageUpload";
 import { validateCatalogImageDataUrl } from "@/lib/catalog-media";
+import { COMBO_NAME_MAX_LENGTH, COMBO_NAME_TELUGU_MAX_LENGTH } from "@/lib/product-admin";
 
 export default function AdminComboPacksSection() {
   const [combos, setCombos] = useState<ComboPack[]>([]);
@@ -149,6 +150,7 @@ export default function AdminComboPacksSection() {
                   <span className="text-xs text-muted">Name (EN)</span>
                   <input
                     value={c.name}
+                    maxLength={COMBO_NAME_MAX_LENGTH}
                     onChange={(e) => update(i, { name: e.target.value })}
                     className="mt-1 w-full rounded-lg border border-border px-3 py-2 text-sm"
                   />
@@ -157,6 +159,7 @@ export default function AdminComboPacksSection() {
                   <span className="text-xs text-muted">పేరు (TE)</span>
                   <input
                     value={c.nameTelugu ?? ""}
+                    maxLength={COMBO_NAME_TELUGU_MAX_LENGTH}
                     onChange={(e) => update(i, { nameTelugu: e.target.value })}
                     className="mt-1 w-full rounded-lg border border-border px-3 py-2 text-sm"
                   />

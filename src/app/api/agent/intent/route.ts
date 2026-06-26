@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "intent is required" }, { status: 400 });
     }
 
-    const result = resolveAgentIntent(intent);
+    const result = await resolveAgentIntent(intent);
     return NextResponse.json(result);
   } catch (err) {
     console.error("POST /api/agent/intent:", err);

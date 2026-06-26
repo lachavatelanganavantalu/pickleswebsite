@@ -1,5 +1,8 @@
 import siteManifest from "@/lib/aditya/site-manifest";
 import intentDictionary from "../../../ADITYA/intent-dictionary.json";
+import { getAssistantManifestForRuntime } from "@/lib/assistant-manifest-db";
+import { getAllCombos } from "@/lib/combos-db";
+import { getAllProducts } from "@/lib/products-db";
 import { isBuyIntent, parseBuyOrder } from "./parse-buy-intent";
 import { matchSensitiveChatIntent } from "./match-sensitive-intent";
 import { matchPlaceOrderIntent } from "./match-place-order-intent";
@@ -13,6 +16,7 @@ import type {
   AdityaResolvedAction,
   AdityaSiteManifest,
 } from "./types";
+import type { AssistantManifestSnapshot } from "@/types/assistant-manifest";
 
 const manifest = siteManifest as AdityaSiteManifest;
 const dictionary = intentDictionary as AdityaIntentDictionary;
@@ -59,14 +63,66 @@ function scoreExample(intentNorm: string, example: string): number {
   return 0;
 }
 
-function matchWorkflow(intent: string): AdityaManifestWorkflow | null {
+function mergeDictionaryWithManifest(
+  manifestSnapshot: AssistantManifestSnapshot,
+): AdityaIntentDictionary {
+  const patchById = new Map(
+    manifestSnapshot.dictionaryPatch.workflows.map((entry) => [entry.workflow_id, entry]),
+  );
+
+  const workflows = dictionary.workflows.map((entry) => {
+    const patch = patchById.get(entry.workflow_id);
+    if (!patch) return entry;
+    return {
+      ...entry,
+      intent_hints: dedupeStrings([...entry.intent_hints, ...(patch.intent_hints ?? [])]),
+      examples: dedupeStrings([...entry.examples, ...patch.examples]),
+    };
+  });
+
+  for (const patch of manifestSnapshot.dictionaryPatch.workflows) {
+    if (workflows.some((entry) => entry.workflow_id === patch.workflow_id)) continue;
+    workflows.push({
+      workflow_id: patch.workflow_id,
+      name: patch.name ?? patch.workflow_id,
+      intent_hints: patch.intent_hints ?? patch.examples,
+      examples: patch.examples,
+    });
+  }
+
+  return {
+    ...dictionary,
+    workflows,
+  };
+}
+
+function dedupeStrings(items: string[]): string[] {
+  return [...new Set(items.filter(Boolean))];
+}
+
+function getWorkflows(manifestSnapshot: AssistantManifestSnapshot): AdityaManifestWorkflow[] {
+  const byId = new Map<string, AdityaManifestWorkflow>();
+  for (const workflow of manifest.workflows) {
+    byId.set(workflow.workflow_id, workflow);
+  }
+  for (const workflow of manifestSnapshot.productWorkflows) {
+    byId.set(workflow.workflow_id, workflow);
+  }
+  return [...byId.values()];
+}
+
+function matchWorkflow(
+  intent: string,
+  mergedDictionary: AdityaIntentDictionary,
+  workflows: AdityaManifestWorkflow[],
+): AdityaManifestWorkflow | null {
   const intentNorm = normalize(intent);
   if (!intentNorm) return null;
 
   let bestId: string | null = null;
   let bestScore = 0;
 
-  for (const entry of dictionary.workflows) {
+  for (const entry of mergedDictionary.workflows) {
     const candidates = [...entry.intent_hints, ...entry.examples];
     for (const candidate of candidates) {
       const score = scoreExample(intentNorm, candidate);
@@ -78,7 +134,7 @@ function matchWorkflow(intent: string): AdityaManifestWorkflow | null {
   }
 
   if (!bestId || bestScore < 50) return null;
-  return manifest.workflows.find((workflow) => workflow.workflow_id === bestId) ?? null;
+  return workflows.find((workflow) => workflow.workflow_id === bestId) ?? null;
 }
 
 function resolveActionKind(action: AdityaManifestAction): AdityaResolvedAction["kind"] {
@@ -123,12 +179,20 @@ function resolveActions(
   return { actions: resolved, requiresHuman, handoff };
 }
 
-export function resolveAgentIntent(intent: string): AdityaIntentResponse {
+export async function resolveAgentIntent(intent: string): Promise<AdityaIntentResponse> {
+  const [products, combos, manifestSnapshot] = await Promise.all([
+    getAllProducts(),
+    getAllCombos(),
+    getAssistantManifestForRuntime(),
+  ]);
+  const mergedDictionary = mergeDictionaryWithManifest(manifestSnapshot);
+  const workflows = getWorkflows(manifestSnapshot);
+
   const bootstrap = {
     siteId: manifest.site_id,
     siteName: manifest.site_name,
     stackHint: manifest.stack_hint ?? "next.js",
-    manifestVersion: manifest.version,
+    manifestVersion: manifestSnapshot.version || manifest.version,
   };
 
   const sensitiveMatch = matchSensitiveChatIntent(intent, bootstrap);
@@ -137,10 +201,10 @@ export function resolveAgentIntent(intent: string): AdityaIntentResponse {
   const placeOrderMatch = matchPlaceOrderIntent(intent, bootstrap);
   if (placeOrderMatch) return placeOrderMatch;
 
-  const navMatch = matchNavigateIntent(intent, bootstrap);
+  const navMatch = matchNavigateIntent(intent, bootstrap, products, combos);
   if (navMatch) return navMatch;
 
-  const unknownPickleMatch = matchUnknownPickleIntent(intent, bootstrap);
+  const unknownPickleMatch = matchUnknownPickleIntent(intent, bootstrap, products, combos);
   if (unknownPickleMatch) return unknownPickleMatch;
 
   if (isBuyIntent(intent)) {
@@ -188,7 +252,7 @@ export function resolveAgentIntent(intent: string): AdityaIntentResponse {
     };
   }
 
-  const workflow = matchWorkflow(intent);
+  const workflow = matchWorkflow(intent, mergedDictionary, workflows);
 
   if (!workflow) {
     return {

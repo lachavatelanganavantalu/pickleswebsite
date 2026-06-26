@@ -1,4 +1,5 @@
-import { defaultProducts } from "@/data/default-products";
+import type { ComboPack } from "@/data/combos";
+import type { PickleProduct } from "@/types/product";
 import { SITE_NAV_DESTINATIONS, NAV_VERB_PREFIX } from "@/lib/aditya/site-navigation";
 import { findProductForQuery } from "@/lib/aditya/resolve-cart-item";
 import { isBuyIntent } from "@/lib/aditya/parse-buy-intent";
@@ -115,6 +116,8 @@ function matchDestination(intent: string): (typeof SITE_NAV_DESTINATIONS)[number
 function matchSearchIntent(
   intent: string,
   bootstrap: AdityaIntentResponse["bootstrap"],
+  products: PickleProduct[],
+  combos: ComboPack[],
 ): AdityaIntentResponse | null {
   const norm = normalize(intent);
   let query = "";
@@ -132,7 +135,7 @@ function matchSearchIntent(
 
   if (!query) return null;
 
-  if (isUnknownPickleQuery(query)) {
+  if (isUnknownPickleQuery(query, products, combos)) {
     return buildUnknownPickleIntentResponse(intent, bootstrap, query);
   }
 
@@ -170,6 +173,7 @@ function isExactNavPhrase(text: string): boolean {
 function matchProductPageIntent(
   intent: string,
   bootstrap: AdityaIntentResponse["bootstrap"],
+  products: PickleProduct[],
 ): AdityaIntentResponse | null {
   const stripped = stripNavVerbs(normalize(intent))
     .replace(/\b(page|product|pickle|pickles)\b/g, " ")
@@ -178,7 +182,7 @@ function matchProductPageIntent(
 
   if (!stripped || stripped.length < 3) return null;
 
-  const product = findProductForQuery(defaultProducts, stripped);
+  const product = findProductForQuery(products, stripped);
   if (!product) return null;
 
   return {
@@ -206,15 +210,17 @@ function matchProductPageIntent(
 export function matchNavigateIntent(
   intent: string,
   bootstrap: AdityaIntentResponse["bootstrap"],
+  products: PickleProduct[],
+  combos: ComboPack[],
 ): AdityaIntentResponse | null {
   if (isBuyIntent(intent)) return null;
 
-  const search = matchSearchIntent(intent, bootstrap);
+  const search = matchSearchIntent(intent, bootstrap, products, combos);
   if (search) return search;
 
   const stripped = stripNavVerbs(normalize(intent));
   if (stripped && !isExactNavPhrase(stripped) && stripped.split(" ").length >= 2) {
-    const productPage = matchProductPageIntent(intent, bootstrap);
+    const productPage = matchProductPageIntent(intent, bootstrap, products);
     if (productPage) return productPage;
   }
 
@@ -223,5 +229,5 @@ export function matchNavigateIntent(
     return buildNavigateResponse(intent, bootstrap, destination);
   }
 
-  return matchProductPageIntent(intent, bootstrap);
+  return matchProductPageIntent(intent, bootstrap, products);
 }

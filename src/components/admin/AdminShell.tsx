@@ -17,6 +17,7 @@ import {
 import { cn } from "@/lib/cn";
 import { BRAND } from "@/data/brand";
 import PwaInstallButton from "@/components/PwaInstallButton";
+import AdminAssistantManifestPush from "@/components/admin/AdminAssistantManifestPush";
 
 const nav = [
   { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -102,6 +103,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
         </nav>
 
         <div className="m-3 space-y-2">
+          <AdminAssistantManifestPush compact />
           <PwaInstallButton variant="admin" />
           <button
             type="button"

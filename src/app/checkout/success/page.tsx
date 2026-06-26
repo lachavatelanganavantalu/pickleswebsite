@@ -9,7 +9,7 @@ import type { LastOrder } from "@/context/OrderContext";
 import GuestPaidReceiptModal from "@/components/GuestPaidReceiptModal";
 import { readPendingOrderSession } from "@/lib/pending-order-session";
 import { readGuestOrderSession } from "@/lib/guest-order-session";
-import { type GuestReceiptData, markGuestReceiptAutoShown } from "@/lib/guest-receipt";
+import { type GuestReceiptData, GUEST_RECEIPT_ONCE_NOTICE, markGuestReceiptAutoShown } from "@/lib/guest-receipt";
 
 function readOrderFromSession(): LastOrder | null {
   const pending = readPendingOrderSession();
@@ -97,8 +97,8 @@ export default function CheckoutSuccessPage() {
         )}
 
         {!pending && guestReceipt && (
-          <p className="mt-4 text-sm text-amber-950 bg-amber-50 rounded-lg px-3 py-2">
-            Guest checkout — save your receipt below. This order will not appear in My account.
+          <p className="mt-4 text-sm text-amber-950 bg-amber-50 rounded-lg border border-amber-200 px-3 py-2">
+            {GUEST_RECEIPT_ONCE_NOTICE}
           </p>
         )}
 
@@ -119,7 +119,7 @@ export default function CheckoutSuccessPage() {
               data-ai-target="view-guest-receipt"
             >
               <Download className="h-4 w-4" />
-              View & save order receipt
+              Download order receipt
             </button>
           )}
           {pending && (

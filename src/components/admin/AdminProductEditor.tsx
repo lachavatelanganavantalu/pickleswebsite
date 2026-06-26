@@ -10,7 +10,7 @@ import {
 } from "@/types/product";
 import AdminImageUpload from "./AdminImageUpload";
 import { validateCatalogImageDataUrl } from "@/lib/catalog-media";
-import { slugify, validateProduct } from "@/lib/product-admin";
+import { slugify, validateProduct, PRODUCT_NAME_MAX_LENGTH, PRODUCT_NAME_TELUGU_MAX_LENGTH, PRODUCT_SUBTITLE_MAX_LENGTH } from "@/lib/product-admin";
 import {
   DISABLED_PRODUCT_TAGS,
   isDisabledProductTag,
@@ -169,17 +169,25 @@ export default function AdminProductEditor({
               <span className="text-xs font-semibold text-muted uppercase">Name</span>
               <input
                 value={product.name}
+                maxLength={PRODUCT_NAME_MAX_LENGTH}
                 onChange={(e) => update("name", e.target.value)}
                 className="mt-1 w-full rounded-lg border border-border px-3 py-2 text-sm"
               />
+              <p className="mt-1 text-[11px] text-muted">
+                {product.name.length}/{PRODUCT_NAME_MAX_LENGTH} — short names keep the shop grid aligned
+              </p>
             </label>
             <label className="block">
               <span className="text-xs font-semibold text-muted uppercase">Telugu name</span>
               <input
                 value={product.nameTelugu ?? ""}
+                maxLength={PRODUCT_NAME_TELUGU_MAX_LENGTH}
                 onChange={(e) => update("nameTelugu", e.target.value)}
                 className="mt-1 w-full rounded-lg border border-border px-3 py-2 text-sm"
               />
+              <p className="mt-1 text-[11px] text-muted">
+                {product.nameTelugu?.length ?? 0}/{PRODUCT_NAME_TELUGU_MAX_LENGTH}
+              </p>
             </label>
           </div>
 
@@ -197,9 +205,13 @@ export default function AdminProductEditor({
             <span className="text-xs font-semibold text-muted uppercase">Subtitle</span>
             <input
               value={product.subtitle}
+              maxLength={PRODUCT_SUBTITLE_MAX_LENGTH}
               onChange={(e) => update("subtitle", e.target.value)}
               className="mt-1 w-full rounded-lg border border-border px-3 py-2 text-sm"
             />
+            <p className="mt-1 text-[11px] text-muted">
+              {product.subtitle.length}/{PRODUCT_SUBTITLE_MAX_LENGTH} — e.g. &quot;1 kg · 1/2 kg&quot;
+            </p>
           </label>
 
           <label className="block">

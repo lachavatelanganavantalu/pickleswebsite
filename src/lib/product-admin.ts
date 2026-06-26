@@ -2,6 +2,17 @@ import { PickleProduct, ProductCategory, WeightOption } from "@/types/product";
 import { resolveProductImagePath } from "@/lib/catalog-media";
 import { isDisabledProductTag } from "@/lib/product-stock";
 
+/** Keeps shop grid titles on one–two lines across all product cards. */
+export const PRODUCT_NAME_MAX_LENGTH = 26;
+export const PRODUCT_NAME_TELUGU_MAX_LENGTH = 14;
+export const PRODUCT_SUBTITLE_MAX_LENGTH = 28;
+export const COMBO_NAME_MAX_LENGTH = 28;
+export const COMBO_NAME_TELUGU_MAX_LENGTH = 18;
+
+export function clipProductText(value: string, maxLength: number): string {
+  return value.trim().slice(0, maxLength);
+}
+
 export function slugify(text: string): string {
   return text
     .toLowerCase()
@@ -69,9 +80,14 @@ export function normalizeProduct(raw: PickleProduct): PickleProduct {
     ...raw,
     id,
     slug,
-    name: raw.name.trim(),
-    nameTelugu: raw.nameTelugu?.trim() || undefined,
-    subtitle: raw.subtitle.trim() || raw.nameTelugu?.trim() || raw.name.trim(),
+    name: clipProductText(raw.name, PRODUCT_NAME_MAX_LENGTH),
+    nameTelugu: raw.nameTelugu?.trim()
+      ? clipProductText(raw.nameTelugu, PRODUCT_NAME_TELUGU_MAX_LENGTH)
+      : undefined,
+    subtitle: clipProductText(
+      raw.subtitle.trim() || raw.nameTelugu?.trim() || raw.name.trim(),
+      PRODUCT_SUBTITLE_MAX_LENGTH
+    ),
     description: raw.description?.trim() ?? "",
     category: raw.category,
     spiceLevel: Math.min(5, Math.max(1, Number(raw.spiceLevel) || 3)),
@@ -99,6 +115,15 @@ export function validateProduct(
 ): string[] {
   const errors: string[] = [];
   if (!product.name.trim()) errors.push("Product name is required");
+  if (product.name.trim().length > PRODUCT_NAME_MAX_LENGTH) {
+    errors.push(`Product name must be ${PRODUCT_NAME_MAX_LENGTH} characters or fewer`);
+  }
+  if ((product.nameTelugu?.trim().length ?? 0) > PRODUCT_NAME_TELUGU_MAX_LENGTH) {
+    errors.push(`Telugu name must be ${PRODUCT_NAME_TELUGU_MAX_LENGTH} characters or fewer`);
+  }
+  if (product.subtitle.trim().length > PRODUCT_SUBTITLE_MAX_LENGTH) {
+    errors.push(`Subtitle must be ${PRODUCT_SUBTITLE_MAX_LENGTH} characters or fewer`);
+  }
   if (!["veg", "non-veg", "combo"].includes(product.category)) {
     errors.push("Select Veg, Non-veg, or Combo");
   }

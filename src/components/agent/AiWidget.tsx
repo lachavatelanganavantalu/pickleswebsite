@@ -7,7 +7,7 @@ export function AiWidget() {
   useEffect(() => {
     void createAssistanceInterface({
       mount: "#ai",
-      workflowBundle: "/ai-workflows.json",
+      workflowBundle: "/api/ai-workflows",
       title: "ai",
     });
   }, []);

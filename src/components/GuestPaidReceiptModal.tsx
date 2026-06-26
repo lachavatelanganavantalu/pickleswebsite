@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { Download, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { CheckCircle2, Download, X } from "lucide-react";
 import {
   type GuestReceiptData,
+  GUEST_RECEIPT_ONCE_NOTICE,
   downloadGuestReceiptHtml,
   downloadGuestReceiptText,
   formatReceiptDateTime,
+  isGuestReceiptDownloaded,
 } from "@/lib/guest-receipt";
 import { formatINRDecimal } from "@/lib/format-price";
 
@@ -18,6 +20,12 @@ interface Props {
 
 export default function GuestPaidReceiptModal({ open, onClose, receipt }: Props) {
   const dialogRef = useRef<HTMLDivElement>(null);
+  const [downloaded, setDownloaded] = useState(false);
+
+  useEffect(() => {
+    if (!receipt.orderId) return;
+    setDownloaded(isGuestReceiptDownloaded(receipt.orderId));
+  }, [receipt.orderId, open]);
 
   useEffect(() => {
     if (!open) return;
@@ -59,7 +67,7 @@ export default function GuestPaidReceiptModal({ open, onClose, receipt }: Props)
               Your order receipt
             </h2>
             <p className="mt-1 text-xs text-muted">
-              Guest checkout — save this to your device. It will not appear in My account.
+              Guest checkout — this order will not appear in My account.
             </p>
           </div>
           <button
@@ -73,6 +81,27 @@ export default function GuestPaidReceiptModal({ open, onClose, receipt }: Props)
         </div>
 
         <div className="px-5 py-4 space-y-4 text-sm">
+          <div
+            className={`rounded-xl border px-4 py-3 text-sm ${
+              downloaded
+                ? "border-forest/30 bg-forest-soft text-forest"
+                : "border-amber-200 bg-amber-50 text-amber-950"
+            }`}
+            role="status"
+          >
+            {downloaded ? (
+              <p className="flex items-start gap-2">
+                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
+                <span>
+                  Receipt saved on this device. Download is no longer available — keep the file for
+                  your records.
+                </span>
+              </p>
+            ) : (
+              <p>{GUEST_RECEIPT_ONCE_NOTICE}</p>
+            )}
+          </div>
+
           <div className="rounded-xl bg-surface/80 p-4 space-y-2">
             <p>
               <span className="font-semibold text-brand">Order ID:</span> {receipt.displayOrderId}
@@ -127,19 +156,25 @@ export default function GuestPaidReceiptModal({ open, onClose, receipt }: Props)
         <div className="sticky bottom-0 flex flex-col gap-2 border-t border-border bg-white px-5 py-4">
           <button
             type="button"
-            onClick={() => downloadGuestReceiptHtml(receipt)}
-            className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-brand px-5 text-sm font-bold uppercase tracking-wide text-white hover:bg-brand-dark"
+            disabled={downloaded}
+            onClick={() => {
+              if (downloadGuestReceiptHtml(receipt)) setDownloaded(true);
+            }}
+            className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-brand px-5 text-sm font-bold uppercase tracking-wide text-white hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-50"
             data-ai-target="download-guest-receipt"
           >
             <Download className="h-4 w-4" />
-            Save receipt to device
+            {downloaded ? "Receipt already saved" : "Download receipt (one time only)"}
           </button>
           <button
             type="button"
-            onClick={() => downloadGuestReceiptText(receipt)}
-            className="min-h-[44px] w-full rounded-full border border-border text-sm font-semibold text-brand hover:border-brand/40"
+            disabled={downloaded}
+            onClick={() => {
+              if (downloadGuestReceiptText(receipt)) setDownloaded(true);
+            }}
+            className="min-h-[44px] w-full rounded-full border border-border text-sm font-semibold text-brand hover:border-brand/40 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            Download as text file
+            {downloaded ? "Text download unavailable" : "Download as text file"}
           </button>
           <button
             type="button"

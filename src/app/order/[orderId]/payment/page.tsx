@@ -11,7 +11,7 @@ import EditableCartList from "@/components/EditableCartList";
 import { formatINRDecimal } from "@/lib/format-price";
 import { clearPendingOrderSession } from "@/lib/pending-order-session";
 import { updateGuestOrderSessionPaid } from "@/lib/guest-order-session";
-import { type GuestReceiptData, markGuestReceiptAutoShown } from "@/lib/guest-receipt";
+import { type GuestReceiptData, GUEST_RECEIPT_ONCE_NOTICE, markGuestReceiptAutoShown } from "@/lib/guest-receipt";
 import { readJsonResponse } from "@/lib/read-json-response";
 import { useCart } from "@/context/CartContext";
 import type { TimelineStep } from "@/lib/order-timeline";
@@ -223,15 +223,20 @@ export default function OrderPaymentPage() {
               Payment confirmed. We are preparing your order.
             </div>
             {isGuest && guestReceipt && (
-              <button
-                type="button"
-                onClick={() => setReceiptOpen(true)}
-                className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full border border-brand px-5 text-sm font-bold uppercase tracking-wide text-brand hover:bg-brand/5"
-                data-ai-target="view-guest-receipt"
-              >
-                <Download className="h-4 w-4" />
-                View & save order receipt
-              </button>
+              <>
+                <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
+                  {GUEST_RECEIPT_ONCE_NOTICE}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setReceiptOpen(true)}
+                  className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full border border-brand px-5 text-sm font-bold uppercase tracking-wide text-brand hover:bg-brand/5"
+                  data-ai-target="view-guest-receipt"
+                >
+                  <Download className="h-4 w-4" />
+                  Download order receipt
+                </button>
+              </>
             )}
           </div>
         )}

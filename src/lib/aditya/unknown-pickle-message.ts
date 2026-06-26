@@ -1,6 +1,5 @@
-import { comboPacks } from "@/data/combos";
-import { defaultProducts } from "@/data/default-products";
-import { defaultSiteSettings } from "@/data/default-site-settings";
+import type { ComboPack } from "@/data/combos";
+import type { PickleProduct } from "@/types/product";
 import { isBuyIntent } from "@/lib/aditya/parse-buy-intent";
 import {
   expandProductQuery,
@@ -11,6 +10,7 @@ import {
   findComboForQuery,
   findProductForQuery,
 } from "@/lib/aditya/resolve-cart-item";
+import { defaultSiteSettings } from "@/data/default-site-settings";
 import { NAV_VERB_PREFIX } from "@/lib/aditya/site-navigation";
 import type { AdityaIntentResponse } from "@/lib/aditya/types";
 
@@ -104,10 +104,14 @@ export function looksLikePickleProductQuery(query: string): boolean {
   return false;
 }
 
-export function isUnknownPickleQuery(query: string): boolean {
+export function isUnknownPickleQuery(
+  query: string,
+  products: PickleProduct[],
+  combos: ComboPack[],
+): boolean {
   if (!looksLikePickleProductQuery(query)) return false;
-  if (findProductForQuery(defaultProducts, query)) return false;
-  if (findComboForQuery(comboPacks, query)) return false;
+  if (findProductForQuery(products, query)) return false;
+  if (findComboForQuery(combos, query)) return false;
   return true;
 }
 
@@ -146,11 +150,13 @@ export function buildUnknownPickleIntentResponse(
 export function matchUnknownPickleIntent(
   intent: string,
   bootstrap: AdityaIntentResponse["bootstrap"],
+  products: PickleProduct[],
+  combos: ComboPack[],
 ): AdityaIntentResponse | null {
   if (isBuyIntent(intent)) return null;
 
   const query = extractPickleProductQuery(intent);
-  if (!isUnknownPickleQuery(query)) return null;
+  if (!isUnknownPickleQuery(query, products, combos)) return null;
 
   return buildUnknownPickleIntentResponse(intent, bootstrap, query);
 }

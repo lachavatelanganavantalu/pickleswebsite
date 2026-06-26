@@ -12,6 +12,7 @@ import ProductVisual from "@/components/ProductVisual";
 import { createEmptyProduct, duplicateProduct } from "@/lib/product-admin";
 import AdminProductEditor from "./AdminProductEditor";
 import AdminComboPacksSection from "./AdminComboPacksSection";
+import AdminAssistantManifestPush from "./AdminAssistantManifestPush";
 
 export default function AdminProductsPanel() {
   const [products, setProducts] = useState<PickleProduct[]>([]);
@@ -69,6 +70,10 @@ export default function AdminProductsPanel() {
 
   return (
     <div className="p-4 sm:p-8 max-w-full overflow-x-hidden">
+      <div className="mb-6">
+        <AdminAssistantManifestPush />
+      </div>
+
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
           <h1 className="font-display text-2xl text-ink">Products</h1>

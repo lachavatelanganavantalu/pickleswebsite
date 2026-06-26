@@ -33,6 +33,21 @@ export interface GuestReceiptData {
 const BRAND_NAME = BRAND.nameFull;
 const TZ = "Asia/Kolkata";
 
+export const GUEST_RECEIPT_ONCE_NOTICE =
+  "As you are a guest user, this order receipt can only be downloaded once. Please save it for future use.";
+
+const GUEST_RECEIPT_DOWNLOAD_KEY_PREFIX = "guestReceiptDownloaded:";
+
+export function isGuestReceiptDownloaded(orderId: string): boolean {
+  if (typeof window === "undefined") return false;
+  return localStorage.getItem(`${GUEST_RECEIPT_DOWNLOAD_KEY_PREFIX}${orderId}`) === "1";
+}
+
+export function markGuestReceiptDownloaded(orderId: string): void {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(`${GUEST_RECEIPT_DOWNLOAD_KEY_PREFIX}${orderId}`, "1");
+}
+
 export function formatReceiptDateTime(iso?: string): string {
   const date = iso ? new Date(iso) : new Date();
   return date.toLocaleString("en-IN", {
@@ -80,7 +95,8 @@ export function buildGuestReceiptText(receipt: GuestReceiptData): string {
     "",
     `Total: ${formatINR(receipt.amountINR)}`,
     "",
-    "Save this receipt — guest orders are not stored in My account.",
+    GUEST_RECEIPT_ONCE_NOTICE,
+    "Guest orders are not stored in My account.",
   ];
   return lines.filter((line) => line !== "").join("\n");
 }
@@ -158,7 +174,7 @@ export function buildGuestReceiptHtml(receipt: GuestReceiptData): string {
       <tbody>${itemRows}</tbody>
     </table>
     <p class="total">Total ${formatINR(receipt.amountINR)}</p>
-    <p class="note">Save this file on your device. Guest orders are not shown in My account — use Track order with your order ID and mobile number.</p>
+    <p class="note">${escapeHtml(GUEST_RECEIPT_ONCE_NOTICE)} Guest orders are not shown in My account — use Track order with your order ID and mobile number.</p>
   </div>
 </body>
 </html>`;
@@ -188,17 +204,23 @@ function triggerBlobDownload(blob: Blob, filename: string): void {
 }
 
 /** Client-side only — saves a printable HTML receipt to the user's device. */
-export function downloadGuestReceiptHtml(receipt: GuestReceiptData): void {
+export function downloadGuestReceiptHtml(receipt: GuestReceiptData): boolean {
+  if (isGuestReceiptDownloaded(receipt.orderId)) return false;
   const html = buildGuestReceiptHtml(receipt);
   const blob = new Blob([html], { type: "text/html;charset=utf-8" });
   triggerBlobDownload(blob, receiptFilename(receipt, "html"));
+  markGuestReceiptDownloaded(receipt.orderId);
+  return true;
 }
 
 /** Client-side plain-text fallback receipt. */
-export function downloadGuestReceiptText(receipt: GuestReceiptData): void {
+export function downloadGuestReceiptText(receipt: GuestReceiptData): boolean {
+  if (isGuestReceiptDownloaded(receipt.orderId)) return false;
   const text = buildGuestReceiptText(receipt);
   const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
   triggerBlobDownload(blob, receiptFilename(receipt, "txt"));
+  markGuestReceiptDownloaded(receipt.orderId);
+  return true;
 }
 
 export function markGuestReceiptAutoShown(orderId: string): boolean {
