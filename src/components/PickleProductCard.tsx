@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { CATEGORY_LABELS, PickleProduct } from "@/types/product";
 import ProductVisual from "./ProductVisual";
+import ProductTagBadge, { StockBadge } from "./ProductTagBadge";
 import WishlistHeartButton from "./WishlistHeartButton";
 import CardQuantitySelect from "./CardQuantitySelect";
 import { formatPriceRange } from "@/lib/format-price";
@@ -86,6 +87,15 @@ export default function PickleProductCard({ product }: Props) {
           product={product}
           className={cn(optionsOpen && "shop-card-image-dimmed")}
         />
+
+        {product.tag && (
+          <div className="absolute left-2 top-2 z-10 flex flex-col items-start gap-1">
+            <ProductTagBadge tag={product.tag} />
+            {!isProductPurchasable(product) && (
+              <StockBadge available={product.available} tag={product.tag} />
+            )}
+          </div>
+        )}
 
         {!optionsOpen && <WishlistHeartButton itemId={product.id} />}
 

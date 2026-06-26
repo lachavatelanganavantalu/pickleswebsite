@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Package, ShoppingBag, Layers, IndianRupee } from "lucide-react";
+import { Package, ShoppingBag, IndianRupee } from "lucide-react";
 
 interface Status {
   ordersCount: number;
@@ -56,13 +56,12 @@ export default function AdminDashboard() {
               icon={Package}
               label="Products"
               value={String(status.productsCount)}
+              sub={
+                status.combosCount > 0
+                  ? `${status.combosCount} combo pack${status.combosCount === 1 ? "" : "s"}`
+                  : undefined
+              }
               href="/admin/products"
-            />
-            <StatCard
-              icon={Layers}
-              label="Combos"
-              value={String(status.combosCount)}
-              href="/admin/combos"
             />
           </div>
 
@@ -78,8 +77,7 @@ export default function AdminDashboard() {
           title="Analytics"
           desc="Best sellers, peak day & hour, cities, tips"
         />
-        <QuickLink href="/admin/products" title="Products" desc="Prices, stock, Telugu names, featured" />
-        <QuickLink href="/admin/combos" title="Combos" desc="Combo packs & bilingual text" />
+        <QuickLink href="/admin/products" title="Products" desc="Pickles, combo packs, tags, Telugu names" />
         <QuickLink href="/admin/orders" title="Orders" desc="DTDC WhatsApp, notes, payment status" />
         <QuickLink href="/admin/settings" title="Site settings" desc="Homepage hero, story, contact, banner" />
       </div>

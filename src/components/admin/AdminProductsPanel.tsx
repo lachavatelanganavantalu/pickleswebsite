@@ -11,6 +11,7 @@ import {
 import ProductVisual from "@/components/ProductVisual";
 import { createEmptyProduct, duplicateProduct } from "@/lib/product-admin";
 import AdminProductEditor from "./AdminProductEditor";
+import AdminComboPacksSection from "./AdminComboPacksSection";
 
 export default function AdminProductsPanel() {
   const [products, setProducts] = useState<PickleProduct[]>([]);
@@ -71,7 +72,9 @@ export default function AdminProductsPanel() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
           <h1 className="font-display text-2xl text-ink">Products</h1>
-          <p className="text-sm text-muted mt-1">{products.length} items</p>
+          <p className="text-sm text-muted mt-1">
+            {products.length} pickle{products.length === 1 ? "" : "s"} · combo packs below
+          </p>
         </div>
         <div className="flex flex-wrap gap-2">
           <select
@@ -156,6 +159,8 @@ export default function AdminProductsPanel() {
           ))}
         </div>
       )}
+
+      {(filter === "all" || filter === "combo") && <AdminComboPacksSection />}
 
       {editorOpen && editing && (
         <AdminProductEditor

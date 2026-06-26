@@ -8,7 +8,6 @@ import {
   ShoppingBag,
   LogOut,
   LayoutDashboard,
-  Layers,
   Settings,
   BarChart3,
   Menu,
@@ -25,7 +24,6 @@ const nav = [
   { href: "/admin/orders", label: "Orders", icon: ShoppingBag },
   { href: "/admin/customers", label: "Customers", icon: Users },
   { href: "/admin/products", label: "Products", icon: Package },
-  { href: "/admin/combos", label: "Combos", icon: Layers },
   { href: "/admin/settings", label: "Site settings", icon: Settings },
 ];
 

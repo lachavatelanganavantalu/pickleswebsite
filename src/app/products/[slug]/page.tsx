@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import ProductDetailClient from "@/components/ProductDetailClient";
 import ProductDetailSections from "@/components/ProductDetailSections";
-import { StockBadge } from "@/components/ProductTagBadge";
+import ProductTagBadge, { StockBadge } from "@/components/ProductTagBadge";
 import ProductVisual from "@/components/ProductVisual";
 import WishlistHeartButton from "@/components/WishlistHeartButton";
 import { productSummary } from "@/lib/product-copy";
@@ -38,6 +38,7 @@ export default async function ProductDetailPage({ params }: Props) {
 
       <div className="mt-4 px-1">
         <div className="mb-2 flex flex-wrap gap-2">
+          <ProductTagBadge tag={product.tag} />
           <StockBadge available={product.available} tag={product.tag} />
         </div>
         {product.nameTelugu && (
