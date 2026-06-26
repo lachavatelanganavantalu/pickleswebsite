@@ -1,14 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getOrderById, assignOrderToUser } from "@/lib/orders-db";
-import { getSiteSettings } from "@/lib/site-settings-db";
-import { defaultSiteSettings } from "@/data/default-site-settings";
 import { buildOrderTimeline } from "@/lib/order-timeline";
 import { assertOrderAccess } from "@/lib/order-access";
-import { publicPaymentSettings } from "@/lib/payment-qr";
-import {
-  adminPaymentProofWhatsAppUrl,
-  razorpayFailureDirectPayWhatsAppUrl,
-} from "@/lib/payment-whatsapp";
 import { isRazorpayConfigured } from "@/lib/razorpay-config";
 
 export const runtime = "nodejs";
@@ -32,11 +25,6 @@ export async function GET(
       await assignOrderToUser(order.orderId, access.ctx.session.userId);
     }
 
-    const settings = await getSiteSettings();
-    const payment = publicPaymentSettings(settings);
-    const adminWhatsApp =
-      settings.contact?.whatsapp?.trim() || defaultSiteSettings.contact.whatsapp;
-
     return NextResponse.json({
       order: {
         orderId: order!.orderId,
@@ -51,17 +39,8 @@ export async function GET(
         paymentConfirmedAt: order!.paymentConfirmedAt,
         dtdcSentAt: order!.dtdcSentAt,
       },
-      payment,
       razorpayEnabled: isRazorpayConfigured(),
       timeline: buildOrderTimeline(order!),
-      whatsappUrl:
-        order!.paymentStatus === "pending"
-          ? adminPaymentProofWhatsAppUrl(order!, adminWhatsApp)
-          : null,
-      directPayWhatsappUrl:
-        order!.paymentStatus === "pending"
-          ? razorpayFailureDirectPayWhatsAppUrl(order!, adminWhatsApp)
-          : null,
     });
   } catch (err) {
     console.error("GET /api/orders/[orderId]:", err);

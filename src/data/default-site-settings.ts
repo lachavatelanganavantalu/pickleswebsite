@@ -51,6 +51,6 @@ export const defaultSiteSettings: SiteSettings = {
     upiPhone: "63021 12848",
     qrImagePath: "/api/payment-qr",
     payeeName: BRAND.payeeName,
-    showQrPayment: true,
+    showQrPayment: false,
   },
 };

@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Order, PaymentStatus } from "@/lib/orders-db";
 import SendToDtdcButton from "@/components/admin/SendToDtdcButton";
-import ConfirmPaymentButton from "@/components/admin/ConfirmPaymentButton";
 import NotifyCustomerDispatchButton from "@/components/admin/NotifyCustomerDispatchButton";
 import AdminOrderNotes from "@/components/admin/AdminOrderNotes";
 import { formatINR } from "@/lib/currency";
@@ -26,30 +25,21 @@ function AdminOrderSteps({ order, onRefresh }: { order: Order; onRefresh: () => 
           <div className="min-w-0 flex-1">
             <p className="text-xs font-semibold text-ink">Awaiting payment</p>
             <p className="mt-0.5 text-xs text-muted">
-              Customer may pay via Razorpay (auto-marked paid), or UPI / QR / PhonePe / GPay and
-              send a screenshot on WhatsApp. Razorpay completes automatically; for UPI / QR you must
-              confirm below after checking the payment.
+              Customer pays on the website via Razorpay. The order moves to paid automatically when
+              payment succeeds.
             </p>
-            <div className="mt-3">
-              <ConfirmPaymentButton order={order} onConfirmed={onRefresh} />
-            </div>
           </div>
         </div>
       </div>
     );
   }
 
-  const paidViaRazorpay =
-    Boolean(order.paymentId) && order.paymentId !== "manual" && order.paymentId !== "upi-manual";
-
   return (
     <div className="mt-4 space-y-4 border-t border-border pt-4">
       <div className="flex items-start gap-3">
         <span className={stepDone(true)}>1</span>
         <div>
-          <p className="text-xs font-semibold text-forest">
-            {paidViaRazorpay ? "Payment confirmed (Razorpay)" : "Payment confirmed (UPI / QR / manual)"}
-          </p>
+          <p className="text-xs font-semibold text-forest">Payment confirmed (Razorpay)</p>
           {order.paymentConfirmedAt && (
             <p className="text-xs text-muted">
               {new Date(order.paymentConfirmedAt).toLocaleString("en-IN", {
@@ -155,8 +145,7 @@ export default function AdminOrdersPanel() {
     <div className="p-4 sm:p-8 max-w-full overflow-x-hidden">
       <h1 className="font-display text-2xl text-ink">Orders</h1>
       <p className="text-sm text-muted mt-1">
-        Razorpay orders move to paid automatically. For UPI / QR / WhatsApp payments, confirm
-        payment on pending orders → Send to DTDC → Notify customer.
+        Razorpay payments move to paid automatically → Send to DTDC → Notify customer.
       </p>
 
       <div className="mt-6 flex flex-wrap gap-2">

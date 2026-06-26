@@ -92,8 +92,7 @@ export default function CheckoutSuccessPage() {
 
         {pending && (
           <p className="mt-4 text-sm text-muted">
-            Scan the payment QR or copy UPI ID in PhonePe / GPay, then send your payment screenshot on
-            WhatsApp.
+            Complete payment with Razorpay on the payment page to confirm your order.
           </p>
         )}
 
@@ -135,9 +134,9 @@ export default function CheckoutSuccessPage() {
               <Link
                 href={`/order/${order.orderId}/payment`}
                 className="inline-flex min-h-[48px] items-center justify-center rounded-full bg-brand px-6 text-sm font-bold uppercase tracking-wide text-white hover:bg-brand-dark"
-                data-ai-target="pay-and-send-screenshot"
+                data-ai-target="pay-with-razorpay"
               >
-                Pay & send screenshot
+                Pay with Razorpay
               </Link>
             </>
           )}

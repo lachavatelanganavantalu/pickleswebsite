@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { MessageCircle } from "lucide-react";
 import { readJsonResponse } from "@/lib/read-json-response";
 import { clearPendingOrderSession } from "@/lib/pending-order-session";
 import { updateGuestOrderSessionPaid } from "@/lib/guest-order-session";
@@ -25,7 +24,6 @@ interface Props {
   displayOrderId: string;
   amountINR: number;
   customer: CustomerInfo;
-  directPayWhatsappUrl: string;
   disabled?: boolean;
 }
 
@@ -48,7 +46,6 @@ export default function RazorpayOrderPayment({
   displayOrderId,
   amountINR,
   customer,
-  directPayWhatsappUrl,
   disabled,
 }: Props) {
   const router = useRouter();
@@ -56,13 +53,11 @@ export default function RazorpayOrderPayment({
   const { setLastOrder } = useOrder();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [razorpayFailed, setRazorpayFailed] = useState(false);
 
   const handlePayOnline = async () => {
     if (disabled) return;
     setLoading(true);
     setError("");
-    setRazorpayFailed(false);
 
     try {
       const res = await fetch(`/api/orders/${encodeURIComponent(orderId)}/razorpay`, {
@@ -108,8 +103,7 @@ export default function RazorpayOrderPayment({
           });
           const verifyData = await verifyRes.json();
           if (!verifyRes.ok) {
-            setRazorpayFailed(true);
-            setError(verifyData.error || "Payment verification failed");
+            setError(verifyData.error || "Payment verification failed. Please try again.");
             return;
           }
           const payload = {
@@ -137,8 +131,7 @@ export default function RazorpayOrderPayment({
       });
 
       rzp.on("payment.failed", () => {
-        setRazorpayFailed(true);
-        setError("Online payment was declined or failed. You can pay us directly on WhatsApp.");
+        setError("Payment was declined or failed. Please try again.");
       });
 
       rzp.open();
@@ -163,19 +156,6 @@ export default function RazorpayOrderPayment({
       >
         {loading ? "Opening payment…" : `Pay online — ₹${amountINR}`}
       </button>
-
-      {razorpayFailed && (
-        <a
-          href={directPayWhatsappUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-3 inline-flex w-full min-h-[48px] items-center justify-center gap-2 rounded-full border-2 border-[#25D366] bg-[#25D366]/10 px-5 text-sm font-bold uppercase tracking-wide text-[#128C7E] hover:bg-[#25D366]/20"
-          data-ai-target="pay-directly-whatsapp"
-        >
-          <MessageCircle className="h-5 w-5" />
-          Pay directly on WhatsApp
-        </a>
-      )}
     </div>
   );
 }
